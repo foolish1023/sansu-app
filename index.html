@@ -161,7 +161,9 @@
   .english-box{background:linear-gradient(180deg,#E1F5FE,#B3E5FC);border:4px solid #0288D1;border-radius:20px;padding:18px;text-align:center;margin-top:8px;box-shadow:var(--shadow)}
   .emoji-big{font-size:min(96px,22vw);line-height:1;margin:6px 0;letter-spacing:2px}
   .english-box.scene .emoji-big{font-size:min(84px,19vw);letter-spacing:6px}
-  .scene-ctx{background:#fff;border:3px solid #0288D1;border-radius:999px;padding:8px 16px;display:inline-block;font-weight:900;color:#01579B;font-size:15px;margin:6px 0 4px;box-shadow:0 3px 0 rgba(2,136,209,.25)}
+  .scene-ctx{background:#fff;border:3px solid #0288D1;border-radius:14px;padding:12px 14px;display:block;font-weight:900;color:#01579B;font-size:14px;line-height:1.55;margin:8px 4px 6px;box-shadow:0 3px 0 rgba(2,136,209,.25);text-align:left}
+  .scene-ctx .quote{display:block;color:#B71C1C;font-size:13px;margin-top:4px}
+  .scene-ctx .prompt{display:block;color:#0D47A1;margin-top:6px;font-size:13px}
   .ja-hint{font-weight:900;font-size:18px;color:#01579B;margin:6px 0 10px}
   /* 長いフレーズの4択：少し小さめで改行OK */
   .choices.phrases .choice{font-size:15px;line-height:1.25;padding:14px 6px;min-height:62px;white-space:normal}
@@ -740,33 +742,57 @@
     ]
   };
 
-  // よくあるシチュエーション（親子で使える日常フレーズ）
+  // よくあるシチュエーション（親子で使える日常フレーズ・物語仕立て）
   const SITUATIONS = [
-    {emoji:"☀️🛏️", ctx:"あさ おきた",              en:"Good morning"},
-    {emoji:"🌙💤",  ctx:"ねる まえ",                en:"Good night"},
-    {emoji:"👋😊",  ctx:"おともだちに あう",        en:"Hello"},
-    {emoji:"👋🚪",  ctx:"わかれる とき",            en:"Goodbye"},
-    {emoji:"🎁💝",  ctx:"プレゼントを もらった",    en:"Thank you"},
-    {emoji:"😢🙇",  ctx:"あやまる とき",            en:"I'm sorry"},
-    {emoji:"🤝👧",  ctx:"はじめて あった",          en:"Nice to meet you"},
-    {emoji:"🍔🤤",  ctx:"おなかが すいた",          en:"I'm hungry"},
-    {emoji:"🥤💧",  ctx:"のどが かわいた",          en:"I'm thirsty"},
-    {emoji:"🍽️😋", ctx:"おいしい！",               en:"It's delicious!"},
-    {emoji:"❤️👍",  ctx:"これ すき！",              en:"I like it"},
-    {emoji:"👎😑",  ctx:"これ きらい",              en:"I don't like it"},
-    {emoji:"❓👀",  ctx:"これ なに？",              en:"What is this?"},
-    {emoji:"💴🛍️", ctx:"ねだんを きく",            en:"How much is it?"},
-    {emoji:"👋🌆",  ctx:"また あした！",            en:"See you tomorrow"},
-    {emoji:"🏠👪",  ctx:"おうちに かえった",        en:"I'm home"},
-    {emoji:"🏫🎒",  ctx:"がっこうへ いく",          en:"I'm going to school"},
-    {emoji:"🚽🚶",  ctx:"トイレに いきたい",        en:"May I go to the bathroom?"},
-    {emoji:"🤔💭",  ctx:"わからない",               en:"I don't know"},
-    {emoji:"🎉😄",  ctx:"たのしい！",               en:"It's fun!"},
-    {emoji:"🆘🙏",  ctx:"たすけて！",               en:"Help!"},
-    {emoji:"🤗😊",  ctx:"いいよ！",                 en:"Sure!"},
-    {emoji:"🎂🎈",  ctx:"たんじょうびを いわう",    en:"Happy birthday!"},
-    {emoji:"🤒🌡️", ctx:"ぐあいが わるい",          en:"I don't feel well"},
-    {emoji:"🙇✨",  ctx:"おれいを いう（ていねい）",en:"Thank you very much"}
+    {emoji:"☀️🛏️🥱",  scene:"あさ、おきたばかり。おかあさんが にっこり わらって 『Good morning!』と こえを かけてきた。", prompt:"あなたも あいさつを かえそう！", en:"Good morning"},
+
+    {emoji:"🌙🌟🛌",  scene:"よる、ベッドに はいる じかん。おとうさんが やさしく 『もう ねようね』と いった。",            prompt:"おやすみの あいさつを しよう。",    en:"Good night"},
+
+    {emoji:"🤝👧👦",  scene:"こうえんで はじめて あう おともだちが てを さしだした。にこっと わらっている。",                 prompt:"えいごで じぶんを しょうかいしよう！", en:"Nice to meet you"},
+
+    {emoji:"🎁💝✨",  scene:"たんじょうびに おばあちゃんから プレゼントを もらった。とても うれしい きもち。",                  prompt:"かんしゃの ことばを つたえよう。",  en:"Thank you"},
+
+    {emoji:"😢🧸💔",  scene:"うっかり おともだちの だいじな おもちゃを こわして しまった。おともだちは かなしそう…。",         prompt:"ちゃんと あやまろう！",             en:"I'm sorry"},
+
+    {emoji:"🍔🤤🕐",  scene:"おひるの じかん。あさから なにも たべていなくて おなかが グーグー なっている。",                   prompt:"おかあさんに きもちを つたえよう。", en:"I'm hungry"},
+
+    {emoji:"💧🥤🌞",  scene:"あつい なつの ひ。こうえんで たくさん はしって、くちが カラカラに なった。",                       prompt:"おみずが ほしいって つたえよう。",  en:"I'm thirsty"},
+
+    {emoji:"🍰😋🍴",  scene:"おかあさんが やいた ケーキを ひとくち たべた。あまくて、ふわふわで、ほっぺが おちそう！",           prompt:"この きもちを えいごで！",           en:"It's delicious!"},
+
+    {emoji:"🎂🎈🎉",  scene:"きょうは だいすきな おともだちの たんじょうび。パーティーに よばれて みんなで おいわい！",         prompt:"おいわいの ことばを かけよう。",    en:"Happy birthday!"},
+
+    {emoji:"🔎🪑❓",  scene:"はくぶつかんで みたことない ふしぎな ものを はっけん！ おとうさんに きいてみたい。",                 prompt:"しつもんして みよう。",              en:"What is this?"},
+
+    {emoji:"💴🛍️💭",  scene:"おみやげ やさんで かわいい キーホルダーを みつけた。でも ねふだが ついていない…。",                  prompt:"てんいんさんに ねだんを きこう！",   en:"How much is it?"},
+
+    {emoji:"🚽🙋🏫",  scene:"じゅぎょうちゅう、きゅうに トイレに いきたくなった。がまんは むずかしい！",                         prompt:"せんせいに ちゃんと つたえよう。",   en:"May I go to the bathroom?"},
+
+    {emoji:"🤔💭📝",  scene:"テストの もんだいが とても むずかしい。いくら かんがえても こたえが うかばない。",                  prompt:"せいじつに こたえよう。",            en:"I don't know"},
+
+    {emoji:"🎢😄✨",  scene:"ゆうえんちに きた！ ジェットコースターに のって、わくわく どきどき。おとうさんが きく 『たのしい？』",prompt:"きもちを えいごで こたえよう！",    en:"It's fun!"},
+
+    {emoji:"🆘🙏😰",  scene:"こうえんで まいごに なった。いそがしく しているが だれかに こえを かけたい。",                      prompt:"おおきな こえで たすけを よぼう！", en:"Help!"},
+
+    {emoji:"🏠🚪👪",  scene:"がっこうから おうちに かえってきた。げんかんで くつを ぬぐ じかん。",                              prompt:"おうちの人に あいさつしよう。",      en:"I'm home"},
+
+    {emoji:"🏫🎒👟",  scene:"あさ、がっこうへ いく じかん。おかあさんが げんかんまで みおくりに きてくれた。",                    prompt:"いってきますを えいごで！",         en:"I'm going to school"},
+
+    {emoji:"👋🌆🚪",  scene:"ともだちと こうえんで あそびおわり。もう そらが あかくなってきた。あしたも あそべるかな。",        prompt:"さよならの あいさつを しよう！",    en:"See you tomorrow"},
+
+    {emoji:"😊👍🤗",  scene:"ともだちが 『いっしょに あそぼう！』って さそって くれた。やろう やろう！",                        prompt:"オーケーを えいごで つたえよう。",  en:"Sure!"},
+
+    {emoji:"🤒🌡️💊",  scene:"あさ おきたら からだが あつい。あたまも いたいし、げんきが でない…。",                             prompt:"おかあさんに つたえよう。",          en:"I don't feel well"},
+
+    {emoji:"💦🤦🚶",  scene:"みちを いそいで あるいていたら、しらないひとに うっかり ぶつかって しまった！",                     prompt:"ていねいに あやまろう。",            en:"Excuse me"},
+
+    {emoji:"🖼️❤️🎨", scene:"びじゅつかんで とても すてきな えを みつけた。いろが きれいで、ずっと みていたい きもち。",         prompt:"きもちを つたえよう。",              en:"I like it"},
+
+    {emoji:"🛒🍎🙅",  scene:"スーパーで おかあさんが 『りんご いる？』と きいた。でも いまは たべたくない。",                    prompt:"ていねいに ことわろう。",            en:"No, thank you"},
+
+    {emoji:"🎖️🙇✨", scene:"せんせいから がんばった ごほうびに とくべつな バッジを もらった。とても うれしい！",                 prompt:"ていねいに おれいを いおう。",       en:"Thank you very much"},
+
+    {emoji:"🍽️🙏✨", scene:"レストランで ごはんを たべおわった。おみせを でる まえに ていねいに。",                              prompt:"ごちそうさまを えいごで！",          en:"It was delicious!"}
   ];
 
   // ===== Speech =====
@@ -890,13 +916,14 @@
       const s = SITUATIONS[Math.floor(Math.random()*SITUATIONS.length)];
       const choices = [s.en];
       let safety=0;
-      while (choices.length < 4 && safety < 60){
+      while (choices.length < 4 && safety < 80){
         safety++;
         const c = SITUATIONS[Math.floor(Math.random()*SITUATIONS.length)].en;
         if (!choices.includes(c)) choices.push(c);
       }
       return {
-        kind:'english', scene:true, en:s.en, emoji:s.emoji, ctx:s.ctx,
+        kind:'english', scene:true, en:s.en, emoji:s.emoji,
+        sceneText: s.scene, promptText: s.prompt,
         choices: choices.sort(()=>Math.random()-0.5),
         ans: s.en,
         text: `situ_${s.en}`,
@@ -1076,7 +1103,7 @@
       const engBox = document.querySelector('.english-box');
       if (q.scene){
         engBox.classList.add('scene');
-        $('engJa').innerHTML = `<span class="scene-ctx">📖 ${q.ctx}</span>`;
+        $('engJa').innerHTML = `<div class="scene-ctx">📖 ${q.sceneText}<span class="prompt">👉 ${q.promptText}</span></div>`;
       } else {
         engBox.classList.remove('scene');
         $('engJa').textContent = '';
