@@ -351,11 +351,11 @@
     <div style="font-size:40px">🚉</div>
     <h2 id="resultTitle">しゅうちゃく えき とうちゃく！</h2>
     <div class="score"><span id="scoreNum">0</span><small>/<span id="scoreAll">10</span>もん せいかい</small></div>
-    <div style="font-weight:900;font-size:13px;color:var(--sub)">さいだい れんぞく <span id="maxCombo">0</span> れんぞく！</div>
+    <div id="maxComboLine" style="font-weight:900;font-size:13px;color:var(--sub)">さいだい れんぞく <span id="maxCombo">0</span> れんぞく！</div>
     <div class="tickets-row" id="ticketRow"><div class="ticket">🎫</div><div class="ticket">🎫</div><div class="ticket">🎫</div></div>
 
     <div class="journey" id="journey">
-      <div class="lbl">🚄 にっぽん じゅうだん のたび</div>
+      <div class="lbl" id="journeyLbl">🚄 にっぽん じゅうだん のたび</div>
       <div class="txt" id="journeyTxt"></div>
     </div>
 
@@ -714,37 +714,93 @@
     {id:"eng_situation", type:"english", cls:"m5", name:"Situations",    desc:"Everyday scenes for families",    svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💬</text><text x="42" y="28" text-anchor="middle" font-size="16">😊</text></svg>`, trophy:"e5"}
   ];
 
-  // ===== English words =====
+  // ===== English words (expanded for adult learners) =====
   const ENGLISH_WORDS = {
-    abc: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(l=>({en:l, ja:l, emoji:l})),
+    abc: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(l=>({en:l, emoji:l})),
     numbers: [
-      {en:"one",ja:"いち",emoji:"1️⃣"},{en:"two",ja:"に",emoji:"2️⃣"},
-      {en:"three",ja:"さん",emoji:"3️⃣"},{en:"four",ja:"よん・し",emoji:"4️⃣"},
-      {en:"five",ja:"ご",emoji:"5️⃣"},{en:"six",ja:"ろく",emoji:"6️⃣"},
-      {en:"seven",ja:"なな・しち",emoji:"7️⃣"},{en:"eight",ja:"はち",emoji:"8️⃣"},
-      {en:"nine",ja:"きゅう",emoji:"9️⃣"},{en:"ten",ja:"じゅう",emoji:"🔟"}
+      {en:"one",emoji:"1"},{en:"two",emoji:"2"},{en:"three",emoji:"3"},{en:"four",emoji:"4"},{en:"five",emoji:"5"},
+      {en:"six",emoji:"6"},{en:"seven",emoji:"7"},{en:"eight",emoji:"8"},{en:"nine",emoji:"9"},{en:"ten",emoji:"10"},
+      {en:"eleven",emoji:"11"},{en:"twelve",emoji:"12"},{en:"thirteen",emoji:"13"},{en:"fourteen",emoji:"14"},{en:"fifteen",emoji:"15"},
+      {en:"sixteen",emoji:"16"},{en:"seventeen",emoji:"17"},{en:"eighteen",emoji:"18"},{en:"nineteen",emoji:"19"},{en:"twenty",emoji:"20"},
+      {en:"thirty",emoji:"30"},{en:"forty",emoji:"40"},{en:"fifty",emoji:"50"},{en:"sixty",emoji:"60"},{en:"seventy",emoji:"70"},
+      {en:"eighty",emoji:"80"},{en:"ninety",emoji:"90"},{en:"hundred",emoji:"100"},{en:"thousand",emoji:"1,000"},{en:"million",emoji:"1M"}
     ],
     colors: [
-      {en:"red",ja:"あか",emoji:"🔴"},{en:"blue",ja:"あお",emoji:"🔵"},
-      {en:"yellow",ja:"きいろ",emoji:"🟡"},{en:"green",ja:"みどり",emoji:"🟢"},
-      {en:"pink",ja:"ピンク",emoji:"🌸"},{en:"purple",ja:"むらさき",emoji:"🟣"},
-      {en:"black",ja:"くろ",emoji:"⚫"},{en:"white",ja:"しろ",emoji:"⚪"},
-      {en:"orange",ja:"オレンジ",emoji:"🟠"},{en:"brown",ja:"ちゃいろ",emoji:"🟤"}
+      {en:"red",emoji:"🔴"},{en:"blue",emoji:"🔵"},{en:"yellow",emoji:"🟡"},{en:"green",emoji:"🟢"},
+      {en:"pink",emoji:"🌸"},{en:"purple",emoji:"🟣"},{en:"black",emoji:"⚫"},{en:"white",emoji:"⚪"},
+      {en:"orange",emoji:"🟠"},{en:"brown",emoji:"🟤"},{en:"gold",emoji:"🟡"},{en:"silver",emoji:"⚪"},
+      {en:"turquoise",emoji:"🩵"},{en:"navy",emoji:"🟦"},{en:"crimson",emoji:"🟥"},{en:"beige",emoji:"🟫"},
+      {en:"maroon",emoji:"🟥"},{en:"olive",emoji:"🫒"},{en:"coral",emoji:"🪸"},{en:"lavender",emoji:"💜"},
+      {en:"teal",emoji:"🩵"},{en:"magenta",emoji:"🌺"},{en:"ivory",emoji:"🦷"},{en:"scarlet",emoji:"🌹"}
     ],
     animals: [
-      {en:"cat",ja:"ねこ",emoji:"🐱"},{en:"dog",ja:"いぬ",emoji:"🐶"},
-      {en:"bird",ja:"とり",emoji:"🐦"},{en:"fish",ja:"さかな",emoji:"🐟"},
-      {en:"pig",ja:"ぶた",emoji:"🐷"},{en:"cow",ja:"うし",emoji:"🐮"},
-      {en:"horse",ja:"うま",emoji:"🐴"},{en:"lion",ja:"ライオン",emoji:"🦁"},
-      {en:"tiger",ja:"とら",emoji:"🐯"},{en:"bear",ja:"くま",emoji:"🐻"},
-      {en:"monkey",ja:"さる",emoji:"🐵"},{en:"rabbit",ja:"うさぎ",emoji:"🐰"},
-      {en:"elephant",ja:"ぞう",emoji:"🐘"},{en:"mouse",ja:"ねずみ",emoji:"🐭"}
+      {en:"cat",emoji:"🐱"},{en:"dog",emoji:"🐶"},{en:"bird",emoji:"🐦"},{en:"fish",emoji:"🐟"},
+      {en:"pig",emoji:"🐷"},{en:"cow",emoji:"🐮"},{en:"horse",emoji:"🐴"},{en:"lion",emoji:"🦁"},
+      {en:"tiger",emoji:"🐯"},{en:"bear",emoji:"🐻"},{en:"monkey",emoji:"🐵"},{en:"rabbit",emoji:"🐰"},
+      {en:"elephant",emoji:"🐘"},{en:"mouse",emoji:"🐭"},{en:"giraffe",emoji:"🦒"},{en:"zebra",emoji:"🦓"},
+      {en:"panda",emoji:"🐼"},{en:"penguin",emoji:"🐧"},{en:"dolphin",emoji:"🐬"},{en:"whale",emoji:"🐳"},
+      {en:"shark",emoji:"🦈"},{en:"octopus",emoji:"🐙"},{en:"kangaroo",emoji:"🦘"},{en:"eagle",emoji:"🦅"},
+      {en:"alligator",emoji:"🐊"},{en:"snake",emoji:"🐍"},{en:"butterfly",emoji:"🦋"},{en:"owl",emoji:"🦉"},
+      {en:"squirrel",emoji:"🐿️"},{en:"raccoon",emoji:"🦝"},{en:"fox",emoji:"🦊"},{en:"wolf",emoji:"🐺"},
+      {en:"cheetah",emoji:"🐆"},{en:"rhinoceros",emoji:"🦏"},{en:"hippopotamus",emoji:"🦛"},{en:"chameleon",emoji:"🦎"}
     ]
   };
 
-  // Everyday situations (for parents & kids to read together — all English)
+  // Everyday & business situations (all English, adult-friendly)
   const SITUATIONS = [
-    {emoji:"☀️🛏️🥱", scene:"Sunday, 7am. Sunlight streams through the curtain and warms your cheeks. Mom walks into your bedroom smiling and says 'Good morning, sunshine!' to wake you up gently.", prompt:"How do you greet her back?", en:"Good morning"},
+    // ===== Business / work =====
+    {emoji:"💼🤝🗣️", scene:"You walk into a meeting room for the first time with a new client. They stand up from the long conference table and extend their hand with a professional smile. Your boss watches from the side, expecting you to make a strong first impression.", prompt:"Greet them properly.", en:"It's a pleasure to meet you"},
+
+    {emoji:"📧⏰🚨", scene:"It's 5:45pm. You just realized the report you promised to your manager by end of day still needs one more hour of work. You knock on her office door; she looks up from her laptop and asks, 'Is everything okay?'", prompt:"Apologize for the delay.", en:"I'm sorry, I need more time"},
+
+    {emoji:"📞📋👔", scene:"A client calls your office and asks to speak with your colleague Mr. Smith, who is in a meeting and cannot be disturbed. You need to handle the call politely and professionally.", prompt:"What do you say to the caller?", en:"May I take a message?"},
+
+    {emoji:"🎯📊🙌", scene:"Your teammate just closed the biggest deal of the quarter after three months of hard work. She walks into the office holding the signed contract with a huge smile. Everyone turns to look.", prompt:"Congratulate her sincerely.", en:"Congratulations on the deal!"},
+
+    {emoji:"💡🤔📝", scene:"During a brainstorming meeting, your colleague proposes an idea that sounds interesting but needs more detail. You want him to explain further before the team makes a decision.", prompt:"Ask him to elaborate.", en:"Could you explain that in more detail?"},
+
+    // ===== Travel / airport / hotel =====
+    {emoji:"✈️🛂🎫", scene:"You arrive at the airport check-in counter 2 hours before your international flight. You hand over your passport to the agent, who smiles politely and asks, 'Are you checking any bags today?'", prompt:"Confirm your intention.", en:"Yes, I have one bag to check"},
+
+    {emoji:"🏨🗝️📋", scene:"You've just arrived at a hotel in New York after a 14-hour flight. You drag your suitcase to the front desk. The receptionist greets you warmly and asks, 'How may I help you?'", prompt:"State your purpose.", en:"I'd like to check in, please"},
+
+    {emoji:"🍽️📖🍷", scene:"At a fine dining restaurant, you've been studying the menu for several minutes. The waiter approaches, notebook ready, and asks, 'Have you decided what you'd like to order?' You see two interesting dishes but can't decide.", prompt:"Ask for advice.", en:"What would you recommend?"},
+
+    {emoji:"🗺️🚶❓", scene:"You're lost in a foreign city looking for the nearest train station. The map on your phone isn't loading. You spot a friendly-looking local person waiting at a bus stop.", prompt:"Ask politely for directions.", en:"Excuse me, could you help me?"},
+
+    {emoji:"🏪💳🛍️", scene:"At a department store in London, you found a beautiful watch you want to buy. You bring it to the counter and the cashier smiles, 'Will that be cash or card today?'", prompt:"Confirm your payment method.", en:"I'll pay by card, please"},
+
+    {emoji:"☕🥐🤔", scene:"You walk into a cozy coffee shop on a cold morning. The barista greets you, 'Good morning! What can I get started for you today?' You want a medium latte with oat milk.", prompt:"Place your order clearly.", en:"A medium latte with oat milk, please"},
+
+    {emoji:"🎤🗣️📞", scene:"You're on an important business call with a partner overseas. The connection is a bit poor and they're speaking quickly. You need them to slow down so you don't miss anything.", prompt:"Ask them politely.", en:"Could you speak more slowly, please?"},
+
+    // ===== Everyday & social =====
+    {emoji:"🎉🎂🥂", scene:"At a friend's promotion party, the room is full of colleagues celebrating. She walks up holding a glass of champagne, beaming with pride. She just got promoted to director.", prompt:"Toast her success.", en:"Congratulations!"},
+
+    {emoji:"😢🌧️💔", scene:"Your coworker's mother passed away last week. You see her at the office for the first time since she returned from leave. Her eyes are tired, and she's trying to smile.", prompt:"Offer sincere condolences.", en:"I'm so sorry for your loss"},
+
+    {emoji:"🏃⚠️💨", scene:"You're rushing to catch the train and you accidentally bump into a well-dressed elderly man on the platform, nearly knocking his briefcase out of his hand. He turns with a surprised look.", prompt:"Apologize sincerely.", en:"I'm terribly sorry"},
+
+    {emoji:"🎁🎀😊", scene:"A coworker hands you a small wrapped gift and says, 'Happy birthday! I hope you like it.' You didn't expect anything and feel genuinely touched by the thoughtful gesture.", prompt:"Thank them warmly.", en:"That's so thoughtful, thank you"},
+
+    {emoji:"🙋‍♂️📣❓", scene:"In a large lecture hall, the professor just finished a complex explanation. You didn't fully understand one key concept and want to ask, but you want to be polite and not interrupt.", prompt:"Get their attention respectfully.", en:"Excuse me, may I ask a question?"},
+
+    {emoji:"🤷🤔💭", scene:"Your manager asks if you'd like to lead the new project. It's a great opportunity but also a huge responsibility. You need a moment to think it through before committing.", prompt:"Ask for time to decide.", en:"Let me think about it"},
+
+    {emoji:"🏥💊🌡️", scene:"You've had a fever and a bad cough for two days and finally go to the doctor's office. The receptionist hands you a clipboard and asks, 'What brings you in today?'", prompt:"Describe how you feel.", en:"I don't feel well"},
+
+    {emoji:"🎤👏🎺", scene:"You just delivered a 30-minute presentation to senior executives about your team's new strategy. The room breaks into applause. The CEO nods approvingly and says, 'Great work!'", prompt:"Reply with humility.", en:"Thank you very much"},
+
+    {emoji:"🚗🔧💸", scene:"Your car broke down in the middle of the highway. You called roadside assistance. When the technician finishes, he hands you the invoice and asks, 'Would you like a receipt?'", prompt:"Politely accept.", en:"Yes, please"},
+
+    {emoji:"📅🤝🗓️", scene:"A colleague wants to schedule a meeting with you next week to discuss a project. She asks, 'Does Tuesday afternoon work for you?' You actually prefer Wednesday morning.", prompt:"Politely propose an alternative.", en:"Could we meet Wednesday morning instead?"},
+
+    {emoji:"🍰😋👌", scene:"You're at a dinner party at your boss's house. The host has just served her homemade dessert — a beautiful chocolate cake. You take a bite and it's incredible. She's watching for your reaction.", prompt:"Compliment her cooking.", en:"This is absolutely delicious"},
+
+    {emoji:"🔁📞🙏", scene:"A sales call ended abruptly due to a dropped connection right when you were about to confirm an important detail. You call the person back immediately.", prompt:"Apologize for the disconnection.", en:"Sorry about that, we got cut off"},
+
+    {emoji:"💼🚪👋", scene:"It's Friday, 6pm. You're finishing up your work and heading out for the weekend. Your team is still at their desks. You want to say goodbye warmly as you leave.", prompt:"Wish them a good weekend.", en:"Have a great weekend!"}
+  ];
 
     {emoji:"🌙🌟🛌", scene:"It's 9pm. You've brushed your teeth, put on pajamas, and Dad just finished reading your favorite bedtime story. He reaches to turn off the lamp and whispers, 'Time to sleep now.'", prompt:"Say it before you close your eyes.", en:"Good night"},
 
@@ -794,6 +850,49 @@
 
     {emoji:"🍽️🙏✨", scene:"At a nice family restaurant, you finished an amazing pasta dish and chocolate cake. Your plate is completely empty. As you stand to leave, the waiter smiles and asks, 'How was everything?'", prompt:"Answer happily!", en:"It was delicious!"}
   ];
+
+  // ===== Page language switcher =====
+  let pageLang = 'ja';
+  function applyLanguage(lang){
+    pageLang = lang;
+    if (lang === 'en'){
+      // Header
+      document.querySelector('header .logo > div').innerHTML =
+        'Bullet Math Train<div style="font-size:11px;font-weight:700;opacity:.9;letter-spacing:.1em">LEARN & PLAY</div>';
+      const zk = $('btnZukan');
+      zk.innerHTML = '🗾 Album';
+      zk.title = 'Album';
+      const tk = document.querySelector('.stat[title]');
+      if (tk && !tk.classList.contains('zukan')) tk.title = 'Tickets collected';
+      // Location
+      $('locBox').style.display = 'none';
+      // Chips (question count)
+      document.querySelectorAll('#countChips .chip').forEach(c=>{
+        c.textContent = c.dataset.count + ' Qs';
+      });
+      // Chip heading
+      const subH = document.querySelector('.count-wrap > .subtitle');
+      if (subH) subH.textContent = 'How many questions?';
+      // Back button default
+      $('btnBack').textContent = '← Back';
+      // Footer
+      document.querySelector('footer').textContent = '© Bullet Math Train — All aboard!';
+    } else {
+      document.querySelector('header .logo > div').innerHTML =
+        'けいさんトレイン<div style="font-size:11px;font-weight:700;opacity:.9;letter-spacing:.1em">BULLET MATH LINE</div>';
+      const zk = $('btnZukan');
+      zk.innerHTML = '🗾 ずかん';
+      zk.title = 'ずかん';
+      $('locBox').style.display = '';
+      document.querySelectorAll('#countChips .chip').forEach(c=>{
+        c.textContent = c.dataset.count + 'もん';
+      });
+      const subH = document.querySelector('.count-wrap > .subtitle');
+      if (subH) subH.textContent = 'きょうは なんもん やる？';
+      $('btnBack').textContent = '← もどる';
+      document.querySelector('footer').textContent = '© けいさんトレイン — はっしゃ オーライ！';
+    }
+  }
 
   // ===== Speech =====
   let enVoice = null;
@@ -863,6 +962,8 @@
   function renderModes(){
     const wrap = $('modesWrap');
     wrap.innerHTML = "";
+    // ページ言語の適用（英語モード選択時は全UIを英語に）
+    applyLanguage(currentGenre === 'english' ? 'en' : 'ja');
     // ジャンルに応じた見出し
     if (currentGenre === 'clock'){
       $('boardTitle').textContent = '◀ どの じかんレベル？ ▶';
@@ -870,8 +971,8 @@
       $('menuSubtitle').textContent = 'ながい はり＝ふん、みじかい はり＝じ！';
     } else if (currentGenre === 'english'){
       $('boardTitle').textContent = '◀ English Listening ▶';
-      $('menuTitle').textContent = 'Pick your level!';
-      $('menuSubtitle').textContent = '🔊 Listen and pick the right English answer!';
+      $('menuTitle').textContent = 'Pick your level';
+      $('menuSubtitle').textContent = '🔊 Listen and choose the correct answer';
     } else {
       $('boardTitle').textContent = '◀ つぎは どの れっしゃ？ ▶';
       $('menuTitle').textContent = 'のる れっしゃを えらぼう';
@@ -1079,10 +1180,10 @@
     state.input="";
 
     if (q.kind === 'clock'){
+      applyLanguage('ja');
       $('playMath').classList.add('hide');
       $('playEnglish').classList.add('hide');
       $('playClock').classList.remove('hide');
-      $('btnBack').textContent = '← もどる';
       $('qLabelClock').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
       $('clockHint').textContent = q.hint;
       $('clockSvgHolder').innerHTML = clockSvg(q.hour, q.minute);
@@ -1095,10 +1196,10 @@
         box.appendChild(btn);
       });
     } else if (q.kind === 'english'){
+      applyLanguage('en');
       $('playMath').classList.add('hide');
       $('playClock').classList.add('hide');
       $('playEnglish').classList.remove('hide');
-      $('btnBack').textContent = '← Back';
       $('qLabelEng').textContent = `NEXT STATION ・ Question ${state.i+1}`;
       $('engEmoji').textContent = q.emoji;
       const engBox = document.querySelector('.english-box');
@@ -1122,10 +1223,10 @@
       // 自動で音声再生
       setTimeout(()=>speak(q.en), 350);
     } else {
+      applyLanguage('ja');
       $('playMath').classList.remove('hide');
       $('playClock').classList.add('hide');
       $('playEnglish').classList.add('hide');
-      $('btnBack').textContent = '← もどる';
       qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
       const parts=q.text.split(' ');
       const html=parts.map(p=>{
@@ -1276,7 +1377,13 @@
     const all=state.answers.length;
     $('scoreNum').textContent=score;
     $('scoreAll').textContent=all;
-    $('maxCombo').textContent=state.maxStreak;
+    const isEng = state.questions[0] && state.questions[0].kind === 'english';
+    $('maxComboLine').innerHTML = isEng
+      ? `Best streak: <span id="maxCombo">${state.maxStreak}</span> in a row!`
+      : `さいだい れんぞく <span id="maxCombo">${state.maxStreak}</span> れんぞく！`;
+    $('journeyLbl').textContent = isEng ? '🚄 Japan Journey' : '🚄 にっぽん じゅうだん のたび';
+    $('btnRetry').textContent = isEng ? 'Try again' : 'もういちど のる';
+    $('btnHome').textContent = isEng ? 'Back to menu' : 'えきに もどる';
 
     const ratio=score/all;
     const tEarned= ratio>=1?3 : ratio>=.7?2 : ratio>=.4?1 : 0;
@@ -1293,9 +1400,13 @@
     // journey text
     if (stepCount>0){
       const from=STATIONS[prevIdx].n, to=STATIONS[save.stationIdx].n;
-      $('journeyTxt').innerHTML = `<span class="from">${from}</span> →→ <span class="to">${to}</span>（${stepCount}えき すすんだ！）`;
+      $('journeyTxt').innerHTML = isEng
+        ? `<span class="from">${from}</span> →→ <span class="to">${to}</span>（advanced ${stepCount} station${stepCount>1?'s':''}!）`
+        : `<span class="from">${from}</span> →→ <span class="to">${to}</span>（${stepCount}えき すすんだ！）`;
     } else {
-      $('journeyTxt').innerHTML = `<span class="from">${STATIONS[prevIdx].n}</span>で たいきちゅう…<br><small style="color:var(--sub);font-size:11px">もうすこし せいかいを ふやして すすもう！</small>`;
+      $('journeyTxt').innerHTML = isEng
+        ? `<span class="from">${STATIONS[prevIdx].n}</span> waiting here…<br><small style="color:var(--sub);font-size:11px">Get more correct answers to advance!</small>`
+        : `<span class="from">${STATIONS[prevIdx].n}</span>で たいきちゅう…<br><small style="color:var(--sub);font-size:11px">もうすこし せいかいを ふやして すすもう！</small>`;
     }
 
     // トロフィー判定
@@ -1328,15 +1439,21 @@
 
     saveNow(); renderHeader();
 
-    $('resultTitle').textContent = ratio>=1 ? 'ぜんもん せいかい！しゅうちゃく！'
-      : ratio>=.7 ? 'じょうず！しゅうちゃく とうちゃく！'
-      : ratio>=.4 ? 'もうすこし！' : 'つぎは きっと はしれる！';
+    $('resultTitle').textContent = isEng
+      ? (ratio>=1 ? 'Perfect! Final stop reached!'
+        : ratio>=.7 ? 'Great job! You arrived!'
+        : ratio>=.4 ? 'Almost there!'
+        : 'Keep going — you can do it!')
+      : (ratio>=1 ? 'ぜんもん せいかい！しゅうちゃく！'
+        : ratio>=.7 ? 'じょうず！しゅうちゃく とうちゃく！'
+        : ratio>=.4 ? 'もうすこし！' : 'つぎは きっと はしれる！');
 
     const review=$('reviewList'); review.innerHTML="";
     state.answers.forEach((a,idx)=>{
       const row=document.createElement('div');
       row.className='row'+(a.ok?'':' ng');
-      row.innerHTML=`<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️':'❌ せいかい '+a.correct}</span>`;
+      const wrong = isEng ? `❌ Correct: ${a.correct}` : `❌ せいかい ${a.correct}`;
+      row.innerHTML=`<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️':wrong}</span>`;
       review.appendChild(row);
     });
     show(result);
