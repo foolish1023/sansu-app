@@ -305,100 +305,148 @@
 
     <div id="tab-map">
       <div class="zukan-map">
-        <svg id="mapSvg" viewBox="0 0 300 480" preserveAspectRatio="xMidYMid meet">
+        <svg id="mapSvg" viewBox="0 0 300 500" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#D3ECFB"/>
-              <stop offset="1" stop-color="#A7D3F2"/>
+              <stop offset="0" stop-color="#4FC3F7"/>
+              <stop offset="1" stop-color="#0277BD"/>
             </linearGradient>
-            <pattern id="wave" x="0" y="0" width="24" height="14" patternUnits="userSpaceOnUse">
-              <path d="M0 7 Q6 3 12 7 T24 7" stroke="#7FB8E1" stroke-width=".7" fill="none" opacity=".45"/>
+            <pattern id="wave" x="0" y="0" width="40" height="18" patternUnits="userSpaceOnUse">
+              <path d="M0 9 Q10 4 20 9 T40 9" stroke="#B3E5FC" stroke-width="1" fill="none" opacity=".7"/>
             </pattern>
-            <filter id="islandShadow" x="-5%" y="-5%" width="110%" height="110%">
-              <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#1E3A5F" flood-opacity=".28"/>
+            <filter id="ds" x="-5%" y="-5%" width="110%" height="110%">
+              <feDropShadow dx="0" dy="3" stdDeviation="1.5" flood-color="#003366" flood-opacity=".4"/>
             </filter>
           </defs>
 
           <!-- 海 -->
-          <rect width="300" height="480" fill="url(#seaG)"/>
-          <rect width="300" height="480" fill="url(#wave)"/>
+          <rect width="300" height="500" fill="url(#seaG)"/>
+          <rect width="300" height="500" fill="url(#wave)"/>
 
-          <!-- 島 -->
-          <g filter="url(#islandShadow)">
-            <!-- 北海道 -->
-            <path d="M 185 38
-              C 198 32, 220 30, 238 38
-              C 258 45, 270 60, 267 78
-              C 264 92, 256 104, 245 110
-              C 232 116, 215 118, 200 115
-              C 188 112, 178 105, 172 94
-              C 168 82, 170 68, 174 56
-              C 177 48, 181 42, 185 38 Z
-              M 198 114
-              C 198 122, 192 130, 184 130
-              C 178 128, 180 120, 188 116 Z"
-              fill="#E5F3D8" stroke="#3F8A54" stroke-width="2"/>
+          <!-- 海の装飾 -->
+          <text x="20" y="195" font-size="22">⛵</text>
+          <text x="265" y="230" font-size="18">🚢</text>
+          <text x="25" y="255" font-size="14">🐋</text>
+          <text x="270" y="95" font-size="12">☁️</text>
+          <text x="15" y="130" font-size="12">☁️</text>
+          <text x="265" y="350" font-size="11">🐟</text>
 
-            <!-- 本州（S字カーブ） -->
-            <path d="M 210 108
-              C 218 112, 222 122, 225 134
-              C 229 146, 234 160, 240 170
-              C 244 180, 242 190, 232 195
-              C 218 201, 200 205, 182 212
-              C 162 220, 142 230, 122 240
-              C 102 248, 84 253, 70 250
-              C 58 245, 54 232, 63 220
-              C 75 210, 87 202, 98 194
-              C 110 185, 122 175, 135 168
-              C 150 161, 165 158, 180 156
-              C 192 153, 202 147, 207 137
-              C 210 126, 210 116, 210 108 Z"
-              fill="#DCF1C8" stroke="#3F8A54" stroke-width="2"/>
+          <!-- 島（桃鉄風：明るい色＋濃いアウトライン） -->
+          <g filter="url(#ds)" stroke="#0D2E4E" stroke-width="2.5" stroke-linejoin="round">
+            <!-- 北海道 (teal) -->
+            <path d="M 195 32
+              C 212 28, 236 30, 252 42
+              C 268 52, 276 68, 272 85
+              C 268 98, 258 108, 244 112
+              C 226 116, 208 118, 192 114
+              C 178 108, 170 92, 172 75
+              C 174 58, 182 42, 195 32 Z
+              M 200 112
+              C 198 122, 190 130, 180 128
+              C 175 122, 182 116, 195 114 Z"
+              fill="#4DB6AC"/>
 
-            <!-- 四国 -->
-            <path d="M 100 298
-              C 115 293, 138 293, 152 300
-              C 160 306, 160 318, 150 324
-              C 135 330, 115 330, 100 324
-              C 92 318, 92 304, 100 298 Z"
-              fill="#FCE7A8" stroke="#A8772A" stroke-width="2"/>
+            <!-- 本州 (lime) ちゃんとした S字バナナ -->
+            <path d="M 215 108
+              C 223 115, 227 128, 231 141
+              C 235 153, 240 165, 238 176
+              C 234 187, 224 193, 210 197
+              C 192 202, 175 207, 158 213
+              C 140 220, 120 228, 100 235
+              C 82 241, 66 244, 56 240
+              C 48 234, 50 224, 60 218
+              C 72 212, 86 208, 100 204
+              C 118 198, 136 192, 152 186
+              C 172 178, 192 168, 206 156
+              C 218 146, 224 135, 224 122
+              C 222 114, 218 110, 215 108 Z"
+              fill="#AED581"/>
 
-            <!-- 九州 -->
-            <path d="M 48 288
-              C 62 282, 75 290, 80 305
-              C 84 320, 83 338, 80 355
-              C 76 374, 64 392, 48 395
-              C 32 395, 20 383, 18 365
-              C 16 345, 20 325, 26 308
-              C 32 294, 40 288, 48 288 Z"
-              fill="#FAD4C2" stroke="#9E4A2A" stroke-width="2"/>
+            <!-- 四国 (orange) -->
+            <path d="M 100 293
+              C 118 288, 140 290, 154 298
+              C 162 305, 162 318, 152 325
+              C 134 330, 112 330, 98 324
+              C 90 317, 90 300, 100 293 Z"
+              fill="#FFB74D"/>
+
+            <!-- 九州 (coral red) -->
+            <path d="M 50 282
+              C 64 277, 78 285, 82 300
+              C 86 318, 84 338, 80 355
+              C 76 375, 64 392, 48 395
+              C 32 395, 20 382, 18 362
+              C 16 342, 20 320, 26 303
+              C 32 290, 40 282, 50 282 Z"
+              fill="#EF5350"/>
+          </g>
+
+          <!-- ランドマーク -->
+          <!-- 富士山 -->
+          <g transform="translate(200, 185)">
+            <polygon points="0,-14 -11,0 11,0" fill="#90A4AE" stroke="#0D2E4E" stroke-width="1.5"/>
+            <polygon points="-6,-6 -2,-10 1,-12 4,-10 7,-6 5,-5 -5,-5" fill="#ECEFF1" stroke="#0D2E4E" stroke-width=".6"/>
+          </g>
+          <!-- 東京タワー -->
+          <g transform="translate(224, 173)">
+            <polygon points="0,-13 -4,-4 4,-4" fill="#E53935" stroke="#0D2E4E" stroke-width="1"/>
+            <rect x="-2" y="-4" width="4" height="4" fill="#E53935" stroke="#0D2E4E" stroke-width="1"/>
+          </g>
+          <!-- 札幌時計台 -->
+          <g transform="translate(218, 52)">
+            <rect x="-4" y="-5" width="8" height="6" fill="#D7CCC8" stroke="#0D2E4E" stroke-width="1"/>
+            <polygon points="-5,-5 0,-10 5,-5" fill="#8D6E63" stroke="#0D2E4E" stroke-width="1"/>
+            <circle cx="0" cy="-2" r="1.5" fill="#FDD835"/>
+          </g>
+          <!-- 通天閣（大阪） -->
+          <g transform="translate(140, 216)">
+            <polygon points="0,-11 -3,0 3,0" fill="#FFA726" stroke="#0D2E4E" stroke-width="1"/>
+          </g>
+          <!-- 清水寺（京都） -->
+          <g transform="translate(155, 206)">
+            <polygon points="-4,0 -4,-3 0,-6 4,-3 4,0" fill="#8D6E63" stroke="#0D2E4E" stroke-width="1"/>
+          </g>
+          <!-- 桜島（鹿児島） -->
+          <g transform="translate(55, 388)">
+            <polygon points="-5,0 0,-6 5,0" fill="#5D4037" stroke="#0D2E4E" stroke-width=".8"/>
+          </g>
+          <!-- 福岡タワー -->
+          <g transform="translate(45, 332)">
+            <polygon points="0,-10 -2,0 2,0" fill="#26A69A" stroke="#0D2E4E" stroke-width="1"/>
+          </g>
+          <!-- 仙台城 -->
+          <g transform="translate(228, 143)">
+            <rect x="-3" y="-4" width="6" height="4" fill="#BCAAA4" stroke="#0D2E4E" stroke-width="1"/>
+            <polygon points="-3,-4 0,-7 3,-4" fill="#6D4C41" stroke="#0D2E4E" stroke-width="1"/>
           </g>
 
           <!-- 地方ラベル -->
-          <text x="152" y="180" font-size="9" font-weight="900" fill="#3F8A54" opacity=".8" text-anchor="middle">ほんしゅう</text>
-          <text x="218" y="78"  font-size="9" font-weight="900" fill="#3F8A54" opacity=".8" text-anchor="middle">ほっかいどう</text>
-          <text x="125" y="315" font-size="7" font-weight="900" fill="#A8772A" opacity=".8" text-anchor="middle">しこく</text>
-          <text x="50"  y="345" font-size="8" font-weight="900" fill="#9E4A2A" opacity=".85" text-anchor="middle">きゅうしゅう</text>
+          <text x="222" y="73" font-size="10" font-weight="900" fill="#fff" stroke="#0D2E4E" stroke-width="2" paint-order="stroke" text-anchor="middle">ほっかいどう</text>
+          <text x="175" y="158" font-size="9" font-weight="900" fill="#fff" stroke="#0D2E4E" stroke-width="2" paint-order="stroke" text-anchor="middle">ほんしゅう</text>
+          <text x="127" y="316" font-size="7.5" font-weight="900" fill="#fff" stroke="#0D2E4E" stroke-width="1.5" paint-order="stroke" text-anchor="middle">しこく</text>
+          <text x="50" y="345" font-size="8" font-weight="900" fill="#fff" stroke="#0D2E4E" stroke-width="1.5" paint-order="stroke" text-anchor="middle">きゅうしゅう</text>
 
-          <!-- 新幹線ライン -->
-          <path id="routeLine" d="M 45 385 L 48 360 L 58 335 L 93 248 L 115 238 L 140 220 L 152 210 L 175 200 L 200 192 L 222 178 L 225 148 L 220 128 L 213 112 L 205 82 L 215 58"
-                stroke="#E4002B" stroke-width="2.5" stroke-dasharray="5 3" fill="none" opacity=".75"/>
+          <!-- 新幹線ライン（白フチ＋赤） -->
+          <path d="M 48 388 L 55 362 L 60 335 L 95 240 L 118 228 L 142 214 L 155 204 L 178 192 L 202 184 L 225 172 L 228 145 L 222 125 L 215 110 L 208 78 L 218 55"
+                stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".95"/>
+          <path id="routeLine" d="M 48 388 L 55 362 L 60 335 L 95 240 L 118 228 L 142 214 L 155 204 L 178 192 L 202 184 L 225 172 L 228 145 L 222 125 L 215 110 L 208 78 L 218 55"
+                stroke="#E4002B" stroke-width="2.5" stroke-dasharray="3 4" stroke-linecap="round" fill="none"/>
 
           <!-- 駅 -->
           <g id="stations"></g>
 
           <!-- コンパス -->
-          <g transform="translate(30, 40)">
-            <circle r="14" fill="#fff" stroke="#083876" stroke-width="1.5"/>
-            <polygon points="0,-9 3,0 0,3 -3,0" fill="#E4002B"/>
-            <polygon points="0,9 3,0 0,-3 -3,0" fill="#083876"/>
-            <text y="-16" text-anchor="middle" font-size="8" font-weight="900" fill="#E4002B">N</text>
+          <g transform="translate(30, 50)">
+            <circle r="14" fill="#fff" stroke="#0D2E4E" stroke-width="1.5"/>
+            <polygon points="0,-10 3,0 0,3 -3,0" fill="#E4002B"/>
+            <polygon points="0,10 3,0 0,-3 -3,0" fill="#0D2E4E"/>
+            <text y="-17" text-anchor="middle" font-size="9" font-weight="900" fill="#E4002B">N</text>
           </g>
 
-          <!-- タイトルバー -->
+          <!-- タイトル -->
           <g>
-            <rect x="85" y="22" width="130" height="22" rx="6" fill="#083876"/>
-            <text x="150" y="37" text-anchor="middle" font-size="11" font-weight="900" fill="#FFD200">🚄 にっぽん じゅうだん マップ</text>
+            <rect x="70" y="14" width="160" height="24" rx="12" fill="#D32F2F" stroke="#fff" stroke-width="2.5"/>
+            <text x="150" y="31" text-anchor="middle" font-size="11" font-weight="900" fill="#FFEB3B">🚄 にっぽんじゅうだん マップ 🗾</text>
           </g>
         </svg>
         <div class="legend">🚄 かごしま → さっぽろ 縦断ルート</div>
@@ -421,21 +469,21 @@
 
   // ===== Stations (日本縦断ルート) =====
   const STATIONS = [
-    {n:"かごしま",    x:45,  y:385, lx:-6, ly:3, la:"end"},
-    {n:"くまもと",    x:48,  y:360, lx:-6, ly:3, la:"end"},
-    {n:"はかた",      x:58,  y:335, lx:-6, ly:3, la:"end"},
-    {n:"ひろしま",    x:93,  y:248, lx:0,  ly:-7,la:"middle"},
-    {n:"おかやま",    x:115, y:238, lx:0,  ly:-7,la:"middle"},
-    {n:"しんおおさか",x:140, y:220, lx:0,  ly:-7,la:"middle"},
-    {n:"きょうと",    x:152, y:210, lx:0,  ly:-7,la:"middle"},
-    {n:"なごや",      x:175, y:200, lx:0,  ly:-7,la:"middle"},
-    {n:"しずおか",    x:200, y:192, lx:0,  ly:11, la:"middle"},
-    {n:"とうきょう",  x:222, y:178, lx:8,  ly:3, la:"start"},
-    {n:"せんだい",    x:225, y:148, lx:8,  ly:3, la:"start"},
-    {n:"もりおか",    x:220, y:128, lx:8,  ly:3, la:"start"},
-    {n:"しんあおもり",x:213, y:112, lx:8,  ly:3, la:"start"},
-    {n:"しんはこだて",x:205, y:82,  lx:-8, ly:3, la:"end"},
-    {n:"さっぽろ",    x:215, y:58,  lx:8,  ly:3, la:"start"}
+    {n:"かごしま",    x:48,  y:388, lx:-10,ly:3, la:"end"},
+    {n:"くまもと",    x:55,  y:362, lx:-10,ly:3, la:"end"},
+    {n:"はかた",      x:60,  y:335, lx:-10,ly:3, la:"end"},
+    {n:"ひろしま",    x:95,  y:240, lx:-10,ly:3, la:"end"},
+    {n:"おかやま",    x:118, y:228, lx:0,  ly:-12,la:"middle"},
+    {n:"しんおおさか",x:142, y:214, lx:0,  ly:-12,la:"middle"},
+    {n:"きょうと",    x:155, y:204, lx:-10,ly:-4,la:"end"},
+    {n:"なごや",      x:178, y:192, lx:0,  ly:-12,la:"middle"},
+    {n:"しずおか",    x:202, y:184, lx:0,  ly:14, la:"middle"},
+    {n:"とうきょう",  x:225, y:172, lx:10, ly:3, la:"start"},
+    {n:"せんだい",    x:228, y:145, lx:10, ly:3, la:"start"},
+    {n:"もりおか",    x:222, y:125, lx:10, ly:3, la:"start"},
+    {n:"しんあおもり",x:215, y:110, lx:10, ly:3, la:"start"},
+    {n:"しんはこだて",x:208, y:78,  lx:-10,ly:3, la:"end"},
+    {n:"さっぽろ",    x:218, y:55,  lx:10, ly:3, la:"start"}
   ];
 
   // ===== Trophy definitions =====
@@ -743,17 +791,27 @@
     STATIONS.forEach((s,idx)=>{
       const done = idx <= save.stationIdx;
       const here = idx === save.stationIdx;
-      const color = here ? "#E4002B" : (done ? "#2DAA6E" : "#9AA8B8");
-      const r = here ? 6 : 4;
-      const tx = s.x + (s.lx ?? 8);
+      // タイル色（桃鉄マス風）
+      const tileFill = here ? "#E4002B" : (done ? "#43A047" : "#FFEB3B");
+      const numFill  = here ? "#fff"    : (done ? "#fff"    : "#0D2E4E");
+      const tx = s.x + (s.lx ?? 10);
       const ty = s.y + (s.ly ?? 3);
       const anchor = s.la || "start";
-      const labelFill = done ? "#0B4E20" : "#485968";
+      // 現在地は光るエフェクト
+      const glow = here ? '<circle cx="'+s.x+'" cy="'+s.y+'" r="14" fill="none" stroke="#E4002B" stroke-width="2" opacity=".5"><animate attributeName="r" values="10;16;10" dur="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;.2;.7" dur="1.4s" repeatCount="indefinite"/></circle>' : '';
+      const trainOnTop = here ? `<text x="${s.x}" y="${s.y-12}" font-size="16" text-anchor="middle" style="filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))">🚅</text>` : '';
       g.innerHTML += `
-        <circle cx="${s.x}" cy="${s.y}" r="${r+2.5}" fill="#fff" stroke="#083876" stroke-width="1"/>
-        <circle cx="${s.x}" cy="${s.y}" r="${r}" fill="${color}"${here?' style="filter:drop-shadow(0 0 6px #E4002B)"':''}/>
-        <text x="${tx}" y="${ty}" font-size="8.5" font-weight="900" text-anchor="${anchor}" fill="#fff" stroke="#fff" stroke-width="3" paint-order="stroke" opacity=".85">${s.n}</text>
-        <text x="${tx}" y="${ty}" font-size="8.5" font-weight="900" text-anchor="${anchor}" fill="${labelFill}">${s.n}</text>
+        <g>
+          ${glow}
+          <rect x="${s.x-8}" y="${s.y-8}" width="16" height="16" rx="3"
+                fill="${tileFill}" stroke="#0D2E4E" stroke-width="1.8"
+                style="filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))"/>
+          <text x="${s.x}" y="${s.y+3}" font-size="9" font-weight="900"
+                fill="${numFill}" text-anchor="middle">${idx+1}</text>
+          ${trainOnTop}
+          <text x="${tx}" y="${ty}" font-size="9" font-weight="900" text-anchor="${anchor}"
+                fill="#fff" stroke="#0D2E4E" stroke-width="3" paint-order="stroke">${s.n}</text>
+        </g>
       `;
     });
   }
