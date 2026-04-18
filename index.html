@@ -3,218 +3,381 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>けいさんチャレンジ</title>
+<title>けいさんトレイン — 新幹線で算数チャレンジ</title>
 <style>
   :root{
-    --bg:#FFF7E6;
-    --card:#FFFFFF;
-    --ink:#2B2B2B;
-    --sub:#6B7280;
-    --accent:#FF7A59;
-    --accent2:#FFC24B;
-    --blue:#4FB2E8;
-    --green:#5CC98E;
-    --pink:#F58BB3;
-    --purple:#9B6CE8;
-    --shadow:0 10px 0 rgba(0,0,0,.08);
-    --radius:22px;
+    --sky1:#7FC7F5;
+    --sky2:#CDEBFA;
+    --ink:#0E2A47;
+    --sub:#4A6A8A;
+    --white:#FFFFFF;
+    --blue:#0B6FC6;      /* N700 blue帯 */
+    --blueDeep:#003E7E;
+    --red:#E4002B;       /* JR新幹線の赤 */
+    --green:#2DAA6E;
+    --orange:#FF8A00;
+    --rail:#9AA3AB;
+    --tie:#6D4C2E;
+    --shadow:0 10px 0 rgba(0,0,0,.10);
+    --radius:20px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;height:100%}
   body{
-    font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","Rounded Mplus 1c","Comic Sans MS",system-ui,sans-serif;
+    font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","Rounded Mplus 1c",system-ui,sans-serif;
     color:var(--ink);
-    background:
-      radial-gradient(circle at 10% 10%, #FFE7A3 0 8%, transparent 9%),
-      radial-gradient(circle at 90% 20%, #CDEAFE 0 7%, transparent 8%),
-      radial-gradient(circle at 80% 85%, #FFD3E0 0 9%, transparent 10%),
-      radial-gradient(circle at 15% 80%, #D4F3DE 0 8%, transparent 9%),
-      var(--bg);
+    background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 65%,#F2E6C8 100%);
     min-height:100%;
     overflow-x:hidden;
   }
-  .wrap{max-width:720px;margin:0 auto;padding:20px 18px 40px;min-height:100vh;display:flex;flex-direction:column;gap:18px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .logo{font-size:26px;font-weight:900;letter-spacing:.04em}
-  .logo .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle}
-  .star-count{background:#fff;border-radius:999px;padding:8px 14px;font-weight:900;box-shadow:var(--shadow);display:flex;align-items:center;gap:6px}
-  .star-count svg{width:18px;height:18px}
+  /* ==== Sky decoration ==== */
+  .bg-sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .cloud{
+    position:absolute;background:#fff;border-radius:50%;
+    box-shadow:40px 0 0 5px #fff, 80px 12px 0 -2px #fff, -30px 10px 0 0 #fff;
+    opacity:.9;
+  }
+  .mountain{
+    position:absolute;bottom:70px;left:0;right:0;height:180px;
+    background:
+      radial-gradient(ellipse at 20% 100%, #6DA06F 0 35%, transparent 36%),
+      radial-gradient(ellipse at 55% 100%, #5E8A60 0 40%, transparent 41%),
+      radial-gradient(ellipse at 85% 100%, #7BB37A 0 34%, transparent 35%);
+  }
+  .ground{position:absolute;bottom:0;left:0;right:0;height:70px;background:#E2C98E}
+  /* rail track at bottom */
+  .track{position:absolute;bottom:20px;left:-40px;right:-40px;height:30px;z-index:1}
+  .track::before, .track::after{
+    content:"";position:absolute;left:0;right:0;height:4px;background:var(--rail);border-radius:2px;
+  }
+  .track::before{top:6px}.track::after{top:20px}
+  .ties{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,var(--tie) 0 14px,transparent 14px 40px);opacity:.7}
 
-  /* Card base */
-  .card{
-    background:var(--card);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:22px;
+  .wrap{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:16px 16px 40px;min-height:100vh;display:flex;flex-direction:column;gap:14px}
+
+  /* ==== Header (駅名標風) ==== */
+  header{
+    background:var(--blueDeep);color:#fff;border-radius:14px;
+    padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+    box-shadow:var(--shadow);border:3px solid #fff;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
+  .logo .train{font-size:26px}
+  .tickets{
+    background:#fff;color:var(--blueDeep);border-radius:6px;
+    padding:6px 12px;font-weight:900;display:flex;align-items:center;gap:6px;
+    border:2px dashed var(--blueDeep);font-size:14px;
   }
 
-  /* Menu */
-  .title{font-size:28px;font-weight:900;text-align:center;margin:6px 0 2px}
-  .subtitle{color:var(--sub);text-align:center;margin-bottom:14px;font-weight:700}
-  .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{
+    background:var(--white);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px;border:3px solid #fff;
+  }
+
+  /* ==== Menu (路線図風) ==== */
+  .board{
+    background:linear-gradient(180deg,#0B3B70,#083060);
+    color:#fff;border-radius:14px;padding:12px 16px;text-align:center;
+    font-weight:900;font-size:18px;letter-spacing:.1em;
+    border-top:4px solid #FFD200;border-bottom:4px solid #FFD200;
+    margin-bottom:12px;
+  }
+  .title{font-size:22px;font-weight:900;text-align:center;margin:4px 0}
+  .subtitle{color:var(--sub);text-align:center;margin:0 0 12px;font-weight:800;font-size:14px}
+  .modes{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:520px){ .modes{grid-template-columns:1fr 1fr} }
+
   .mode{
     border:none;cursor:pointer;
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:18px 14px;
-    text-align:left;
-    box-shadow:var(--shadow);
+    border-radius:16px;padding:14px;text-align:left;
+    box-shadow:var(--shadow);font-family:inherit;color:inherit;
+    display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;
     transition:transform .08s ease;
-    display:flex;flex-direction:column;gap:4px;
-    font-family:inherit;color:inherit;
+    position:relative;overflow:hidden;
   }
   .mode:active{transform:translateY(2px)}
-  .mode .emoji{font-size:34px;line-height:1}
-  .mode .name{font-weight:900;font-size:18px;margin-top:6px}
-  .mode .desc{color:var(--sub);font-size:13px;font-weight:700}
-  .mode.m1{background:linear-gradient(180deg,#FFF2D6,#FFFFFF)}
-  .mode.m2{background:linear-gradient(180deg,#E6F4FE,#FFFFFF)}
-  .mode.m3{background:linear-gradient(180deg,#FDE4EE,#FFFFFF)}
-  .mode.m4{background:linear-gradient(180deg,#E3F6EA,#FFFFFF)}
+  .mode .icon{
+    width:58px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:#fff;position:relative;
+  }
+  .mode .icon svg{width:54px;height:40px}
+  .mode .name{font-weight:900;font-size:18px;line-height:1.2}
+  .mode .desc{color:rgba(255,255,255,.9);font-size:12px;font-weight:800}
+  .mode .arrow{font-size:22px;color:#fff;font-weight:900}
+  .mode.m1{background:linear-gradient(135deg,#2DAA6E,#22884F);color:#fff}       /* 山手線グリーン */
+  .mode.m2{background:linear-gradient(135deg,#F58220,#E05E0F);color:#fff}        /* オレンジ */
+  .mode.m3{background:linear-gradient(135deg,#0B6FC6,#0950A0);color:#fff}        /* 新幹線ブルー */
+  .mode.m4{background:linear-gradient(135deg,#9B2DDC,#6C1FB0);color:#fff}        /* 特急パープル */
 
-  .question-count{display:flex;gap:8px;justify-content:center;margin:10px 0 0;flex-wrap:wrap}
+  /* number of questions chips */
+  .count-wrap{margin-top:14px}
+  .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
   .chip{
-    border:3px solid #EDE5D1;background:#fff;
-    border-radius:999px;padding:8px 14px;font-weight:900;cursor:pointer;
-    font-family:inherit;color:var(--ink);
+    border:3px solid #D6E2ED;background:#fff;color:var(--ink);
+    border-radius:999px;padding:7px 14px;font-weight:900;cursor:pointer;
+    font-family:inherit;font-size:14px;
   }
-  .chip.active{border-color:var(--accent);background:#FFF1EC;color:var(--accent)}
+  .chip.active{border-color:var(--red);background:#FFEEF0;color:var(--red)}
 
-  /* Play */
-  .playbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .progress{flex:1;height:14px;background:#F0E8D2;border-radius:999px;overflow:hidden}
-  .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease;border-radius:999px}
-  .count{font-weight:900;font-size:16px;color:var(--sub);min-width:54px;text-align:right}
-  .back{background:#fff;border:none;border-radius:14px;padding:10px 12px;font-weight:900;box-shadow:var(--shadow);cursor:pointer;font-family:inherit}
+  /* ==== Play screen ==== */
+  .playbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .back{
+    background:#fff;border:none;border-radius:10px;padding:10px 12px;font-weight:900;
+    box-shadow:var(--shadow);cursor:pointer;font-family:inherit;color:var(--ink);font-size:13px;
+  }
+  .count{font-weight:900;font-size:15px;color:var(--sub);min-width:50px;text-align:right}
 
-  .qbox{
-    text-align:center;padding:28px 14px;border-radius:20px;
-    background:linear-gradient(180deg,#FFFDF6,#FFF5E0);
-    border:4px dashed #F6D98B;
+  /* rail progress with bullet train */
+  .railbox{flex:1;position:relative;height:44px}
+  .rail{
+    position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+    height:16px;background:
+      repeating-linear-gradient(90deg,var(--tie) 0 6px, transparent 6px 18px) center/100% 14px no-repeat,
+      linear-gradient(var(--rail),var(--rail)) top 1px left 0/100% 3px no-repeat,
+      linear-gradient(var(--rail),var(--rail)) bottom 1px left 0/100% 3px no-repeat,
+      #DCD1B8;
+    border-radius:4px;
   }
-  .qnum{font-size:14px;color:var(--sub);font-weight:900;margin-bottom:8px}
-  .qformula{
-    font-size:clamp(44px,9vw,72px);font-weight:900;letter-spacing:.06em;
-    display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;
+  .trainIcon{
+    position:absolute;top:50%;transform:translate(0,-55%);
+    transition:left .35s cubic-bezier(.5,.1,.2,1);
+    width:60px;height:34px;z-index:3;
   }
-  .qformula .op{color:var(--accent)}
-  .qformula .eq{color:var(--blue)}
+
+  /* station sign style question box */
+  .station{
+    background:linear-gradient(180deg,#083876,#0B4E94);
+    color:#fff;border-radius:14px;padding:16px;margin-top:8px;
+    border:4px solid #fff; outline:4px solid #083876;
+    position:relative;
+  }
+  .station::before{
+    content:"";position:absolute;left:14px;top:14px;right:14px;bottom:14px;
+    border:2px solid rgba(255,255,255,.2);border-radius:8px;pointer-events:none;
+  }
+  .qLabel{font-size:12px;font-weight:900;letter-spacing:.15em;opacity:.85;text-align:center}
+  .qFormula{
+    font-family:"DIN Alternate","Helvetica Neue",sans-serif;
+    font-size:clamp(38px,8vw,64px);font-weight:900;letter-spacing:.05em;
+    text-align:center;margin-top:8px;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .qFormula .op{color:#FFD200}
+  .qFormula .eq{color:#FF9A3C}
   .answer{
-    display:inline-block;min-width:120px;padding:4px 18px;border-radius:16px;
-    background:#fff;border:4px solid var(--blue);color:var(--ink);
+    display:inline-block;min-width:110px;padding:2px 18px;border-radius:10px;
+    background:#FFD200;color:#0E2A47;border:3px solid #fff;
   }
-  .answer.empty{color:#C9C9C9}
+  .answer.empty{color:#6D6020}
 
-  /* Keypad */
-  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  /* ==== Keypad (切符ボタン風) ==== */
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
   .key{
     border:none;cursor:pointer;font-family:inherit;color:var(--ink);
-    background:#fff;border-radius:18px;padding:18px 0;
-    font-size:28px;font-weight:900;
-    box-shadow:var(--shadow);
-    transition:transform .06s ease, background .15s;
+    background:linear-gradient(180deg,#fff,#F1F5FA);
+    border-radius:14px;padding:16px 0;
+    font-size:26px;font-weight:900;box-shadow:var(--shadow);
+    border:2px solid #E1E8F0;
+    transition:transform .06s ease;
   }
-  .key:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(0,0,0,.08)}
-  .key.back{background:#FFE3DB;color:#D1513A}
-  .key.ok{background:linear-gradient(180deg,#5CC98E,#3DA970);color:#fff;grid-column:span 1}
+  .key:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(0,0,0,.1)}
+  .key.back{background:linear-gradient(180deg,#FFE3DB,#FFC8B6);color:#BA2B10;border-color:#F3B7A0}
+  .key.ok{background:linear-gradient(180deg,#33B97F,#1E8A58);color:#fff;border-color:#1E8A58;font-size:22px}
 
-  /* Feedback */
-  .toast{
-    position:fixed;inset:auto 0 30px 0;display:flex;justify-content:center;
-    pointer-events:none;
-  }
+  /* ==== Toast feedback ==== */
+  .toast{position:fixed;inset:auto 0 28px 0;display:flex;justify-content:center;pointer-events:none;z-index:100}
   .toast .bubble{
-    background:#fff;border-radius:999px;padding:14px 22px;font-weight:900;font-size:18px;
+    background:#fff;border-radius:999px;padding:12px 20px;font-weight:900;font-size:16px;
     box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:all .25s ease;
-    display:flex;align-items:center;gap:8px;
+    display:flex;align-items:center;gap:8px;border:3px solid #fff;
   }
   .toast.show .bubble{opacity:1;transform:translateY(0)}
-  .toast.ok .bubble{color:#3DA970;border:3px solid #CDEBD9}
-  .toast.ng .bubble{color:#D1513A;border:3px solid #FFD3C6}
+  .toast.ok .bubble{color:var(--green);border-color:#B8E6CC}
+  .toast.ng .bubble{color:var(--red);border-color:#FFC2C9}
 
-  /* Confetti/overlay anim */
-  .burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
-  .burst span{
-    position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;
-    animation:fall 1.6s linear forwards;
+  /* pass-by animation */
+  @keyframes pass{
+    0%{left:-80px;opacity:1}
+    50%{opacity:1}
+    100%{left:calc(100% + 80px);opacity:.9}
   }
-  @keyframes fall{
-    0%{transform:translateY(-20px) rotate(0deg);opacity:1}
-    100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
-  }
+  .pass{position:fixed;top:30%;left:-80px;width:120px;height:60px;z-index:90;pointer-events:none;animation:pass 1.2s cubic-bezier(.4,.1,.4,1)}
 
-  /* Result */
+  /* ==== Result (終着駅) ==== */
   .result{text-align:center}
-  .result h2{font-size:30px;margin:6px 0 4px}
-  .score{font-size:64px;font-weight:900;color:var(--accent)}
-  .score small{font-size:20px;color:var(--sub)}
-  .stars{display:flex;justify-content:center;gap:6px;margin:8px 0 12px;font-size:36px}
-  .stars .s{filter:grayscale(1);opacity:.35;transform:scale(.9);transition:all .25s}
-  .stars .s.on{filter:none;opacity:1;transform:scale(1.1)}
-  .review{margin-top:14px;display:grid;gap:8px;text-align:left}
-  .review .row{display:flex;justify-content:space-between;padding:10px 14px;border-radius:12px;background:#FAF6EA;font-weight:900}
-  .review .row.ng{background:#FFE8E0;color:#D1513A}
-  .buttons{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+  .result h2{font-size:26px;margin:8px 0 4px}
+  .score{font-size:52px;font-weight:900;color:var(--red)}
+  .score small{font-size:16px;color:var(--sub)}
+  .tickets-row{display:flex;justify-content:center;gap:8px;margin:10px 0 14px}
+  .ticket{
+    width:70px;height:42px;border-radius:8px;background:#fff;border:3px dashed #D2B26A;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    filter:grayscale(1);opacity:.4;transition:all .3s;
+    position:relative;
+  }
+  .ticket::before,.ticket::after{
+    content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--sky1);top:50%;transform:translateY(-50%);
+  }
+  .ticket::before{left:-5px}.ticket::after{right:-5px}
+  .ticket.on{filter:none;opacity:1;transform:scale(1.06);border-color:var(--red);color:var(--red);background:#FFF7E8}
+
+  .review{margin-top:12px;display:grid;gap:6px;text-align:left}
+  .review .row{
+    display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;
+    background:#F1F5FA;font-weight:900;border-left:6px solid var(--green);font-size:14px;
+  }
+  .review .row.ng{background:#FFE8E9;color:#BA2B10;border-left-color:var(--red)}
+  .buttons{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
   .btn{
     border:none;cursor:pointer;font-family:inherit;
-    border-radius:999px;padding:14px 22px;font-weight:900;font-size:16px;
+    border-radius:999px;padding:14px 22px;font-weight:900;font-size:15px;
     box-shadow:var(--shadow);
   }
-  .btn.primary{background:var(--accent);color:#fff}
-  .btn.ghost{background:#fff;color:var(--ink)}
+  .btn.primary{background:var(--red);color:#fff}
+  .btn.ghost{background:#fff;color:var(--ink);border:3px solid #E1E8F0}
 
-  /* helpers */
   .hide{display:none!important}
-  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:auto}
-  .kana{font-weight:900}
-  /* small devices */
+  footer{color:var(--sub);font-size:11px;text-align:center;margin-top:auto;font-weight:800}
   @media(max-width:380px){
-    .key{font-size:24px;padding:14px 0}
-    .qformula{font-size:44px}
+    .key{font-size:22px;padding:12px 0}
+    .qFormula{font-size:38px}
+    .mode .name{font-size:16px}
   }
 </style>
 </head>
 <body>
+
+<!-- 背景装飾 -->
+<div class="bg-sky">
+  <div class="cloud" style="top:8%;left:6%;width:50px;height:22px"></div>
+  <div class="cloud" style="top:16%;right:10%;width:60px;height:26px"></div>
+  <div class="cloud" style="top:28%;left:25%;width:40px;height:18px"></div>
+  <div class="mountain"></div>
+  <div class="ground"></div>
+  <div class="track"><div class="ties"></div></div>
+</div>
+
 <div class="wrap">
   <header>
-    <div class="logo"><span class="dot"></span>けいさんチャレンジ</div>
-    <div class="star-count" title="これまでにあつめたスター">
-      <svg viewBox="0 0 24 24" fill="#FFB800"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z"/></svg>
-      <span id="starCount">0</span>
+    <div class="logo">
+      <span class="train">🚅</span>
+      <div>けいさんトレイン<div style="font-size:11px;font-weight:700;opacity:.9;letter-spacing:.1em">BULLET MATH LINE</div></div>
+    </div>
+    <div class="tickets" title="あつめた きっぷ">
+      🎫 <span id="starCount">0</span>
     </div>
   </header>
 
-  <!-- MENU -->
+  <!-- ===== MENU ===== -->
   <section id="menu" class="card">
-    <div class="title">モードを えらんでね</div>
-    <div class="subtitle">きょうは なんもん チャレンジする？</div>
+    <div class="board">◀ つぎは どの れっしゃ？ ▶</div>
+    <div class="title">のる れっしゃを えらぼう</div>
+    <div class="subtitle">はやさが あがるほど むずかしいよ</div>
+
     <div class="modes">
-      <button class="mode m1" data-mode="1d1d"><div class="emoji">🍎</div><div class="name">1けた + 1けた</div><div class="desc">れい：3 + 4</div></button>
-      <button class="mode m2" data-mode="2d1d"><div class="emoji">🐸</div><div class="name">2けた + 1けた</div><div class="desc">れい：24 + 7</div></button>
-      <button class="mode m3" data-mode="2d2d"><div class="emoji">🎈</div><div class="name">2けた + 2けた</div><div class="desc">れい：36 + 48</div></button>
-      <button class="mode m4" data-mode="3x1d"><div class="emoji">🌟</div><div class="name">3つの たしざん</div><div class="desc">れい：4 + 9 + 2</div></button>
+      <button class="mode m1" data-mode="1d1d">
+        <div class="icon">
+          <svg viewBox="0 0 54 40"><!-- 山手線っぽい普通電車 -->
+            <rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/>
+            <rect x="8" y="12" width="38" height="8" rx="2" fill="#E9F7EF"/>
+            <rect x="10" y="14" width="8" height="4" fill="#2a7c52"/>
+            <rect x="20" y="14" width="8" height="4" fill="#2a7c52"/>
+            <rect x="30" y="14" width="8" height="4" fill="#2a7c52"/>
+            <circle cx="14" cy="32" r="3" fill="#333"/>
+            <circle cx="40" cy="32" r="3" fill="#333"/>
+          </svg>
+        </div>
+        <div><div class="name">かくえきていしゃ</div><div class="desc">1けた ＋ 1けた</div></div>
+        <div class="arrow">▶</div>
+      </button>
+
+      <button class="mode m2" data-mode="2d1d">
+        <div class="icon">
+          <svg viewBox="0 0 54 40"><!-- 中央線オレンジ特急 -->
+            <path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/>
+            <rect x="8" y="12" width="30" height="8" rx="2" fill="#FFF0DC"/>
+            <circle cx="14" cy="32" r="3" fill="#333"/>
+            <circle cx="40" cy="32" r="3" fill="#333"/>
+            <circle cx="46" cy="14" r="2" fill="#FFE082"/>
+          </svg>
+        </div>
+        <div><div class="name">とっきゅう</div><div class="desc">2けた ＋ 1けた</div></div>
+        <div class="arrow">▶</div>
+      </button>
+
+      <button class="mode m3" data-mode="2d2d">
+        <div class="icon">
+          <svg viewBox="0 0 60 40"><!-- N700系新幹線 -->
+            <path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/>
+            <path d="M2 22 L58 22 L58 26 L2 26 Z" fill="#0B6FC6"/>
+            <path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#E4002B" opacity=".9"/>
+            <rect x="10" y="15" width="6" height="5" rx="1" fill="#083876"/>
+            <rect x="20" y="15" width="6" height="5" rx="1" fill="#083876"/>
+            <rect x="30" y="15" width="6" height="5" rx="1" fill="#083876"/>
+            <circle cx="14" cy="32" r="3" fill="#222"/>
+            <circle cx="46" cy="32" r="3" fill="#222"/>
+          </svg>
+        </div>
+        <div><div class="name">しんかんせん</div><div class="desc">2けた ＋ 2けた</div></div>
+        <div class="arrow">▶</div>
+      </button>
+
+      <button class="mode m4" data-mode="3x1d">
+        <div class="icon">
+          <svg viewBox="0 0 60 40"><!-- 3両編成 -->
+            <rect x="2"  y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
+            <rect x="22" y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
+            <rect x="42" y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
+            <rect x="2" y="22" width="56" height="5" fill="#9B2DDC"/>
+            <line x1="18" y1="23" x2="22" y2="23" stroke="#5b1f85" stroke-width="2"/>
+            <line x1="38" y1="23" x2="42" y2="23" stroke="#5b1f85" stroke-width="2"/>
+            <circle cx="8" cy="34" r="2.5" fill="#333"/>
+            <circle cx="14" cy="34" r="2.5" fill="#333"/>
+            <circle cx="28" cy="34" r="2.5" fill="#333"/>
+            <circle cx="34" cy="34" r="2.5" fill="#333"/>
+            <circle cx="48" cy="34" r="2.5" fill="#333"/>
+            <circle cx="54" cy="34" r="2.5" fill="#333"/>
+          </svg>
+        </div>
+        <div><div class="name">3りょうへんせい</div><div class="desc">3つの たしざん（くりあがり）</div></div>
+        <div class="arrow">▶</div>
+      </button>
     </div>
-    <div style="margin-top:16px">
-      <div class="subtitle" style="margin-bottom:6px">もんだいの かず</div>
-      <div class="question-count" id="countChips">
-        <button class="chip" data-count="5">5もん</button>
-        <button class="chip active" data-count="10">10もん</button>
-        <button class="chip" data-count="20">20もん</button>
+
+    <div class="count-wrap">
+      <div class="subtitle" style="margin-bottom:6px">きょうは なんえき すすむ？</div>
+      <div class="chips" id="countChips">
+        <button class="chip" data-count="5">5えき</button>
+        <button class="chip active" data-count="10">10えき</button>
+        <button class="chip" data-count="20">20えき</button>
       </div>
     </div>
   </section>
 
-  <!-- PLAY -->
+  <!-- ===== PLAY ===== -->
   <section id="play" class="card hide">
     <div class="playbar">
       <button class="back" id="btnBack">← もどる</button>
-      <div class="progress"><span id="bar"></span></div>
+      <div class="railbox">
+        <div class="rail"></div>
+        <svg class="trainIcon" id="trainIcon" viewBox="0 0 60 34">
+          <path d="M2 22 L2 12 Q2 8 8 6 L40 3 Q56 3 58 12 L58 22 Q58 26 54 26 L6 26 Q2 26 2 22 Z" fill="#fff" stroke="#083876" stroke-width="2"/>
+          <path d="M2 17 L58 17 L58 21 L2 21 Z" fill="#0B6FC6"/>
+          <path d="M40 3 Q52 5 56 10 L30 10 Z" fill="#E4002B"/>
+          <rect x="10" y="11" width="6" height="4" rx="1" fill="#083876"/>
+          <rect x="20" y="11" width="6" height="4" rx="1" fill="#083876"/>
+          <rect x="30" y="11" width="6" height="4" rx="1" fill="#083876"/>
+          <circle cx="14" cy="28" r="2.5" fill="#222"/>
+          <circle cx="46" cy="28" r="2.5" fill="#222"/>
+        </svg>
+      </div>
       <div class="count"><span id="qIdx">1</span>/<span id="qAll">10</span></div>
     </div>
-    <div class="qbox">
-      <div class="qnum" id="qLabel">もんだい 1</div>
-      <div class="qformula" id="qFormula"></div>
+
+    <div class="station">
+      <div class="qLabel" id="qLabel">NEXT STATION ・ もんだい 1</div>
+      <div class="qFormula" id="qFormula"></div>
     </div>
+
     <div class="pad" id="pad">
       <button class="key" data-k="1">1</button>
       <button class="key" data-k="2">2</button>
@@ -227,26 +390,28 @@
       <button class="key" data-k="9">9</button>
       <button class="key back" data-k="del">⌫</button>
       <button class="key" data-k="0">0</button>
-      <button class="key ok" data-k="ok">OK</button>
+      <button class="key ok" data-k="ok">しゅっぱつ</button>
     </div>
   </section>
 
-  <!-- RESULT -->
+  <!-- ===== RESULT ===== -->
   <section id="result" class="card result hide">
-    <div style="font-size:48px">🎉</div>
-    <h2 id="resultTitle">やったね！</h2>
+    <div style="font-size:44px">🚉</div>
+    <h2 id="resultTitle">しゅうちゃく えき とうちゃく！</h2>
     <div class="score"><span id="scoreNum">0</span><small>/<span id="scoreAll">10</span>もん せいかい</small></div>
-    <div class="stars" id="starRow">
-      <span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span>
+    <div class="tickets-row" id="ticketRow">
+      <div class="ticket">🎫</div>
+      <div class="ticket">🎫</div>
+      <div class="ticket">🎫</div>
     </div>
     <div id="reviewList" class="review"></div>
     <div class="buttons">
-      <button class="btn primary" id="btnRetry">もういちど</button>
-      <button class="btn ghost" id="btnHome">メニューへ</button>
+      <button class="btn primary" id="btnRetry">もういちど のる</button>
+      <button class="btn ghost" id="btnHome">えきに もどる</button>
     </div>
   </section>
 
-  <footer>© けいさんチャレンジ — たのしく まなぼう</footer>
+  <footer>© けいさんトレイン — はっしゃ オーライ！</footer>
 </div>
 
 <div class="toast" id="toast"><div class="bubble" id="bubble"></div></div>
@@ -254,59 +419,47 @@
 <script>
   const $ = (id) => document.getElementById(id);
   const menu = $('menu'), play = $('play'), result = $('result');
-  const qIdxEl = $('qIdx'), qAllEl = $('qAll'), bar = $('bar');
+  const qIdxEl = $('qIdx'), qAllEl = $('qAll');
   const qLabel = $('qLabel'), qFormula = $('qFormula'), pad = $('pad');
   const toast = $('toast'), bubble = $('bubble');
   const starCountEl = $('starCount');
+  const trainIcon = $('trainIcon');
 
-  const state = {
-    mode: null,
-    count: 10,
-    questions: [],
-    i: 0,
-    input: '',
-    answers: [], // {q, correct, your, ok}
-  };
+  const state = { mode:null, count:10, questions:[], i:0, input:'', answers:[] };
 
-  let totalStars = Number(localStorage.getItem('stars_total') || 0);
+  let totalStars = Number(localStorage.getItem('tickets_total') || 0);
   starCountEl.textContent = totalStars;
 
-  // --- question generator ---
   const rnd = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
   function makeQuestion(mode){
     if (mode === '1d1d'){
       const a = rnd(1,9), b = rnd(1,9);
-      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+      return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '2d1d'){
       const a = rnd(10,99), b = rnd(1,9);
-      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+      return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '2d2d'){
       const a = rnd(10,89), b = rnd(10,89);
-      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+      return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '3x1d'){
-      // 3つの1桁 繰り上がりありを優先（合計が10以上）
-      let a,b,c,sum;
-      let tries=0;
-      do{ a=rnd(1,9); b=rnd(0,9); c=rnd(0,9); sum=a+b+c; tries++; }
-      while (sum < 10 && tries < 10);
-      return { nums:[a,b,c], text:`${a} + ${b} + ${c} =`, ans:sum };
+      let a,b,c,sum,tries=0;
+      do{ a=rnd(1,9); b=rnd(0,9); c=rnd(0,9); sum=a+b+c; tries++; } while (sum<10 && tries<10);
+      return { text:`${a} + ${b} + ${c} =`, ans:sum };
     }
   }
   function buildQuestions(mode, count){
-    const seen = new Set(); const list = [];
+    const seen = new Set(), list = [];
     while (list.length < count){
       const q = makeQuestion(mode);
-      const key = q.text;
-      if (seen.has(key)) continue;
-      seen.add(key); list.push(q);
+      if (seen.has(q.text)) continue;
+      seen.add(q.text); list.push(q);
     }
     return list;
   }
 
-  // --- Menu interaction ---
   document.querySelectorAll('.mode').forEach(el=>{
     el.addEventListener('click', ()=> startGame(el.dataset.mode));
   });
@@ -336,16 +489,18 @@
   $('btnHome').addEventListener('click', ()=> show(menu));
   $('btnRetry').addEventListener('click', ()=> startGame(state.mode));
 
-  // --- Render ---
   function renderQuestion(){
     const q = state.questions[state.i];
     qAllEl.textContent = state.questions.length;
     qIdxEl.textContent = state.i + 1;
-    qLabel.textContent = `もんだい ${state.i + 1}`;
-    bar.style.width = ((state.i) / state.questions.length * 100) + '%';
-    // formula html with colored operators + answer box
+    qLabel.textContent = `NEXT STATION ・ もんだい ${state.i + 1}`;
+    // move train along the rail
+    const rb = trainIcon.parentElement.getBoundingClientRect();
+    const ratio = state.i / state.questions.length;
+    const max = Math.max(0, rb.width - 60);
+    trainIcon.style.left = (max * ratio) + 'px';
+
     const parts = q.text.split(' ');
-    // parts like ["4","+","9","+","2","="]
     const html = parts.map(p=>{
       if(p==='+'||p==='-') return `<span class="op">${p}</span>`;
       if(p==='=') return `<span class="eq">=</span>`;
@@ -358,44 +513,31 @@
   function updateAnswerBox(){
     const ansBox = document.getElementById('ansBox');
     if (!ansBox) return;
-    if (state.input === ''){
-      ansBox.textContent = '？';
-      ansBox.classList.add('empty');
-    }else{
-      ansBox.textContent = state.input;
-      ansBox.classList.remove('empty');
-    }
+    if (state.input === ''){ ansBox.textContent='？'; ansBox.classList.add('empty'); }
+    else { ansBox.textContent=state.input; ansBox.classList.remove('empty'); }
   }
 
-  // --- Keypad ---
   pad.addEventListener('click', (e)=>{
     const b = e.target.closest('.key'); if(!b) return;
     const k = b.dataset.k;
-    if (k === 'del'){
-      state.input = state.input.slice(0,-1);
-    } else if (k === 'ok'){
-      return submitAnswer();
-    } else {
-      if (state.input.length >= 3) return; // 最大3桁
-      // 先頭0の重複を防ぐ
+    if (k === 'del'){ state.input = state.input.slice(0,-1); }
+    else if (k === 'ok'){ return submitAnswer(); }
+    else {
+      if (state.input.length >= 3) return;
       if (state.input === '0') state.input = '';
       state.input += k;
     }
     updateAnswerBox();
   });
 
-  // physical keyboard for desktop
   window.addEventListener('keydown', (e)=>{
     if (play.classList.contains('hide')) return;
     if (/^[0-9]$/.test(e.key)){
       if (state.input.length >= 3) return;
       if (state.input === '0') state.input = '';
       state.input += e.key; updateAnswerBox();
-    } else if (e.key === 'Backspace'){
-      state.input = state.input.slice(0,-1); updateAnswerBox();
-    } else if (e.key === 'Enter'){
-      submitAnswer();
-    }
+    } else if (e.key === 'Backspace'){ state.input = state.input.slice(0,-1); updateAnswerBox(); }
+    else if (e.key === 'Enter'){ submitAnswer(); }
   });
 
   function submitAnswer(){
@@ -404,76 +546,77 @@
     const your = Number(state.input);
     const ok = your === q.ans;
     state.answers.push({ text:q.text, correct:q.ans, your, ok });
-    if (ok){ flash('ok', pickPraise()); confetti(); }
+    if (ok){ flash('ok', pickPraise()); passBy(); }
     else { flash('ng', `ざんねん… こたえは ${q.ans}`); }
     setTimeout(()=>{
       state.i++;
-      if (state.i >= state.questions.length){
-        finish();
-      } else {
-        renderQuestion();
-      }
-    }, ok ? 700 : 1200);
+      if (state.i >= state.questions.length){ finish(); }
+      else { renderQuestion(); }
+    }, ok ? 900 : 1200);
   }
 
   function pickPraise(){
-    const list = ['せいかい！','やったー！','すごい！','ナイス！','その ちょうし！','てんさい！'];
+    const list = ['はっしゃ オーライ！','めちゃはやい！','こくてつ級！','グッドジョブ！','のぞみ きゅう！','てんさい！'];
     return list[Math.floor(Math.random()*list.length)];
   }
 
   function flash(type, text){
-    bubble.textContent = (type==='ok'?'🎉 ':'🥺 ') + text;
+    bubble.textContent = (type==='ok'?'🚄 ':'🚧 ') + text;
     toast.classList.remove('ok','ng');
     toast.classList.add('show', type);
     clearTimeout(flash._t);
-    flash._t = setTimeout(()=> toast.classList.remove('show'), 1000);
+    flash._t = setTimeout(()=> toast.classList.remove('show'), 1100);
   }
 
-  function confetti(){
-    const colors = ['#FF7A59','#FFC24B','#4FB2E8','#5CC98E','#F58BB3','#9B6CE8'];
-    const wrap = document.createElement('div');
-    wrap.className = 'burst';
-    for (let i=0;i<28;i++){
-      const s = document.createElement('span');
-      s.style.left = (Math.random()*100)+'%';
-      s.style.background = colors[i%colors.length];
-      s.style.animationDelay = (Math.random()*0.4)+'s';
-      s.style.transform = `rotate(${Math.random()*360}deg)`;
-      wrap.appendChild(s);
-    }
-    document.body.appendChild(wrap);
-    setTimeout(()=>wrap.remove(), 1800);
+  function passBy(){
+    const el = document.createElement('div');
+    el.className = 'pass';
+    el.innerHTML = `<svg viewBox="0 0 120 60" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 rgba(0,0,0,.15))">
+      <path d="M4 40 L4 22 Q4 16 12 12 L80 6 Q112 6 116 22 L116 42 Q116 48 110 48 L10 48 Q4 48 4 40 Z" fill="#fff" stroke="#083876" stroke-width="3"/>
+      <path d="M4 30 L116 30 L116 36 L4 36 Z" fill="#0B6FC6"/>
+      <path d="M80 6 Q108 10 114 20 L60 20 Z" fill="#E4002B"/>
+      <rect x="16" y="18" width="10" height="6" rx="2" fill="#083876"/>
+      <rect x="32" y="18" width="10" height="6" rx="2" fill="#083876"/>
+      <rect x="48" y="18" width="10" height="6" rx="2" fill="#083876"/>
+      <rect x="64" y="18" width="10" height="6" rx="2" fill="#083876"/>
+      <circle cx="24" cy="50" r="4" fill="#222"/>
+      <circle cx="92" cy="50" r="4" fill="#222"/>
+    </svg>`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1400);
   }
 
   function finish(){
-    bar.style.width = '100%';
+    // train arrives at the end
+    const rb = trainIcon.parentElement.getBoundingClientRect();
+    trainIcon.style.left = Math.max(0, rb.width - 60) + 'px';
+
     const score = state.answers.filter(a=>a.ok).length;
     const all = state.answers.length;
     $('scoreNum').textContent = score;
     $('scoreAll').textContent = all;
     const ratio = score / all;
-    const starsEarned = ratio >= 1 ? 3 : ratio >= .7 ? 2 : ratio >= .4 ? 1 : 0;
-    const starEls = document.querySelectorAll('#starRow .s');
-    starEls.forEach((el,i)=> el.classList.toggle('on', i < starsEarned));
-    // add to total
-    totalStars += starsEarned;
-    localStorage.setItem('stars_total', totalStars);
+    const tEarned = ratio >= 1 ? 3 : ratio >= .7 ? 2 : ratio >= .4 ? 1 : 0;
+    const els = document.querySelectorAll('#ticketRow .ticket');
+    els.forEach((el,i)=> el.classList.toggle('on', i < tEarned));
+    totalStars += tEarned;
+    localStorage.setItem('tickets_total', totalStars);
     starCountEl.textContent = totalStars;
 
     $('resultTitle').textContent =
-      ratio >= 1 ? 'ぜんもん せいかい！' :
-      ratio >= .7 ? 'よくできたね！' :
-      ratio >= .4 ? 'もうすこし！' : 'つぎは きっとできる！';
+      ratio >= 1 ? 'ぜんえき クリア！しゅうちゃく！' :
+      ratio >= .7 ? 'じょうず！しゅうちゃく とうちゃく！' :
+      ratio >= .4 ? 'もうすこし！' : 'つぎは きっと はしれる！';
 
     const review = $('reviewList'); review.innerHTML='';
     state.answers.forEach((a,idx)=>{
       const row = document.createElement('div');
       row.className = 'row' + (a.ok?'':' ng');
-      row.innerHTML = `<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️':'❌ せいかい '+a.correct}</span>`;
+      row.innerHTML = `<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️ ていしゃ':'❌ せいかい '+a.correct}</span>`;
       review.appendChild(row);
     });
     show(result);
-    if (ratio >= 1) { for(let k=0;k<3;k++) setTimeout(confetti, k*400); }
+    if (ratio >= 1) { for(let k=0;k<3;k++) setTimeout(passBy, k*450); }
   }
 </script>
 </body>
