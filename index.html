@@ -129,6 +129,34 @@
   @keyframes pass{0%{left:-80px;opacity:1}100%{left:calc(100% + 80px);opacity:.9}}
   .pass{position:fixed;top:30%;left:-80px;width:120px;height:60px;z-index:90;pointer-events:none;animation:pass 1.2s cubic-bezier(.4,.1,.4,1)}
 
+  /* Genre tabs */
+  .genres{display:flex;gap:8px;margin-bottom:12px}
+  .genre{flex:1;background:#EDF3FA;border:none;border-radius:10px;padding:11px;font-weight:900;color:var(--sub);cursor:pointer;font-family:inherit;font-size:14px;box-shadow:var(--shadow)}
+  .genre.active{background:var(--blueDeep);color:#FFD200}
+
+  /* Clock challenge */
+  .clockbox{background:linear-gradient(180deg,#FFFDEB,#FFE8A3);border:4px solid #F6C960;border-radius:18px;padding:14px;text-align:center;margin-top:8px;box-shadow:var(--shadow)}
+  .clockSvg{width:min(230px,72vw);height:min(230px,72vw);margin:0 auto;display:block}
+  .hands-legend{display:flex;justify-content:center;gap:14px;margin-top:8px;font-size:12px;font-weight:900}
+  .hands-legend .item{display:inline-flex;align-items:center;gap:5px;background:#fff;padding:4px 10px;border-radius:999px;border:2px solid #F6C960}
+  .hands-legend .bar{display:inline-block;width:16px;height:3.5px;border-radius:2px}
+  .hands-legend .bar.hour{background:#0B6FC6}
+  .hands-legend .bar.min{background:#E4002B;width:22px}
+  .clock-hint{margin-top:10px;font-weight:900;color:#8B6914;font-size:15px}
+
+  /* Choices */
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .choice{
+    background:linear-gradient(180deg,#fff,#F1F5FA);
+    border:3px solid #E1E8F0;border-radius:16px;padding:16px 8px;
+    font-size:19px;font-weight:900;cursor:pointer;box-shadow:var(--shadow);
+    font-family:inherit;color:var(--ink);transition:transform .06s;min-height:56px;
+  }
+  .choice:active{transform:translateY(3px)}
+  .choice.correct{background:linear-gradient(180deg,#C8E6C9,#81C784);border-color:#2E7D32;color:#1B5E20}
+  .choice.wrong{background:linear-gradient(180deg,#FFCDD2,#EF9A9A);border-color:#B71C1C;color:#B71C1C}
+  .choice.disabled{pointer-events:none;opacity:.6}
+
   /* Result */
   .result{text-align:center}
   .result h2{font-size:24px;margin:8px 0 4px}
@@ -220,9 +248,13 @@
       <div class="txt">いまここ：<span id="locHere">かごしま</span><small id="locNext">つぎは はかた を めざそう</small></div>
       <div class="prog"><span id="locIdx">0</span>/<span id="locAll">14</span></div>
     </div>
-    <div class="board">◀ つぎは どの れっしゃ？ ▶</div>
-    <div class="title">のる れっしゃを えらぼう</div>
-    <div class="subtitle">クリアで えきが すすむよ！</div>
+    <div class="genres" id="genreTabs">
+      <button class="genre active" data-genre="math">➕ たしざん</button>
+      <button class="genre" data-genre="clock">🕐 とけい</button>
+    </div>
+    <div class="board" id="boardTitle">◀ つぎは どの れっしゃ？ ▶</div>
+    <div class="title" id="menuTitle">のる れっしゃを えらぼう</div>
+    <div class="subtitle" id="menuSubtitle">クリアで えきが すすむよ！</div>
 
     <div class="modes" id="modesWrap"></div>
 
@@ -256,16 +288,33 @@
 
     <div class="combo" id="combo"></div>
 
-    <div class="station">
-      <div class="qLabel" id="qLabel">NEXT STATION ・ もんだい 1</div>
-      <div class="qFormula" id="qFormula"></div>
+    <!-- 算数プレイ -->
+    <div id="playMath">
+      <div class="station">
+        <div class="qLabel" id="qLabel">NEXT STATION ・ もんだい 1</div>
+        <div class="qFormula" id="qFormula"></div>
+      </div>
+
+      <div class="pad" id="pad">
+        <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+        <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+        <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+        <button class="key back" data-k="del">⌫</button><button class="key" data-k="0">0</button><button class="key ok" data-k="ok">しゅっぱつ</button>
+      </div>
     </div>
 
-    <div class="pad" id="pad">
-      <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
-      <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
-      <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
-      <button class="key back" data-k="del">⌫</button><button class="key" data-k="0">0</button><button class="key ok" data-k="ok">しゅっぱつ</button>
+    <!-- 時計プレイ -->
+    <div id="playClock" class="hide">
+      <div class="clockbox">
+        <div class="qLabel" id="qLabelClock" style="color:#8B6914;letter-spacing:.15em">NEXT STATION ・ もんだい 1</div>
+        <div id="clockSvgHolder"></div>
+        <div class="hands-legend">
+          <span class="item"><span class="bar hour"></span>みじかい＝じ</span>
+          <span class="item"><span class="bar min"></span>ながい＝ふん</span>
+        </div>
+        <div class="clock-hint" id="clockHint">しんかんせんの しゅっぱつは なんじ？</div>
+      </div>
+      <div class="choices" id="choicesBox"></div>
     </div>
   </section>
 
@@ -605,16 +654,25 @@
     {id:"m5",       ic:"🌟", nm:"スペシャル マスター",   ds:"スペシャル ぜんもんせいかい"},
     {id:"tokyo",    ic:"🗼", nm:"とうきょう とうちゃく", ds:"とうきょう まで すすんだ"},
     {id:"sapporo",  ic:"🏆", nm:"さっぽろ せいは！",     ds:"さっぽろ に とうちゃく！"},
-    {id:"all",      ic:"👑", nm:"ぜんモード せいは",      ds:"ぜんぶの れっしゃで マスター"}
+    {id:"all",      ic:"👑", nm:"ぜんモード せいは",      ds:"ぜんぶの れっしゃで マスター"},
+    {id:"ct1",      ic:"🕐", nm:"ぴったり マスター",     ds:"ぴったり じかん ぜんもん"},
+    {id:"ct2",      ic:"🕧", nm:"はんぶん マスター",     ds:"30ぷん じかん ぜんもん"},
+    {id:"ct3",      ic:"🕔", nm:"5ふん マスター",         ds:"5ふんきざみ ぜんもん"},
+    {id:"ct4",      ic:"⏰", nm:"じかん はかせ",         ds:"1ぷんきざみ ぜんもん"}
   ];
 
   // ===== Mode list =====
   const MODES = [
-    {id:"1d1d_low",  cls:"m1", name:"かくえきていしゃ",  desc:"1けた ＋ 1けた（こたえ 10まで）", svg:`<svg viewBox="0 0 54 40"><rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/><rect x="8" y="12" width="38" height="8" rx="2" fill="#E9F7EF"/><rect x="10" y="14" width="8" height="4" fill="#2a7c52"/><rect x="20" y="14" width="8" height="4" fill="#2a7c52"/><rect x="30" y="14" width="8" height="4" fill="#2a7c52"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/></svg>`,  trophy:"m1"},
-    {id:"1d1d_high", cls:"m2", name:"とっきゅう",          desc:"1けた ＋ 1けた（こたえ 10〜20）",    svg:`<svg viewBox="0 0 54 40"><path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/><rect x="8" y="12" width="30" height="8" rx="2" fill="#FFF0DC"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/><circle cx="46" cy="14" r="2" fill="#FFE082"/></svg>`, trophy:"m2"},
-    {id:"2d1d",      cls:"m3", name:"しんかんせん",         desc:"2けた ＋ 1けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/><path d="M2 22 L58 22 L58 26 L2 26 Z" fill="#0B6FC6"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#E4002B" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#083876"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m3"},
-    {id:"2d2d",      cls:"m4", name:"リニアモーターカー",   desc:"2けた ＋ 2けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 26 L2 18 Q2 14 8 12 L32 7 Q54 5 58 16 L58 26 Q58 30 54 30 L6 30 Q2 30 2 26 Z" fill="#fff" stroke="#00838F" stroke-width="2"/><path d="M2 22 L58 22 L58 25 L2 25 Z" fill="#00BCD4"/><path d="M32 7 Q52 7 57 15 L25 15 Z" fill="#0097A7"/><rect x="10" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="18" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="26" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="2" y="30" width="56" height="2" fill="#B2EBF2"/></svg>`, trophy:"m4"},
-    {id:"3x1d",      cls:"m5", name:"スペシャル",           desc:"1＋1＋1（こたえ 20まで）ドクターイエロー", svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#FFD700" stroke="#8B6914" stroke-width="2"/><path d="M2 21 L58 21 L58 25 L2 25 Z" fill="#003E7E"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#FFF176" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#8B6914"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m5"}
+    {id:"1d1d_low",  type:"math", cls:"m1", name:"かくえきていしゃ",  desc:"1けた ＋ 1けた（こたえ 10まで）", svg:`<svg viewBox="0 0 54 40"><rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/><rect x="8" y="12" width="38" height="8" rx="2" fill="#E9F7EF"/><rect x="10" y="14" width="8" height="4" fill="#2a7c52"/><rect x="20" y="14" width="8" height="4" fill="#2a7c52"/><rect x="30" y="14" width="8" height="4" fill="#2a7c52"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/></svg>`,  trophy:"m1"},
+    {id:"1d1d_high", type:"math", cls:"m2", name:"とっきゅう",          desc:"1けた ＋ 1けた（こたえ 10〜20）",    svg:`<svg viewBox="0 0 54 40"><path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/><rect x="8" y="12" width="30" height="8" rx="2" fill="#FFF0DC"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/><circle cx="46" cy="14" r="2" fill="#FFE082"/></svg>`, trophy:"m2"},
+    {id:"2d1d",      type:"math", cls:"m3", name:"しんかんせん",         desc:"2けた ＋ 1けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/><path d="M2 22 L58 22 L58 26 L2 26 Z" fill="#0B6FC6"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#E4002B" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#083876"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m3"},
+    {id:"2d2d",      type:"math", cls:"m4", name:"リニアモーターカー",   desc:"2けた ＋ 2けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 26 L2 18 Q2 14 8 12 L32 7 Q54 5 58 16 L58 26 Q58 30 54 30 L6 30 Q2 30 2 26 Z" fill="#fff" stroke="#00838F" stroke-width="2"/><path d="M2 22 L58 22 L58 25 L2 25 Z" fill="#00BCD4"/><path d="M32 7 Q52 7 57 15 L25 15 Z" fill="#0097A7"/><rect x="10" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="18" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="26" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="2" y="30" width="56" height="2" fill="#B2EBF2"/></svg>`, trophy:"m4"},
+    {id:"3x1d",      type:"math", cls:"m5", name:"スペシャル",           desc:"1＋1＋1（こたえ 20まで）ドクターイエロー", svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#FFD700" stroke="#8B6914" stroke-width="2"/><path d="M2 21 L58 21 L58 25 L2 25 Z" fill="#003E7E"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#FFF176" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#8B6914"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m5"},
+    // 時計モード
+    {id:"clock_hour", type:"clock", cls:"m1", name:"ぴったり じかん",   desc:"〇じ ちょうど（3じ/6じ etc）", svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="27" y2="12" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><line x1="27" y1="20" x2="35" y2="20" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct1"},
+    {id:"clock_half", type:"clock", cls:"m2", name:"30ぷん じかん",     desc:"〇じ 00ふん/30ふん",            svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="27" y2="28" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="16" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct2"},
+    {id:"clock_5min", type:"clock", cls:"m3", name:"5ふん きざみ",      desc:"〇じ05ふん/10ふん/15ふん…",     svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="34" y2="14" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="29" y2="13" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct3"},
+    {id:"clock_1min", type:"clock", cls:"m4", name:"1ぷん きざみ",      desc:"どんな じかんでも よめるよ",      svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="22" y2="12" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="22" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct4"}
   ];
 
   // ===== Save state =====
@@ -647,10 +705,21 @@
     $('locIdx').textContent = save.stationIdx;
     $('locAll').textContent = STATIONS.length-1;
   }
+  let currentGenre = 'math';
   function renderModes(){
     const wrap = $('modesWrap');
     wrap.innerHTML = "";
-    MODES.forEach(m=>{
+    // ジャンルに応じた見出し
+    if (currentGenre === 'clock'){
+      $('boardTitle').textContent = '◀ どの じかんレベル？ ▶';
+      $('menuTitle').textContent = 'とけい チャレンジ';
+      $('menuSubtitle').textContent = 'ながい はり＝ふん、みじかい はり＝じ！';
+    } else {
+      $('boardTitle').textContent = '◀ つぎは どの れっしゃ？ ▶';
+      $('menuTitle').textContent = 'のる れっしゃを えらぼう';
+      $('menuSubtitle').textContent = 'クリアで えきが すすむよ！';
+    }
+    MODES.filter(m => m.type === currentGenre).forEach(m=>{
       const gotMaster = save.cleared[m.id];
       const btn = document.createElement('button');
       btn.className = `mode ${m.cls}`;
@@ -670,11 +739,105 @@
   const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
   function makeQuestion(mode){
     let a,b,c,tries;
-    if (mode==='1d1d_low'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b>10); return {text:`${a} + ${b} =`,ans:a+b}; }
-    if (mode==='1d1d_high'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b<10||a+b>20); return {text:`${a} + ${b} =`,ans:a+b}; }
-    if (mode==='2d1d'){ do{a=rnd(10,99);b=rnd(1,9);}while(a+b>100); return {text:`${a} + ${b} =`,ans:a+b}; }
-    if (mode==='2d2d'){ do{a=rnd(10,89);b=rnd(10,89);}while(a+b>100); return {text:`${a} + ${b} =`,ans:a+b}; }
-    if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); return {text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
+    // 算数
+    if (mode==='1d1d_low'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b>10); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='1d1d_high'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b<10||a+b>20); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='2d1d'){ do{a=rnd(10,99);b=rnd(1,9);}while(a+b>100); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='2d2d'){ do{a=rnd(10,89);b=rnd(10,89);}while(a+b>100); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); return {kind:'math',text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
+    // 時計
+    if (mode && mode.startsWith('clock_')) return makeClockQuestion(mode);
+  }
+
+  function timeLabel(h,m){
+    if (m===0) return `${h}じ`;
+    if (m===30) return `${h}じはん`;
+    return `${h}じ ${m}ふん`;
+  }
+  function makeClockQuestion(mode){
+    let hour = rnd(1,12), minute = 0;
+    if (mode==='clock_hour') minute = 0;
+    else if (mode==='clock_half') minute = Math.random()<0.5 ? 0 : 30;
+    else if (mode==='clock_5min') minute = rnd(0,11)*5;
+    else if (mode==='clock_1min') minute = rnd(0,59);
+    const correct = timeLabel(hour, minute);
+    // distractor 生成
+    const pool = new Set([correct]);
+    let safety = 0;
+    while (pool.size < 4 && safety < 50){
+      safety++;
+      let h = hour, m = minute;
+      const which = rnd(1,3);
+      if (which===1){ h = rnd(1,12); if (h===hour) h = (h%12)+1; }
+      else if (which===2){
+        if (mode==='clock_hour') m = 0;
+        else if (mode==='clock_half') m = (minute===0?30:0);
+        else if (mode==='clock_5min'){ m = rnd(0,11)*5; if (m===minute) m = ((minute/5+rnd(1,11))%12)*5; }
+        else { m = rnd(0,59); if (m===minute) m = (minute+rnd(1,59))%60; }
+      }
+      else {
+        h = rnd(1,12);
+        if (mode==='clock_hour') m = 0;
+        else if (mode==='clock_half') m = rnd(0,1)*30;
+        else if (mode==='clock_5min') m = rnd(0,11)*5;
+        else m = rnd(0,59);
+      }
+      pool.add(timeLabel(h,m));
+    }
+    // 4個未満なら水増し
+    while (pool.size < 4){
+      pool.add(timeLabel(rnd(1,12), rnd(0,59)));
+    }
+    const choices = [...pool].slice(0,4).sort(()=>Math.random()-0.5);
+    const hints = [
+      "しんかんせんの しゅっぱつは なんじ？",
+      "いまは なんじ かな？",
+      "とけいを よんでみよう！",
+      "つぎの れっしゃは？",
+      "ベルが なる じかんは？",
+    ];
+    return { kind:'clock', hour, minute, choices, ans:correct, label:`🕐 とけい → `, hint:hints[Math.floor(Math.random()*hints.length)] };
+  }
+
+  function clockSvg(hour, minute){
+    const minAng = (minute/60)*360;
+    const hourAng = (((hour%12)+minute/60)/12)*360;
+    const hx = 50*Math.sin(hourAng*Math.PI/180);
+    const hy = -50*Math.cos(hourAng*Math.PI/180);
+    const mx = 72*Math.sin(minAng*Math.PI/180);
+    const my = -72*Math.cos(minAng*Math.PI/180);
+    let ticks='';
+    for (let i=0;i<60;i++){
+      const a = i*6, isH = (i%5===0);
+      const r1 = isH?76:84, r2=88;
+      const x1 = r1*Math.sin(a*Math.PI/180), y1=-r1*Math.cos(a*Math.PI/180);
+      const x2 = r2*Math.sin(a*Math.PI/180), y2=-r2*Math.cos(a*Math.PI/180);
+      ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#0D2E4E" stroke-width="${isH?3:1}" stroke-linecap="round"/>`;
+    }
+    let nums='';
+    for (let i=1;i<=12;i++){
+      const a = i*30;
+      const x = 62*Math.sin(a*Math.PI/180);
+      const y = -62*Math.cos(a*Math.PI/180) + 7;
+      nums += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" font-size="18" font-weight="900" fill="#0D2E4E">${i}</text>`;
+    }
+    return `
+      <svg class="clockSvg" viewBox="-100 -100 200 200">
+        <defs>
+          <radialGradient id="faceG" cx="50%" cy="30%">
+            <stop offset="0" stop-color="#FFFEF0"/>
+            <stop offset="1" stop-color="#FFF3C4"/>
+          </radialGradient>
+        </defs>
+        <circle r="96" fill="#FFC107" stroke="#8B6914" stroke-width="3"/>
+        <circle r="90" fill="url(#faceG)" stroke="#0D2E4E" stroke-width="2"/>
+        ${ticks}${nums}
+        <line x1="0" y1="0" x2="${hx.toFixed(1)}" y2="${hy.toFixed(1)}" stroke="#0B6FC6" stroke-width="7" stroke-linecap="round"/>
+        <line x1="0" y1="0" x2="${mx.toFixed(1)}" y2="${my.toFixed(1)}" stroke="#E4002B" stroke-width="4" stroke-linecap="round"/>
+        <circle r="6" fill="#0D2E4E"/>
+        <circle r="2.5" fill="#FFD200"/>
+      </svg>
+    `;
   }
   function buildQuestions(mode,count){
     const seen=new Set(), list=[];
@@ -703,19 +866,64 @@
     const q=state.questions[state.i];
     qAllEl.textContent=state.questions.length;
     qIdxEl.textContent=state.i+1;
-    qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
     const rb=trainIcon.parentElement.getBoundingClientRect();
     const max=Math.max(0,rb.width-60);
     trainIcon.style.left=(max*(state.i/state.questions.length))+"px";
-
-    const parts=q.text.split(' ');
-    const html=parts.map(p=>{
-      if(p==='+'||p==='-') return `<span class="op">${p}</span>`;
-      if(p==='=') return `<span class="eq">=</span>`;
-      return `<span>${p}</span>`;
-    }).join(' ');
     state.input="";
-    qFormula.innerHTML = html+' <span id="ansBox" class="answer empty">？</span>';
+
+    if (q.kind === 'clock'){
+      $('playMath').classList.add('hide');
+      $('playClock').classList.remove('hide');
+      $('qLabelClock').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
+      $('clockHint').textContent = q.hint;
+      $('clockSvgHolder').innerHTML = clockSvg(q.hour, q.minute);
+      const box = $('choicesBox'); box.innerHTML = '';
+      q.choices.forEach(c=>{
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.textContent = c;
+        btn.addEventListener('click', ()=> submitChoice(c, btn));
+        box.appendChild(btn);
+      });
+    } else {
+      $('playMath').classList.remove('hide');
+      $('playClock').classList.add('hide');
+      qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
+      const parts=q.text.split(' ');
+      const html=parts.map(p=>{
+        if(p==='+'||p==='-') return `<span class="op">${p}</span>`;
+        if(p==='=') return `<span class="eq">=</span>`;
+        return `<span>${p}</span>`;
+      }).join(' ');
+      qFormula.innerHTML = html+' <span id="ansBox" class="answer empty">？</span>';
+    }
+  }
+
+  function submitChoice(choice, btn){
+    const q = state.questions[state.i];
+    const ok = choice === q.ans;
+    // すべてのボタンを無効化、色付け
+    document.querySelectorAll('#choicesBox .choice').forEach(b=>{
+      b.classList.add('disabled');
+      if (b.textContent === q.ans) b.classList.add('correct');
+      else if (b === btn) b.classList.add('wrong');
+    });
+    state.answers.push({text:q.label, correct:q.ans, your:choice, ok});
+    if (ok){
+      state.streak++;
+      state.maxStreak=Math.max(state.maxStreak,state.streak);
+      flash('ok', pickPraise(state.streak));
+      passBy();
+    } else {
+      state.streak = 0;
+      flash('ng', `ざんねん… こたえは ${q.ans}`);
+    }
+    renderCombo();
+    setTimeout(()=>{
+      state.i++;
+      if (state.i >= state.questions.length) finish();
+      else renderQuestion();
+    }, ok?950:1350);
   }
   function updateAns(){
     const el=document.getElementById('ansBox'); if(!el) return;
@@ -751,6 +959,7 @@
   });
   window.addEventListener('keydown',(e)=>{
     if(play.classList.contains('hide')) return;
+    if($('playMath').classList.contains('hide')) return; // 時計モード中は無視
     if(/^[0-9]$/.test(e.key)){ if(state.input.length>=3) return; if(state.input==='0') state.input=''; state.input+=e.key; updateAns(); }
     else if(e.key==='Backspace'){ state.input=state.input.slice(0,-1); updateAns(); }
     else if(e.key==='Enter'){ submit(); }
@@ -954,6 +1163,16 @@
       document.querySelectorAll('#countChips .chip').forEach(c=>c.classList.remove('active'));
       el.classList.add('active');
       state.count=Number(el.dataset.count);
+    });
+  });
+
+  // ジャンル切替（たしざん ⇔ とけい）
+  document.querySelectorAll('#genreTabs .genre').forEach(el=>{
+    el.addEventListener('click',()=>{
+      document.querySelectorAll('#genreTabs .genre').forEach(g=>g.classList.remove('active'));
+      el.classList.add('active');
+      currentGenre = el.dataset.genre;
+      renderModes();
     });
   });
 
