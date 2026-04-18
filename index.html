@@ -332,7 +332,7 @@
       <div class="english-box">
         <div class="qLabel" id="qLabelEng" style="color:#01579B;letter-spacing:.15em">NEXT STATION ・ もんだい 1</div>
         <div class="emoji-big" id="engEmoji">🐱</div>
-        <div class="ja-hint" id="engJa">ねこ</div>
+        <div class="ja-hint" id="engJa"></div>
         <button class="speaker" id="btnSpeak"><span class="wave">🔊</span> もういちど きく</button>
         <div style="font-size:11px;color:#01579B;font-weight:900;margin-top:6px">えいごを きいて こたえを えらぼう！</div>
       </div>
@@ -1054,9 +1054,9 @@
       else if (b === btn) b.classList.add('wrong');
     });
     state.answers.push({text:q.label, correct:q.ans, your:choice, ok});
-    // 英語：答えたあとに日本語訳を表示＋正解音声を再生（耳で覚えさせる）
+    // 英語：正解音声を再度再生して耳で覚えさせる（日本語は表示しない）
     if (q.kind === 'english'){
-      $('engJa').textContent = `${q.en} ＝ ${q.ja}`;
+      $('engJa').textContent = '';
       setTimeout(()=>speak(q.ans), 250);
     }
     if (ok){
