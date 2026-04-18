@@ -3,21 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>けいさんトレイン — 新幹線で算数チャレンジ</title>
+<title>けいさんトレイン — 新幹線で日本縦断！</title>
 <style>
   :root{
-    --sky1:#7FC7F5;
-    --sky2:#CDEBFA;
-    --ink:#0E2A47;
-    --sub:#4A6A8A;
-    --white:#FFFFFF;
-    --blue:#0B6FC6;      /* N700 blue帯 */
-    --blueDeep:#003E7E;
-    --red:#E4002B;       /* JR新幹線の赤 */
-    --green:#2DAA6E;
-    --orange:#FF8A00;
-    --rail:#9AA3AB;
-    --tie:#6D4C2E;
+    --sky1:#7FC7F5; --sky2:#CDEBFA;
+    --ink:#0E2A47; --sub:#4A6A8A;
+    --blue:#0B6FC6; --blueDeep:#003E7E;
+    --red:#E4002B; --green:#2DAA6E;
+    --orange:#FF8A00; --gold:#FFB300;
+    --rail:#9AA3AB; --tie:#6D4C2E;
     --shadow:0 10px 0 rgba(0,0,0,.10);
     --radius:20px;
   }
@@ -27,234 +21,183 @@
     font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","Rounded Mplus 1c",system-ui,sans-serif;
     color:var(--ink);
     background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 65%,#F2E6C8 100%);
-    min-height:100%;
-    overflow-x:hidden;
+    min-height:100%;overflow-x:hidden;
   }
-  /* ==== Sky decoration ==== */
   .bg-sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-  .cloud{
-    position:absolute;background:#fff;border-radius:50%;
-    box-shadow:40px 0 0 5px #fff, 80px 12px 0 -2px #fff, -30px 10px 0 0 #fff;
-    opacity:.9;
-  }
-  .mountain{
-    position:absolute;bottom:70px;left:0;right:0;height:180px;
-    background:
-      radial-gradient(ellipse at 20% 100%, #6DA06F 0 35%, transparent 36%),
-      radial-gradient(ellipse at 55% 100%, #5E8A60 0 40%, transparent 41%),
-      radial-gradient(ellipse at 85% 100%, #7BB37A 0 34%, transparent 35%);
-  }
+  .cloud{position:absolute;background:#fff;border-radius:50%;box-shadow:40px 0 0 5px #fff,80px 12px 0 -2px #fff,-30px 10px 0 0 #fff;opacity:.9}
+  .mountain{position:absolute;bottom:70px;left:0;right:0;height:180px;background:
+    radial-gradient(ellipse at 20% 100%,#6DA06F 0 35%,transparent 36%),
+    radial-gradient(ellipse at 55% 100%,#5E8A60 0 40%,transparent 41%),
+    radial-gradient(ellipse at 85% 100%,#7BB37A 0 34%,transparent 35%)}
   .ground{position:absolute;bottom:0;left:0;right:0;height:70px;background:#E2C98E}
-  /* rail track at bottom */
   .track{position:absolute;bottom:20px;left:-40px;right:-40px;height:30px;z-index:1}
-  .track::before, .track::after{
-    content:"";position:absolute;left:0;right:0;height:4px;background:var(--rail);border-radius:2px;
-  }
+  .track::before,.track::after{content:"";position:absolute;left:0;right:0;height:4px;background:var(--rail);border-radius:2px}
   .track::before{top:6px}.track::after{top:20px}
   .ties{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,var(--tie) 0 14px,transparent 14px 40px);opacity:.7}
 
   .wrap{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:16px 16px 40px;min-height:100vh;display:flex;flex-direction:column;gap:14px}
 
-  /* ==== Header (駅名標風) ==== */
-  header{
-    background:var(--blueDeep);color:#fff;border-radius:14px;
-    padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
-    box-shadow:var(--shadow);border:3px solid #fff;
-  }
-  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
-  .logo .train{font-size:26px}
-  .tickets{
-    background:#fff;color:var(--blueDeep);border-radius:6px;
-    padding:6px 12px;font-weight:900;display:flex;align-items:center;gap:6px;
-    border:2px dashed var(--blueDeep);font-size:14px;
-  }
+  /* Header */
+  header{background:var(--blueDeep);color:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:var(--shadow);border:3px solid #fff}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}
+  .logo .train{font-size:24px}
+  .hstat{display:flex;gap:6px;align-items:center}
+  .stat{background:#fff;color:var(--blueDeep);border-radius:8px;padding:5px 9px;font-weight:900;font-size:12px;display:flex;align-items:center;gap:4px;border:2px solid #fff}
+  .stat.zukan{cursor:pointer;background:var(--gold);color:#2B1A00;border-color:#FFF3C4}
 
-  .card{
-    background:var(--white);border-radius:var(--radius);
-    box-shadow:var(--shadow);padding:20px;border:3px solid #fff;
-  }
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:3px solid #fff}
 
-  /* ==== Menu (路線図風) ==== */
-  .board{
-    background:linear-gradient(180deg,#0B3B70,#083060);
-    color:#fff;border-radius:14px;padding:12px 16px;text-align:center;
-    font-weight:900;font-size:18px;letter-spacing:.1em;
-    border-top:4px solid #FFD200;border-bottom:4px solid #FFD200;
-    margin-bottom:12px;
-  }
-  .title{font-size:22px;font-weight:900;text-align:center;margin:4px 0}
-  .subtitle{color:var(--sub);text-align:center;margin:0 0 12px;font-weight:800;font-size:14px}
+  /* Menu */
+  .board{background:linear-gradient(180deg,#0B3B70,#083060);color:#fff;border-radius:12px;padding:10px 14px;text-align:center;font-weight:900;font-size:15px;letter-spacing:.1em;border-top:4px solid #FFD200;border-bottom:4px solid #FFD200;margin-bottom:10px}
+  .title{font-size:20px;font-weight:900;text-align:center;margin:4px 0}
+  .subtitle{color:var(--sub);text-align:center;margin:0 0 10px;font-weight:800;font-size:13px}
+
+  /* 現在地表示 */
+  .location{background:linear-gradient(180deg,#FFF4D6,#FDE8A8);border:3px solid #F6C960;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .location .pin{font-size:22px}
+  .location .txt{flex:1;font-weight:900;font-size:14px}
+  .location .txt small{display:block;color:#6B5A2F;font-weight:800;font-size:11px;letter-spacing:.05em}
+  .location .prog{background:#fff;border-radius:999px;padding:4px 10px;font-weight:900;font-size:12px;color:var(--red)}
+
   .modes{display:grid;grid-template-columns:1fr;gap:10px}
-  @media(min-width:520px){ .modes{grid-template-columns:1fr 1fr} }
-
-  .mode{
-    border:none;cursor:pointer;
-    border-radius:16px;padding:14px;text-align:left;
-    box-shadow:var(--shadow);font-family:inherit;color:inherit;
-    display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;
-    transition:transform .08s ease;
-    position:relative;overflow:hidden;
-  }
+  @media(min-width:520px){.modes{grid-template-columns:1fr 1fr}}
+  .mode{border:none;cursor:pointer;border-radius:16px;padding:14px;text-align:left;box-shadow:var(--shadow);font-family:inherit;color:inherit;display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;transition:transform .08s;position:relative;overflow:hidden}
   .mode:active{transform:translateY(2px)}
-  .mode .icon{
-    width:58px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-    background:#fff;position:relative;
-  }
+  .mode .icon{width:58px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff}
   .mode .icon svg{width:54px;height:40px}
-  .mode .name{font-weight:900;font-size:18px;line-height:1.2}
-  .mode .desc{color:rgba(255,255,255,.9);font-size:12px;font-weight:800}
-  .mode .arrow{font-size:22px;color:#fff;font-weight:900}
-  .mode.m1{background:linear-gradient(135deg,#2DAA6E,#22884F);color:#fff}       /* 山手線グリーン */
-  .mode.m2{background:linear-gradient(135deg,#F58220,#E05E0F);color:#fff}        /* オレンジ */
-  .mode.m3{background:linear-gradient(135deg,#0B6FC6,#0950A0);color:#fff}        /* 新幹線ブルー */
-  .mode.m4{background:linear-gradient(135deg,#00BCD4,#00838F);color:#fff}        /* リニア ティール */
+  .mode .name{font-weight:900;font-size:17px;line-height:1.2}
+  .mode .desc{color:rgba(255,255,255,.9);font-size:11px;font-weight:800}
+  .mode .arrow{font-size:20px;color:#fff;font-weight:900}
+  .mode.m1{background:linear-gradient(135deg,#2DAA6E,#22884F);color:#fff}
+  .mode.m2{background:linear-gradient(135deg,#F58220,#E05E0F);color:#fff}
+  .mode.m3{background:linear-gradient(135deg,#0B6FC6,#0950A0);color:#fff}
+  .mode.m4{background:linear-gradient(135deg,#00BCD4,#00838F);color:#fff}
   .mode.m5{background:linear-gradient(135deg,#FFB300,#F57C00);color:#2B1A00;grid-column:1/-1;position:relative}
-  .mode.m5::after{content:"★";position:absolute;top:8px;right:14px;font-size:22px;color:#E53935}
+  .mode.m5 .desc{color:rgba(43,26,0,.7)}
+  .mode.m5 .arrow{color:#2B1A00}
+  .mode.m5::after{content:"★";position:absolute;top:6px;right:14px;font-size:22px;color:#E53935}
+  .mode .master{position:absolute;top:6px;right:10px;background:#FFD700;color:#5B3F00;font-size:10px;font-weight:900;padding:2px 6px;border-radius:6px;box-shadow:0 2px 0 rgba(0,0,0,.1)}
 
-  /* number of questions chips */
-  .count-wrap{margin-top:14px}
+  .count-wrap{margin-top:12px}
   .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-  .chip{
-    border:3px solid #D6E2ED;background:#fff;color:var(--ink);
-    border-radius:999px;padding:7px 14px;font-weight:900;cursor:pointer;
-    font-family:inherit;font-size:14px;
-  }
+  .chip{border:3px solid #D6E2ED;background:#fff;color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:900;cursor:pointer;font-family:inherit;font-size:13px}
   .chip.active{border-color:var(--red);background:#FFEEF0;color:var(--red)}
 
-  /* ==== Play screen ==== */
+  /* Play */
   .playbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .back{
-    background:#fff;border:none;border-radius:10px;padding:10px 12px;font-weight:900;
-    box-shadow:var(--shadow);cursor:pointer;font-family:inherit;color:var(--ink);font-size:13px;
-  }
-  .count{font-weight:900;font-size:15px;color:var(--sub);min-width:50px;text-align:right}
+  .back{background:#fff;border:none;border-radius:10px;padding:9px 11px;font-weight:900;box-shadow:var(--shadow);cursor:pointer;font-family:inherit;color:var(--ink);font-size:12px}
+  .count{font-weight:900;font-size:14px;color:var(--sub);min-width:44px;text-align:right}
+  .railbox{flex:1;position:relative;height:42px}
+  .rail{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:16px;background:
+    repeating-linear-gradient(90deg,var(--tie) 0 6px,transparent 6px 18px) center/100% 14px no-repeat,
+    linear-gradient(var(--rail),var(--rail)) top 1px left 0/100% 3px no-repeat,
+    linear-gradient(var(--rail),var(--rail)) bottom 1px left 0/100% 3px no-repeat,
+    #DCD1B8;border-radius:4px}
+  .trainIcon{position:absolute;top:50%;transform:translate(0,-55%);transition:left .35s cubic-bezier(.5,.1,.2,1);width:58px;height:32px;z-index:3}
 
-  /* rail progress with bullet train */
-  .railbox{flex:1;position:relative;height:44px}
-  .rail{
-    position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-    height:16px;background:
-      repeating-linear-gradient(90deg,var(--tie) 0 6px, transparent 6px 18px) center/100% 14px no-repeat,
-      linear-gradient(var(--rail),var(--rail)) top 1px left 0/100% 3px no-repeat,
-      linear-gradient(var(--rail),var(--rail)) bottom 1px left 0/100% 3px no-repeat,
-      #DCD1B8;
-    border-radius:4px;
-  }
-  .trainIcon{
-    position:absolute;top:50%;transform:translate(0,-55%);
-    transition:left .35s cubic-bezier(.5,.1,.2,1);
-    width:60px;height:34px;z-index:3;
-  }
+  /* combo */
+  .combo{display:flex;align-items:center;justify-content:center;gap:6px;margin:-4px 0 8px;min-height:24px;font-weight:900;font-size:14px;color:var(--red)}
+  .combo.show{animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(.6)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .combo.big{color:#E4002B;font-size:17px}
+  .combo.huge{color:#D32F2F;font-size:19px;text-shadow:0 2px 0 #FFCDD2}
 
-  /* station sign style question box */
-  .station{
-    background:linear-gradient(180deg,#083876,#0B4E94);
-    color:#fff;border-radius:14px;padding:16px;margin-top:8px;
-    border:4px solid #fff; outline:4px solid #083876;
-    position:relative;
-  }
-  .station::before{
-    content:"";position:absolute;left:14px;top:14px;right:14px;bottom:14px;
-    border:2px solid rgba(255,255,255,.2);border-radius:8px;pointer-events:none;
-  }
+  /* Station-sign question */
+  .station{background:linear-gradient(180deg,#083876,#0B4E94);color:#fff;border-radius:14px;padding:16px;margin-top:8px;border:4px solid #fff;outline:4px solid #083876;position:relative}
+  .station::before{content:"";position:absolute;left:14px;top:14px;right:14px;bottom:14px;border:2px solid rgba(255,255,255,.2);border-radius:8px;pointer-events:none}
   .qLabel{font-size:12px;font-weight:900;letter-spacing:.15em;opacity:.85;text-align:center}
-  .qFormula{
-    font-family:"DIN Alternate","Helvetica Neue",sans-serif;
-    font-size:clamp(38px,8vw,64px);font-weight:900;letter-spacing:.05em;
-    text-align:center;margin-top:8px;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
-  }
+  .qFormula{font-family:"DIN Alternate","Helvetica Neue",sans-serif;font-size:clamp(36px,8vw,60px);font-weight:900;letter-spacing:.05em;text-align:center;margin-top:8px;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
   .qFormula .op{color:#FFD200}
   .qFormula .eq{color:#FF9A3C}
-  .answer{
-    display:inline-block;min-width:110px;padding:2px 18px;border-radius:10px;
-    background:#FFD200;color:#0E2A47;border:3px solid #fff;
-  }
+  .answer{display:inline-block;min-width:110px;padding:2px 18px;border-radius:10px;background:#FFD200;color:#0E2A47;border:3px solid #fff}
   .answer.empty{color:#6D6020}
 
-  /* ==== Keypad (切符ボタン風) ==== */
+  /* Keypad */
   .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-  .key{
-    border:none;cursor:pointer;font-family:inherit;color:var(--ink);
-    background:linear-gradient(180deg,#fff,#F1F5FA);
-    border-radius:14px;padding:16px 0;
-    font-size:26px;font-weight:900;box-shadow:var(--shadow);
-    border:2px solid #E1E8F0;
-    transition:transform .06s ease;
-  }
+  .key{border:none;cursor:pointer;font-family:inherit;color:var(--ink);background:linear-gradient(180deg,#fff,#F1F5FA);border-radius:14px;padding:16px 0;font-size:26px;font-weight:900;box-shadow:var(--shadow);border:2px solid #E1E8F0;transition:transform .06s}
   .key:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(0,0,0,.1)}
   .key.back{background:linear-gradient(180deg,#FFE3DB,#FFC8B6);color:#BA2B10;border-color:#F3B7A0}
   .key.ok{background:linear-gradient(180deg,#33B97F,#1E8A58);color:#fff;border-color:#1E8A58;font-size:22px}
 
-  /* ==== Toast feedback ==== */
+  /* Toast */
   .toast{position:fixed;inset:auto 0 28px 0;display:flex;justify-content:center;pointer-events:none;z-index:100}
-  .toast .bubble{
-    background:#fff;border-radius:999px;padding:12px 20px;font-weight:900;font-size:16px;
-    box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:all .25s ease;
-    display:flex;align-items:center;gap:8px;border:3px solid #fff;
-  }
+  .toast .bubble{background:#fff;border-radius:999px;padding:12px 20px;font-weight:900;font-size:16px;box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:all .25s;display:flex;align-items:center;gap:8px;border:3px solid #fff}
   .toast.show .bubble{opacity:1;transform:translateY(0)}
   .toast.ok .bubble{color:var(--green);border-color:#B8E6CC}
   .toast.ng .bubble{color:var(--red);border-color:#FFC2C9}
 
-  /* pass-by animation */
-  @keyframes pass{
-    0%{left:-80px;opacity:1}
-    50%{opacity:1}
-    100%{left:calc(100% + 80px);opacity:.9}
-  }
+  @keyframes pass{0%{left:-80px;opacity:1}100%{left:calc(100% + 80px);opacity:.9}}
   .pass{position:fixed;top:30%;left:-80px;width:120px;height:60px;z-index:90;pointer-events:none;animation:pass 1.2s cubic-bezier(.4,.1,.4,1)}
 
-  /* ==== Result (終着駅) ==== */
+  /* Result */
   .result{text-align:center}
-  .result h2{font-size:26px;margin:8px 0 4px}
-  .score{font-size:52px;font-weight:900;color:var(--red)}
-  .score small{font-size:16px;color:var(--sub)}
-  .tickets-row{display:flex;justify-content:center;gap:8px;margin:10px 0 14px}
-  .ticket{
-    width:70px;height:42px;border-radius:8px;background:#fff;border:3px dashed #D2B26A;
-    display:flex;align-items:center;justify-content:center;font-size:22px;
-    filter:grayscale(1);opacity:.4;transition:all .3s;
-    position:relative;
-  }
-  .ticket::before,.ticket::after{
-    content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--sky1);top:50%;transform:translateY(-50%);
-  }
+  .result h2{font-size:24px;margin:8px 0 4px}
+  .score{font-size:46px;font-weight:900;color:var(--red)}
+  .score small{font-size:15px;color:var(--sub)}
+  .tickets-row{display:flex;justify-content:center;gap:8px;margin:8px 0 12px}
+  .ticket{width:66px;height:40px;border-radius:8px;background:#fff;border:3px dashed #D2B26A;display:flex;align-items:center;justify-content:center;font-size:20px;filter:grayscale(1);opacity:.4;transition:all .3s;position:relative}
+  .ticket::before,.ticket::after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--sky1);top:50%;transform:translateY(-50%)}
   .ticket::before{left:-5px}.ticket::after{right:-5px}
   .ticket.on{filter:none;opacity:1;transform:scale(1.06);border-color:var(--red);color:var(--red);background:#FFF7E8}
 
-  .review{margin-top:12px;display:grid;gap:6px;text-align:left}
-  .review .row{
-    display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;
-    background:#F1F5FA;font-weight:900;border-left:6px solid var(--green);font-size:14px;
-  }
+  /* Journey panel */
+  .journey{background:linear-gradient(180deg,#E8F5E9,#C8E6C9);border:3px solid #66BB6A;border-radius:14px;padding:12px;margin:12px 0;text-align:center}
+  .journey .lbl{font-size:11px;font-weight:900;color:#2E7D32;letter-spacing:.1em}
+  .journey .txt{font-weight:900;font-size:16px;color:#1B5E20;margin-top:4px}
+  .journey .txt .from{color:var(--sub);font-size:13px}
+  .journey .txt .to{color:var(--red);font-size:18px}
+
+  /* Trophies new */
+  .new-trophies{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+  .new-tr{background:#FFF8DC;border:3px solid var(--gold);border-radius:12px;padding:8px 12px;font-weight:900;font-size:13px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 0 #E6A93A;animation:tShow .5s ease}
+  @keyframes tShow{0%{transform:scale(.4) rotate(-10deg);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+
+  .review{margin-top:12px;display:grid;gap:6px;text-align:left;max-height:200px;overflow-y:auto}
+  .review .row{display:flex;justify-content:space-between;padding:9px 12px;border-radius:10px;background:#F1F5FA;font-weight:900;border-left:5px solid var(--green);font-size:13px}
   .review .row.ng{background:#FFE8E9;color:#BA2B10;border-left-color:var(--red)}
   .buttons{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
-  .btn{
-    border:none;cursor:pointer;font-family:inherit;
-    border-radius:999px;padding:14px 22px;font-weight:900;font-size:15px;
-    box-shadow:var(--shadow);
-  }
+  .btn{border:none;cursor:pointer;font-family:inherit;border-radius:999px;padding:13px 20px;font-weight:900;font-size:14px;box-shadow:var(--shadow)}
   .btn.primary{background:var(--red);color:#fff}
   .btn.ghost{background:#fff;color:var(--ink);border:3px solid #E1E8F0}
 
+  /* ZUKAN (図鑑) screen */
+  #zukan .tabs{display:flex;gap:6px;margin-bottom:12px}
+  #zukan .tab{flex:1;background:#EDF3FA;border:none;border-radius:10px;padding:10px;font-weight:900;color:var(--sub);cursor:pointer;font-family:inherit;font-size:13px}
+  #zukan .tab.active{background:var(--blueDeep);color:#fff}
+  .zukan-map{background:linear-gradient(180deg,#CFE8FB,#E6F2FC);border-radius:14px;padding:14px;margin-bottom:10px;position:relative}
+  .zukan-map svg{width:100%;height:auto;display:block}
+  .zukan-map .legend{text-align:center;font-size:11px;color:var(--sub);font-weight:800;margin-top:4px}
+
+  .station-list{display:grid;gap:4px;margin-top:8px}
+  .st-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:#F4F8FB;font-weight:900;font-size:13px}
+  .st-row.done{background:#E8F5E9;color:#1B5E20}
+  .st-row.here{background:#FFEBEE;color:var(--red);border:2px solid var(--red)}
+  .st-row .n{font-size:11px;color:var(--sub);min-width:26px}
+  .st-row .dot{width:10px;height:10px;border-radius:50%;background:#C6D3DE}
+  .st-row.done .dot{background:var(--green)}
+  .st-row.here .dot{background:var(--red);box-shadow:0 0 0 4px rgba(228,0,43,.25)}
+
+  .trophy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  @media(min-width:480px){.trophy-grid{grid-template-columns:repeat(3,1fr)}}
+  .trophy{background:#F4F8FB;border:3px solid #E1E8F0;border-radius:12px;padding:10px;text-align:center;font-weight:900;font-size:12px;filter:grayscale(1);opacity:.5}
+  .trophy.got{background:#FFF8DC;border-color:var(--gold);filter:none;opacity:1;color:#5B3F00}
+  .trophy .ic{font-size:30px;display:block;margin-bottom:4px}
+  .trophy .nm{font-size:12px;line-height:1.2}
+  .trophy .ds{font-size:10px;color:var(--sub);font-weight:800;margin-top:2px}
+  .trophy.got .ds{color:#8A6A2E}
+
   .hide{display:none!important}
   footer{color:var(--sub);font-size:11px;text-align:center;margin-top:auto;font-weight:800}
-  @media(max-width:380px){
-    .key{font-size:22px;padding:12px 0}
-    .qFormula{font-size:38px}
-    .mode .name{font-size:16px}
-  }
+  @media(max-width:380px){.key{font-size:22px;padding:12px 0}.qFormula{font-size:36px}.mode .name{font-size:15px}}
 </style>
 </head>
 <body>
 
-<!-- 背景装飾 -->
 <div class="bg-sky">
   <div class="cloud" style="top:8%;left:6%;width:50px;height:22px"></div>
   <div class="cloud" style="top:16%;right:10%;width:60px;height:26px"></div>
   <div class="cloud" style="top:28%;left:25%;width:40px;height:18px"></div>
-  <div class="mountain"></div>
-  <div class="ground"></div>
+  <div class="mountain"></div><div class="ground"></div>
   <div class="track"><div class="ties"></div></div>
 </div>
 
@@ -264,106 +207,31 @@
       <span class="train">🚅</span>
       <div>けいさんトレイン<div style="font-size:11px;font-weight:700;opacity:.9;letter-spacing:.1em">BULLET MATH LINE</div></div>
     </div>
-    <div class="tickets" title="あつめた きっぷ">
-      🎫 <span id="starCount">0</span>
+    <div class="hstat">
+      <div class="stat" title="あつめた きっぷ">🎫 <span id="tickets">0</span></div>
+      <div class="stat zukan" id="btnZukan" title="ずかん">🗾 ずかん</div>
     </div>
   </header>
 
   <!-- ===== MENU ===== -->
   <section id="menu" class="card">
+    <div class="location" id="locBox">
+      <span class="pin">📍</span>
+      <div class="txt">いまここ：<span id="locHere">かごしま</span><small id="locNext">つぎは はかた を めざそう</small></div>
+      <div class="prog"><span id="locIdx">0</span>/<span id="locAll">14</span></div>
+    </div>
     <div class="board">◀ つぎは どの れっしゃ？ ▶</div>
     <div class="title">のる れっしゃを えらぼう</div>
-    <div class="subtitle">はやさが あがるほど むずかしいよ</div>
+    <div class="subtitle">クリアで えきが すすむよ！</div>
 
-    <div class="modes">
-      <button class="mode m1" data-mode="1d1d_low">
-        <div class="icon">
-          <svg viewBox="0 0 54 40"><!-- 山手線っぽい普通電車 -->
-            <rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/>
-            <rect x="8" y="12" width="38" height="8" rx="2" fill="#E9F7EF"/>
-            <rect x="10" y="14" width="8" height="4" fill="#2a7c52"/>
-            <rect x="20" y="14" width="8" height="4" fill="#2a7c52"/>
-            <rect x="30" y="14" width="8" height="4" fill="#2a7c52"/>
-            <circle cx="14" cy="32" r="3" fill="#333"/>
-            <circle cx="40" cy="32" r="3" fill="#333"/>
-          </svg>
-        </div>
-        <div><div class="name">かくえきていしゃ</div><div class="desc">1けた ＋ 1けた（こたえ 10まで）</div></div>
-        <div class="arrow">▶</div>
-      </button>
-
-      <button class="mode m2" data-mode="1d1d_high">
-        <div class="icon">
-          <svg viewBox="0 0 54 40"><!-- 中央線オレンジ特急 -->
-            <path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/>
-            <rect x="8" y="12" width="30" height="8" rx="2" fill="#FFF0DC"/>
-            <circle cx="14" cy="32" r="3" fill="#333"/>
-            <circle cx="40" cy="32" r="3" fill="#333"/>
-            <circle cx="46" cy="14" r="2" fill="#FFE082"/>
-          </svg>
-        </div>
-        <div><div class="name">とっきゅう</div><div class="desc">1けた ＋ 1けた（こたえ 10〜20）</div></div>
-        <div class="arrow">▶</div>
-      </button>
-
-      <button class="mode m3" data-mode="2d1d">
-        <div class="icon">
-          <svg viewBox="0 0 60 40"><!-- N700系新幹線 -->
-            <path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/>
-            <path d="M2 22 L58 22 L58 26 L2 26 Z" fill="#0B6FC6"/>
-            <path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#E4002B" opacity=".9"/>
-            <rect x="10" y="15" width="6" height="5" rx="1" fill="#083876"/>
-            <rect x="20" y="15" width="6" height="5" rx="1" fill="#083876"/>
-            <rect x="30" y="15" width="6" height="5" rx="1" fill="#083876"/>
-            <circle cx="14" cy="32" r="3" fill="#222"/>
-            <circle cx="46" cy="32" r="3" fill="#222"/>
-          </svg>
-        </div>
-        <div><div class="name">しんかんせん</div><div class="desc">2けた ＋ 1けた（こたえ 100まで）</div></div>
-        <div class="arrow">▶</div>
-      </button>
-
-      <button class="mode m4" data-mode="2d2d">
-        <div class="icon">
-          <svg viewBox="0 0 60 40"><!-- L0系リニア風・流線形 -->
-            <path d="M2 26 L2 18 Q2 14 8 12 L32 7 Q54 5 58 16 L58 26 Q58 30 54 30 L6 30 Q2 30 2 26 Z" fill="#fff" stroke="#00838F" stroke-width="2"/>
-            <path d="M2 22 L58 22 L58 25 L2 25 Z" fill="#00BCD4"/>
-            <path d="M32 7 Q52 7 57 15 L25 15 Z" fill="#0097A7"/>
-            <rect x="10" y="16" width="5" height="4" rx="1" fill="#004D60"/>
-            <rect x="18" y="16" width="5" height="4" rx="1" fill="#004D60"/>
-            <rect x="26" y="16" width="5" height="4" rx="1" fill="#004D60"/>
-            <rect x="2" y="30" width="56" height="2" fill="#B2EBF2"/>
-            <rect x="6" y="32" width="48" height="1.5" fill="#80DEEA" opacity=".8"/>
-          </svg>
-        </div>
-        <div><div class="name">リニアモーターカー</div><div class="desc">2けた ＋ 2けた（こたえ 100まで）</div></div>
-        <div class="arrow">▶</div>
-      </button>
-
-      <button class="mode m5" data-mode="3x1d">
-        <div class="icon">
-          <svg viewBox="0 0 60 40"><!-- ドクターイエロー風・スペシャル -->
-            <path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#FFD700" stroke="#8B6914" stroke-width="2"/>
-            <path d="M2 21 L58 21 L58 25 L2 25 Z" fill="#003E7E"/>
-            <path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#FFF176" opacity=".9"/>
-            <rect x="10" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
-            <rect x="20" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
-            <rect x="30" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
-            <circle cx="14" cy="32" r="3" fill="#222"/>
-            <circle cx="46" cy="32" r="3" fill="#222"/>
-          </svg>
-        </div>
-        <div><div class="name">スペシャル</div><div class="desc">1けた ＋ 1けた ＋ 1けた（こたえ 20まで）</div></div>
-        <div class="arrow">▶</div>
-      </button>
-    </div>
+    <div class="modes" id="modesWrap"></div>
 
     <div class="count-wrap">
-      <div class="subtitle" style="margin-bottom:6px">きょうは なんえき すすむ？</div>
+      <div class="subtitle" style="margin-bottom:6px">きょうは なんもん やる？</div>
       <div class="chips" id="countChips">
-        <button class="chip" data-count="5">5えき</button>
-        <button class="chip active" data-count="10">10えき</button>
-        <button class="chip" data-count="20">20えき</button>
+        <button class="chip" data-count="5">5もん</button>
+        <button class="chip active" data-count="10">10もん</button>
+        <button class="chip" data-count="20">20もん</button>
       </div>
     </div>
   </section>
@@ -372,8 +240,7 @@
   <section id="play" class="card hide">
     <div class="playbar">
       <button class="back" id="btnBack">← もどる</button>
-      <div class="railbox">
-        <div class="rail"></div>
+      <div class="railbox"><div class="rail"></div>
         <svg class="trainIcon" id="trainIcon" viewBox="0 0 60 34">
           <path d="M2 22 L2 12 Q2 8 8 6 L40 3 Q56 3 58 12 L58 22 Q58 26 54 26 L6 26 Q2 26 2 22 Z" fill="#fff" stroke="#083876" stroke-width="2"/>
           <path d="M2 17 L58 17 L58 21 L2 21 Z" fill="#0B6FC6"/>
@@ -381,12 +248,13 @@
           <rect x="10" y="11" width="6" height="4" rx="1" fill="#083876"/>
           <rect x="20" y="11" width="6" height="4" rx="1" fill="#083876"/>
           <rect x="30" y="11" width="6" height="4" rx="1" fill="#083876"/>
-          <circle cx="14" cy="28" r="2.5" fill="#222"/>
-          <circle cx="46" cy="28" r="2.5" fill="#222"/>
+          <circle cx="14" cy="28" r="2.5" fill="#222"/><circle cx="46" cy="28" r="2.5" fill="#222"/>
         </svg>
       </div>
       <div class="count"><span id="qIdx">1</span>/<span id="qAll">10</span></div>
     </div>
+
+    <div class="combo" id="combo"></div>
 
     <div class="station">
       <div class="qLabel" id="qLabel">NEXT STATION ・ もんだい 1</div>
@@ -394,35 +262,70 @@
     </div>
 
     <div class="pad" id="pad">
-      <button class="key" data-k="1">1</button>
-      <button class="key" data-k="2">2</button>
-      <button class="key" data-k="3">3</button>
-      <button class="key" data-k="4">4</button>
-      <button class="key" data-k="5">5</button>
-      <button class="key" data-k="6">6</button>
-      <button class="key" data-k="7">7</button>
-      <button class="key" data-k="8">8</button>
-      <button class="key" data-k="9">9</button>
-      <button class="key back" data-k="del">⌫</button>
-      <button class="key" data-k="0">0</button>
-      <button class="key ok" data-k="ok">しゅっぱつ</button>
+      <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+      <button class="key back" data-k="del">⌫</button><button class="key" data-k="0">0</button><button class="key ok" data-k="ok">しゅっぱつ</button>
     </div>
   </section>
 
   <!-- ===== RESULT ===== -->
   <section id="result" class="card result hide">
-    <div style="font-size:44px">🚉</div>
+    <div style="font-size:40px">🚉</div>
     <h2 id="resultTitle">しゅうちゃく えき とうちゃく！</h2>
     <div class="score"><span id="scoreNum">0</span><small>/<span id="scoreAll">10</span>もん せいかい</small></div>
-    <div class="tickets-row" id="ticketRow">
-      <div class="ticket">🎫</div>
-      <div class="ticket">🎫</div>
-      <div class="ticket">🎫</div>
+    <div style="font-weight:900;font-size:13px;color:var(--sub)">さいだい れんぞく <span id="maxCombo">0</span> れんぞく！</div>
+    <div class="tickets-row" id="ticketRow"><div class="ticket">🎫</div><div class="ticket">🎫</div><div class="ticket">🎫</div></div>
+
+    <div class="journey" id="journey">
+      <div class="lbl">🚄 にっぽん じゅうだん のたび</div>
+      <div class="txt" id="journeyTxt"></div>
     </div>
+
+    <div class="new-trophies" id="newTrophies"></div>
+
     <div id="reviewList" class="review"></div>
     <div class="buttons">
       <button class="btn primary" id="btnRetry">もういちど のる</button>
       <button class="btn ghost" id="btnHome">えきに もどる</button>
+    </div>
+  </section>
+
+  <!-- ===== ZUKAN ===== -->
+  <section id="zukan" class="card hide">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <button class="back" id="btnZukanBack">← もどる</button>
+      <div style="font-weight:900;font-size:16px">🗾 にっぽん じゅうだん ずかん</div>
+      <span style="width:60px"></span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="map">ちず</button>
+      <button class="tab" data-tab="trophy">トロフィー</button>
+    </div>
+
+    <div id="tab-map">
+      <div class="zukan-map">
+        <svg id="mapSvg" viewBox="0 0 300 460" preserveAspectRatio="xMidYMid meet">
+          <!-- 超簡略化した日本の島 -->
+          <!-- 北海道 -->
+          <path d="M170 30 Q210 20 240 50 Q260 80 240 110 Q210 120 180 100 Q160 70 170 30 Z" fill="#C8E6C9" stroke="#4E8852" stroke-width="2"/>
+          <!-- 本州 -->
+          <path d="M70 180 Q120 150 170 160 L230 140 Q260 150 250 180 L210 210 L170 240 L130 260 L90 280 L60 260 Q50 220 70 180 Z" fill="#C8E6C9" stroke="#4E8852" stroke-width="2"/>
+          <!-- 四国 -->
+          <path d="M95 300 Q130 295 145 310 Q140 325 110 325 Q90 320 95 300 Z" fill="#C8E6C9" stroke="#4E8852" stroke-width="2"/>
+          <!-- 九州 -->
+          <path d="M30 300 Q55 290 70 310 L75 350 Q65 390 40 395 Q20 380 22 350 Z" fill="#C8E6C9" stroke="#4E8852" stroke-width="2"/>
+          <!-- 線路（駅を結ぶ新幹線ライン） -->
+          <path id="routeLine" d="M 42 375 L 55 330 L 90 295 L 120 255 L 150 225 L 180 200 L 205 180 L 225 160 L 200 100 L 210 60" stroke="#E4002B" stroke-width="3" stroke-dasharray="6 4" fill="none" opacity=".6"/>
+          <g id="stations"></g>
+        </svg>
+        <div class="legend">🚄 かごしま → さっぽろ 縦断ルート</div>
+      </div>
+      <div class="station-list" id="stationList"></div>
+    </div>
+
+    <div id="tab-trophy" class="hide">
+      <div class="trophy-grid" id="trophyGrid"></div>
     </div>
   </section>
 
@@ -433,211 +336,378 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const menu = $('menu'), play = $('play'), result = $('result');
-  const qIdxEl = $('qIdx'), qAllEl = $('qAll');
-  const qLabel = $('qLabel'), qFormula = $('qFormula'), pad = $('pad');
-  const toast = $('toast'), bubble = $('bubble');
-  const starCountEl = $('starCount');
-  const trainIcon = $('trainIcon');
 
-  const state = { mode:null, count:10, questions:[], i:0, input:'', answers:[] };
+  // ===== Stations (日本縦断ルート) =====
+  const STATIONS = [
+    {n:"かごしま",    x:42,  y:375},
+    {n:"くまもと",    x:50,  y:350},
+    {n:"はかた",      x:55,  y:330},
+    {n:"ひろしま",    x:90,  y:295},
+    {n:"おかやま",    x:110, y:270},
+    {n:"しんおおさか",x:135, y:245},
+    {n:"きょうと",    x:148, y:230},
+    {n:"なごや",      x:170, y:215},
+    {n:"しずおか",    x:200, y:195},
+    {n:"とうきょう",  x:220, y:165},
+    {n:"せんだい",    x:210, y:130},
+    {n:"もりおか",    x:205, y:110},
+    {n:"しんあおもり",x:195, y:90 },
+    {n:"しんはこだて",x:200, y:75 },
+    {n:"さっぽろ",    x:210, y:60 }
+  ];
 
-  let totalStars = Number(localStorage.getItem('tickets_total') || 0);
-  starCountEl.textContent = totalStars;
+  // ===== Trophy definitions =====
+  const TROPHIES = [
+    {id:"first",    ic:"🎉", nm:"はじめの いっぽ",   ds:"はじめて せいかい"},
+    {id:"c5",       ic:"🔥", nm:"5れんぞく！",       ds:"5もん れんぞく せいかい"},
+    {id:"c10",      ic:"⚡", nm:"10れんぞく！！",    ds:"10もん れんぞく せいかい"},
+    {id:"perfect",  ic:"💯", nm:"ぜんもん せいかい", ds:"1ラウンド ぜんもん せいかい"},
+    {id:"m1",       ic:"🥉", nm:"かくえきていしゃ マスター", ds:"かくえきていしゃ ぜんもんせいかい"},
+    {id:"m2",       ic:"🥈", nm:"とっきゅう マスター",   ds:"とっきゅう ぜんもんせいかい"},
+    {id:"m3",       ic:"🥇", nm:"しんかんせん マスター", ds:"しんかんせん ぜんもんせいかい"},
+    {id:"m4",       ic:"🏅", nm:"リニア マスター",       ds:"リニア ぜんもんせいかい"},
+    {id:"m5",       ic:"🌟", nm:"スペシャル マスター",   ds:"スペシャル ぜんもんせいかい"},
+    {id:"tokyo",    ic:"🗼", nm:"とうきょう とうちゃく", ds:"とうきょう まで すすんだ"},
+    {id:"sapporo",  ic:"🏆", nm:"さっぽろ せいは！",     ds:"さっぽろ に とうちゃく！"},
+    {id:"all",      ic:"👑", nm:"ぜんモード せいは",      ds:"ぜんぶの れっしゃで マスター"}
+  ];
 
-  const rnd = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+  // ===== Mode list =====
+  const MODES = [
+    {id:"1d1d_low",  cls:"m1", name:"かくえきていしゃ",  desc:"1けた ＋ 1けた（こたえ 10まで）", svg:`<svg viewBox="0 0 54 40"><rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/><rect x="8" y="12" width="38" height="8" rx="2" fill="#E9F7EF"/><rect x="10" y="14" width="8" height="4" fill="#2a7c52"/><rect x="20" y="14" width="8" height="4" fill="#2a7c52"/><rect x="30" y="14" width="8" height="4" fill="#2a7c52"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/></svg>`,  trophy:"m1"},
+    {id:"1d1d_high", cls:"m2", name:"とっきゅう",          desc:"1けた ＋ 1けた（こたえ 10〜20）",    svg:`<svg viewBox="0 0 54 40"><path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/><rect x="8" y="12" width="30" height="8" rx="2" fill="#FFF0DC"/><circle cx="14" cy="32" r="3" fill="#333"/><circle cx="40" cy="32" r="3" fill="#333"/><circle cx="46" cy="14" r="2" fill="#FFE082"/></svg>`, trophy:"m2"},
+    {id:"2d1d",      cls:"m3", name:"しんかんせん",         desc:"2けた ＋ 1けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/><path d="M2 22 L58 22 L58 26 L2 26 Z" fill="#0B6FC6"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#E4002B" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#083876"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#083876"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m3"},
+    {id:"2d2d",      cls:"m4", name:"リニアモーターカー",   desc:"2けた ＋ 2けた（こたえ 100まで）",  svg:`<svg viewBox="0 0 60 40"><path d="M2 26 L2 18 Q2 14 8 12 L32 7 Q54 5 58 16 L58 26 Q58 30 54 30 L6 30 Q2 30 2 26 Z" fill="#fff" stroke="#00838F" stroke-width="2"/><path d="M2 22 L58 22 L58 25 L2 25 Z" fill="#00BCD4"/><path d="M32 7 Q52 7 57 15 L25 15 Z" fill="#0097A7"/><rect x="10" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="18" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="26" y="16" width="5" height="4" rx="1" fill="#004D60"/><rect x="2" y="30" width="56" height="2" fill="#B2EBF2"/></svg>`, trophy:"m4"},
+    {id:"3x1d",      cls:"m5", name:"スペシャル",           desc:"1＋1＋1（こたえ 20まで）ドクターイエロー", svg:`<svg viewBox="0 0 60 40"><path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#FFD700" stroke="#8B6914" stroke-width="2"/><path d="M2 21 L58 21 L58 25 L2 25 Z" fill="#003E7E"/><path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#FFF176" opacity=".9"/><rect x="10" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="20" y="15" width="6" height="5" rx="1" fill="#8B6914"/><rect x="30" y="15" width="6" height="5" rx="1" fill="#8B6914"/><circle cx="14" cy="32" r="3" fill="#222"/><circle cx="46" cy="32" r="3" fill="#222"/></svg>`, trophy:"m5"}
+  ];
+
+  // ===== Save state =====
+  const SAVE_KEY = "keisan_train_save_v2";
+  const defaultSave = { tickets:0, maxStreak:0, stationIdx:0, trophies:[], cleared:{} };
+  function loadSave(){
+    try{ return { ...defaultSave, ...JSON.parse(localStorage.getItem(SAVE_KEY) || "{}") }; }
+    catch{ return { ...defaultSave }; }
+  }
+  function saveNow(){ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }
+  let save = loadSave();
+
+  // state during a round
+  const state = { mode:null, count:10, questions:[], i:0, input:"", answers:[], streak:0, maxStreak:0 };
+
+  // ===== DOM =====
+  const menu=$('menu'), play=$('play'), result=$('result'), zukan=$('zukan');
+  const qIdxEl=$('qIdx'), qAllEl=$('qAll'), qLabel=$('qLabel'), qFormula=$('qFormula'), pad=$('pad');
+  const toast=$('toast'), bubble=$('bubble');
+  const comboEl=$('combo');
+  const trainIcon=$('trainIcon');
+
+  // ===== Init rendering =====
+  function renderHeader(){ $('tickets').textContent = save.tickets; }
+  function renderLocation(){
+    const here = STATIONS[save.stationIdx] || STATIONS[STATIONS.length-1];
+    const next = STATIONS[save.stationIdx+1];
+    $('locHere').textContent = here.n;
+    $('locNext').textContent = next ? `つぎは ${next.n} を めざそう` : "ぜん えき せいは！ おめでとう！";
+    $('locIdx').textContent = save.stationIdx;
+    $('locAll').textContent = STATIONS.length-1;
+  }
+  function renderModes(){
+    const wrap = $('modesWrap');
+    wrap.innerHTML = "";
+    MODES.forEach(m=>{
+      const gotMaster = save.cleared[m.id];
+      const btn = document.createElement('button');
+      btn.className = `mode ${m.cls}`;
+      btn.dataset.mode = m.id;
+      btn.innerHTML = `
+        <div class="icon">${m.svg}</div>
+        <div><div class="name">${m.name}</div><div class="desc">${m.desc}</div></div>
+        <div class="arrow">▶</div>
+        ${gotMaster?'<div class="master">MASTER ★</div>':''}
+      `;
+      btn.addEventListener('click', ()=> startGame(m.id));
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ===== Game loop =====
+  const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
   function makeQuestion(mode){
     let a,b,c,tries;
-    if (mode === '1d1d_low'){
-      do{ a=rnd(1,9); b=rnd(1,9); } while (a+b>10);
-      return { text:`${a} + ${b} =`, ans:a+b };
-    }
-    if (mode === '1d1d_high'){
-      do{ a=rnd(1,9); b=rnd(1,9); } while (a+b<10 || a+b>20);
-      return { text:`${a} + ${b} =`, ans:a+b };
-    }
-    if (mode === '2d1d'){
-      do{ a=rnd(10,99); b=rnd(1,9); } while (a+b>100);
-      return { text:`${a} + ${b} =`, ans:a+b };
-    }
-    if (mode === '2d2d'){
-      do{ a=rnd(10,89); b=rnd(10,89); } while (a+b>100);
-      return { text:`${a} + ${b} =`, ans:a+b };
-    }
-    if (mode === '3x1d'){
-      tries=0;
-      do{ a=rnd(1,9); b=rnd(1,9); c=rnd(1,9); tries++; } while (a+b+c>20 && tries<30);
-      return { text:`${a} + ${b} + ${c} =`, ans:a+b+c };
-    }
+    if (mode==='1d1d_low'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b>10); return {text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='1d1d_high'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b<10||a+b>20); return {text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='2d1d'){ do{a=rnd(10,99);b=rnd(1,9);}while(a+b>100); return {text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='2d2d'){ do{a=rnd(10,89);b=rnd(10,89);}while(a+b>100); return {text:`${a} + ${b} =`,ans:a+b}; }
+    if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); return {text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
   }
-  function buildQuestions(mode, count){
-    const seen = new Set(), list = [];
-    while (list.length < count){
-      const q = makeQuestion(mode);
-      if (seen.has(q.text)) continue;
+  function buildQuestions(mode,count){
+    const seen=new Set(), list=[];
+    while(list.length<count){
+      const q=makeQuestion(mode);
+      if(seen.has(q.text)) continue;
       seen.add(q.text); list.push(q);
     }
     return list;
   }
 
-  document.querySelectorAll('.mode').forEach(el=>{
-    el.addEventListener('click', ()=> startGame(el.dataset.mode));
-  });
-  document.querySelectorAll('#countChips .chip').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      document.querySelectorAll('#countChips .chip').forEach(c=>c.classList.remove('active'));
-      el.classList.add('active');
-      state.count = Number(el.dataset.count);
-    });
-  });
-
   function startGame(mode){
-    state.mode = mode;
-    state.questions = buildQuestions(mode, state.count);
-    state.i = 0; state.input=''; state.answers=[];
-    show(play);
-    renderQuestion();
+    state.mode=mode;
+    state.questions=buildQuestions(mode,state.count);
+    state.i=0; state.input=""; state.answers=[]; state.streak=0; state.maxStreak=0;
+    show(play); renderQuestion(); renderCombo();
   }
 
   function show(section){
-    [menu,play,result].forEach(s=>s.classList.add('hide'));
+    [menu,play,result,zukan].forEach(s=>s.classList.add('hide'));
     section.classList.remove('hide');
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  $('btnBack').addEventListener('click', ()=> show(menu));
-  $('btnHome').addEventListener('click', ()=> show(menu));
-  $('btnRetry').addEventListener('click', ()=> startGame(state.mode));
-
   function renderQuestion(){
-    const q = state.questions[state.i];
-    qAllEl.textContent = state.questions.length;
-    qIdxEl.textContent = state.i + 1;
-    qLabel.textContent = `NEXT STATION ・ もんだい ${state.i + 1}`;
-    // move train along the rail
-    const rb = trainIcon.parentElement.getBoundingClientRect();
-    const ratio = state.i / state.questions.length;
-    const max = Math.max(0, rb.width - 60);
-    trainIcon.style.left = (max * ratio) + 'px';
+    const q=state.questions[state.i];
+    qAllEl.textContent=state.questions.length;
+    qIdxEl.textContent=state.i+1;
+    qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
+    const rb=trainIcon.parentElement.getBoundingClientRect();
+    const max=Math.max(0,rb.width-60);
+    trainIcon.style.left=(max*(state.i/state.questions.length))+"px";
 
-    const parts = q.text.split(' ');
-    const html = parts.map(p=>{
+    const parts=q.text.split(' ');
+    const html=parts.map(p=>{
       if(p==='+'||p==='-') return `<span class="op">${p}</span>`;
       if(p==='=') return `<span class="eq">=</span>`;
       return `<span>${p}</span>`;
     }).join(' ');
-    state.input='';
-    qFormula.innerHTML = html + ' <span id="ansBox" class="answer empty">？</span>';
+    state.input="";
+    qFormula.innerHTML = html+' <span id="ansBox" class="answer empty">？</span>';
+  }
+  function updateAns(){
+    const el=document.getElementById('ansBox'); if(!el) return;
+    if(state.input===""){ el.textContent="？"; el.classList.add('empty'); }
+    else{ el.textContent=state.input; el.classList.remove('empty'); }
   }
 
-  function updateAnswerBox(){
-    const ansBox = document.getElementById('ansBox');
-    if (!ansBox) return;
-    if (state.input === ''){ ansBox.textContent='？'; ansBox.classList.add('empty'); }
-    else { ansBox.textContent=state.input; ansBox.classList.remove('empty'); }
+  function renderCombo(){
+    const s = state.streak;
+    comboEl.classList.remove('show','big','huge');
+    if (s<2) { comboEl.textContent=""; return; }
+    let txt="", cls="";
+    if (s>=10){ txt=`✨ ${s} れんぞく！すごすぎ！！ ✨`; cls="huge"; }
+    else if (s>=5){ txt=`⚡ ${s} れんぞく！ ⚡`; cls="big"; }
+    else { txt=`🔥 ${s} れんぞく！`; }
+    comboEl.textContent=txt;
+    if (cls) comboEl.classList.add(cls);
+    comboEl.classList.add('show');
+    setTimeout(()=>comboEl.classList.remove('show'),400);
   }
 
-  pad.addEventListener('click', (e)=>{
-    const b = e.target.closest('.key'); if(!b) return;
-    const k = b.dataset.k;
-    if (k === 'del'){ state.input = state.input.slice(0,-1); }
-    else if (k === 'ok'){ return submitAnswer(); }
-    else {
-      if (state.input.length >= 3) return;
-      if (state.input === '0') state.input = '';
-      state.input += k;
+  pad.addEventListener('click',(e)=>{
+    const b=e.target.closest('.key'); if(!b) return;
+    const k=b.dataset.k;
+    if(k==='del'){ state.input=state.input.slice(0,-1); }
+    else if(k==='ok'){ return submit(); }
+    else{
+      if(state.input.length>=3) return;
+      if(state.input==='0') state.input='';
+      state.input+=k;
     }
-    updateAnswerBox();
+    updateAns();
+  });
+  window.addEventListener('keydown',(e)=>{
+    if(play.classList.contains('hide')) return;
+    if(/^[0-9]$/.test(e.key)){ if(state.input.length>=3) return; if(state.input==='0') state.input=''; state.input+=e.key; updateAns(); }
+    else if(e.key==='Backspace'){ state.input=state.input.slice(0,-1); updateAns(); }
+    else if(e.key==='Enter'){ submit(); }
   });
 
-  window.addEventListener('keydown', (e)=>{
-    if (play.classList.contains('hide')) return;
-    if (/^[0-9]$/.test(e.key)){
-      if (state.input.length >= 3) return;
-      if (state.input === '0') state.input = '';
-      state.input += e.key; updateAnswerBox();
-    } else if (e.key === 'Backspace'){ state.input = state.input.slice(0,-1); updateAnswerBox(); }
-    else if (e.key === 'Enter'){ submitAnswer(); }
-  });
-
-  function submitAnswer(){
-    if (state.input === '') { flash('ng','すうじを いれてね'); return; }
-    const q = state.questions[state.i];
-    const your = Number(state.input);
-    const ok = your === q.ans;
-    state.answers.push({ text:q.text, correct:q.ans, your, ok });
-    if (ok){ flash('ok', pickPraise()); passBy(); }
-    else { flash('ng', `ざんねん… こたえは ${q.ans}`); }
+  function submit(){
+    if(state.input===""){ flash('ng','すうじを いれてね'); return; }
+    const q=state.questions[state.i];
+    const your=Number(state.input);
+    const ok=your===q.ans;
+    state.answers.push({text:q.text,correct:q.ans,your,ok});
+    if(ok){
+      state.streak++;
+      state.maxStreak=Math.max(state.maxStreak,state.streak);
+      flash('ok',pickPraise(state.streak));
+      passBy();
+    } else {
+      state.streak=0;
+      flash('ng',`ざんねん… こたえは ${q.ans}`);
+    }
+    renderCombo();
     setTimeout(()=>{
       state.i++;
-      if (state.i >= state.questions.length){ finish(); }
-      else { renderQuestion(); }
-    }, ok ? 900 : 1200);
+      if(state.i>=state.questions.length) finish();
+      else renderQuestion();
+    }, ok?850:1150);
   }
-
-  function pickPraise(){
-    const list = ['はっしゃ オーライ！','めちゃはやい！','こくてつ級！','グッドジョブ！','のぞみ きゅう！','てんさい！'];
+  function pickPraise(s){
+    if(s>=10) return "でんせつの てんさい！";
+    if(s>=5) return "ちょう ぜっこうちょう！";
+    const list=["はっしゃ オーライ！","めちゃはやい！","こくてつ級！","グッドジョブ！","のぞみ きゅう！","てんさい！"];
     return list[Math.floor(Math.random()*list.length)];
   }
-
-  function flash(type, text){
-    bubble.textContent = (type==='ok'?'🚄 ':'🚧 ') + text;
-    toast.classList.remove('ok','ng');
-    toast.classList.add('show', type);
-    clearTimeout(flash._t);
-    flash._t = setTimeout(()=> toast.classList.remove('show'), 1100);
+  function flash(t,text){
+    bubble.textContent=(t==='ok'?'🚄 ':'🚧 ')+text;
+    toast.classList.remove('ok','ng'); toast.classList.add('show',t);
+    clearTimeout(flash._t); flash._t=setTimeout(()=>toast.classList.remove('show'),1100);
   }
-
   function passBy(){
-    const el = document.createElement('div');
-    el.className = 'pass';
-    el.innerHTML = `<svg viewBox="0 0 120 60" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 rgba(0,0,0,.15))">
+    const el=document.createElement('div');
+    el.className='pass';
+    el.innerHTML=`<svg viewBox="0 0 120 60" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 rgba(0,0,0,.15))">
       <path d="M4 40 L4 22 Q4 16 12 12 L80 6 Q112 6 116 22 L116 42 Q116 48 110 48 L10 48 Q4 48 4 40 Z" fill="#fff" stroke="#083876" stroke-width="3"/>
       <path d="M4 30 L116 30 L116 36 L4 36 Z" fill="#0B6FC6"/>
       <path d="M80 6 Q108 10 114 20 L60 20 Z" fill="#E4002B"/>
-      <rect x="16" y="18" width="10" height="6" rx="2" fill="#083876"/>
-      <rect x="32" y="18" width="10" height="6" rx="2" fill="#083876"/>
-      <rect x="48" y="18" width="10" height="6" rx="2" fill="#083876"/>
-      <rect x="64" y="18" width="10" height="6" rx="2" fill="#083876"/>
-      <circle cx="24" cy="50" r="4" fill="#222"/>
-      <circle cx="92" cy="50" r="4" fill="#222"/>
+      <circle cx="24" cy="50" r="4" fill="#222"/><circle cx="92" cy="50" r="4" fill="#222"/>
     </svg>`;
     document.body.appendChild(el);
-    setTimeout(()=>el.remove(), 1400);
+    setTimeout(()=>el.remove(),1400);
   }
 
+  // ===== Finish / reward =====
   function finish(){
-    // train arrives at the end
-    const rb = trainIcon.parentElement.getBoundingClientRect();
-    trainIcon.style.left = Math.max(0, rb.width - 60) + 'px';
+    const rb=trainIcon.parentElement.getBoundingClientRect();
+    trainIcon.style.left=Math.max(0,rb.width-60)+"px";
 
-    const score = state.answers.filter(a=>a.ok).length;
-    const all = state.answers.length;
-    $('scoreNum').textContent = score;
-    $('scoreAll').textContent = all;
-    const ratio = score / all;
-    const tEarned = ratio >= 1 ? 3 : ratio >= .7 ? 2 : ratio >= .4 ? 1 : 0;
-    const els = document.querySelectorAll('#ticketRow .ticket');
-    els.forEach((el,i)=> el.classList.toggle('on', i < tEarned));
-    totalStars += tEarned;
-    localStorage.setItem('tickets_total', totalStars);
-    starCountEl.textContent = totalStars;
+    const score=state.answers.filter(a=>a.ok).length;
+    const all=state.answers.length;
+    $('scoreNum').textContent=score;
+    $('scoreAll').textContent=all;
+    $('maxCombo').textContent=state.maxStreak;
 
-    $('resultTitle').textContent =
-      ratio >= 1 ? 'ぜんえき クリア！しゅうちゃく！' :
-      ratio >= .7 ? 'じょうず！しゅうちゃく とうちゃく！' :
-      ratio >= .4 ? 'もうすこし！' : 'つぎは きっと はしれる！';
+    const ratio=score/all;
+    const tEarned= ratio>=1?3 : ratio>=.7?2 : ratio>=.4?1 : 0;
+    const els=document.querySelectorAll('#ticketRow .ticket');
+    els.forEach((el,i)=>el.classList.toggle('on', i<tEarned));
 
-    const review = $('reviewList'); review.innerHTML='';
+    // 進行駅
+    const stepCount = ratio>=1?2 : ratio>=.7?1 : 0;
+    const prevIdx = save.stationIdx;
+    save.stationIdx = Math.min(STATIONS.length-1, save.stationIdx + stepCount);
+    save.tickets += tEarned;
+    save.maxStreak = Math.max(save.maxStreak, state.maxStreak);
+
+    // journey text
+    if (stepCount>0){
+      const from=STATIONS[prevIdx].n, to=STATIONS[save.stationIdx].n;
+      $('journeyTxt').innerHTML = `<span class="from">${from}</span> →→ <span class="to">${to}</span>（${stepCount}えき すすんだ！）`;
+    } else {
+      $('journeyTxt').innerHTML = `<span class="from">${STATIONS[prevIdx].n}</span>で たいきちゅう…<br><small style="color:var(--sub);font-size:11px">もうすこし せいかいを ふやして すすもう！</small>`;
+    }
+
+    // トロフィー判定
+    const newlyGot = [];
+    const grant = (id)=>{ if(!save.trophies.includes(id)){ save.trophies.push(id); newlyGot.push(id); } };
+    if (score>0) grant('first');
+    if (state.maxStreak>=5) grant('c5');
+    if (state.maxStreak>=10) grant('c10');
+    if (ratio>=1){
+      grant('perfect');
+      save.cleared[state.mode] = true;
+      const t = MODES.find(m=>m.id===state.mode)?.trophy;
+      if (t) grant(t);
+      // 全モード マスター判定
+      if (MODES.every(m=>save.cleared[m.id])) grant('all');
+    }
+    const tokyoIdx = STATIONS.findIndex(s=>s.n==="とうきょう");
+    if (save.stationIdx>=tokyoIdx) grant('tokyo');
+    if (save.stationIdx>=STATIONS.length-1) grant('sapporo');
+
+    // 新トロフィー表示
+    const newWrap=$('newTrophies'); newWrap.innerHTML="";
+    newlyGot.forEach(id=>{
+      const t=TROPHIES.find(t=>t.id===id); if(!t) return;
+      const el=document.createElement('div');
+      el.className='new-tr';
+      el.innerHTML = `<span style="font-size:20px">${t.ic}</span><span>${t.nm} GET!</span>`;
+      newWrap.appendChild(el);
+    });
+
+    saveNow(); renderHeader();
+
+    $('resultTitle').textContent = ratio>=1 ? 'ぜんもん せいかい！しゅうちゃく！'
+      : ratio>=.7 ? 'じょうず！しゅうちゃく とうちゃく！'
+      : ratio>=.4 ? 'もうすこし！' : 'つぎは きっと はしれる！';
+
+    const review=$('reviewList'); review.innerHTML="";
     state.answers.forEach((a,idx)=>{
-      const row = document.createElement('div');
-      row.className = 'row' + (a.ok?'':' ng');
-      row.innerHTML = `<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️ ていしゃ':'❌ せいかい '+a.correct}</span>`;
+      const row=document.createElement('div');
+      row.className='row'+(a.ok?'':' ng');
+      row.innerHTML=`<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️':'❌ せいかい '+a.correct}</span>`;
       review.appendChild(row);
     });
     show(result);
-    if (ratio >= 1) { for(let k=0;k<3;k++) setTimeout(passBy, k*450); }
+    if(ratio>=1){ for(let k=0;k<3;k++) setTimeout(passBy,k*450); }
+    if(save.stationIdx>=STATIONS.length-1){ for(let k=0;k<5;k++) setTimeout(passBy,k*350); }
   }
+
+  // ===== Zukan (図鑑) =====
+  function openZukan(){
+    renderMap(); renderStationList(); renderTrophies();
+    show(zukan);
+    setActiveTab('map');
+  }
+  function setActiveTab(tab){
+    document.querySelectorAll('#zukan .tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+    $('tab-map').classList.toggle('hide', tab!=='map');
+    $('tab-trophy').classList.toggle('hide', tab!=='trophy');
+  }
+  document.querySelectorAll('#zukan .tab').forEach(t=>t.addEventListener('click',()=>setActiveTab(t.dataset.tab)));
+
+  function renderMap(){
+    const g=$('stations'); g.innerHTML="";
+    STATIONS.forEach((s,idx)=>{
+      const done = idx <= save.stationIdx;
+      const here = idx === save.stationIdx;
+      const color = here ? "#E4002B" : (done ? "#2DAA6E" : "#B9C5D0");
+      const r = here ? 7 : 5;
+      g.innerHTML += `
+        <circle cx="${s.x}" cy="${s.y}" r="${r+2}" fill="#fff"/>
+        <circle cx="${s.x}" cy="${s.y}" r="${r}" fill="${color}"${here?' style="filter:drop-shadow(0 0 6px #E4002B)"':''}/>
+        <text x="${s.x+10}" y="${s.y+3}" font-size="8" font-weight="700" fill="${done?'#1B5E20':'#738396'}">${s.n}</text>
+      `;
+    });
+  }
+  function renderStationList(){
+    const el=$('stationList'); el.innerHTML="";
+    STATIONS.forEach((s,idx)=>{
+      const done=idx<=save.stationIdx;
+      const here=idx===save.stationIdx;
+      const row=document.createElement('div');
+      row.className='st-row'+(here?' here':done?' done':'');
+      row.innerHTML=`<span class="n">${idx+1}</span><span class="dot"></span><span>${s.n}えき</span>${here?'<span style="margin-left:auto;font-size:11px">📍いまここ</span>':done?'<span style="margin-left:auto;font-size:11px">✅ クリア</span>':''}`;
+      el.appendChild(row);
+    });
+  }
+  function renderTrophies(){
+    const g=$('trophyGrid'); g.innerHTML="";
+    TROPHIES.forEach(t=>{
+      const got=save.trophies.includes(t.id);
+      const el=document.createElement('div');
+      el.className='trophy'+(got?' got':'');
+      el.innerHTML=`<span class="ic">${t.ic}</span><div class="nm">${t.nm}</div><div class="ds">${t.ds}</div>`;
+      g.appendChild(el);
+    });
+  }
+
+  $('btnZukan').addEventListener('click',openZukan);
+  $('btnZukanBack').addEventListener('click',()=>show(menu));
+  $('btnBack').addEventListener('click',()=>show(menu));
+  $('btnHome').addEventListener('click',()=>{ renderLocation(); renderModes(); show(menu); });
+  $('btnRetry').addEventListener('click',()=>startGame(state.mode));
+
+  document.querySelectorAll('#countChips .chip').forEach(el=>{
+    el.addEventListener('click',()=>{
+      document.querySelectorAll('#countChips .chip').forEach(c=>c.classList.remove('active'));
+      el.classList.add('active');
+      state.count=Number(el.dataset.count);
+    });
+  });
+
+  // ===== Boot =====
+  renderHeader(); renderLocation(); renderModes();
 </script>
 </body>
 </html>
