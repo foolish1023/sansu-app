@@ -852,8 +852,9 @@
   ];
 
   // ===== Page language switcher =====
-  let pageLang = 'ja';
+  let pageLang = null;
   function applyLanguage(lang){
+    if (pageLang === lang) return; // 同じ言語なら何もしない
     pageLang = lang;
     if (lang === 'en'){
       // Header
