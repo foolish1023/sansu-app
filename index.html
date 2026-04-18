@@ -160,7 +160,7 @@
   /* English listening */
   .english-box{background:linear-gradient(180deg,#E1F5FE,#B3E5FC);border:4px solid #0288D1;border-radius:20px;padding:18px;text-align:center;margin-top:8px;box-shadow:var(--shadow)}
   .emoji-big{font-size:min(96px,22vw);line-height:1;margin:6px 0;letter-spacing:2px}
-  .english-box.scene .emoji-big{font-size:min(84px,19vw);letter-spacing:6px}
+  .english-box.scene .emoji-big{font-size:min(60px,15vw);letter-spacing:5px;margin:4px 0 2px}
   .scene-ctx{background:#fff;border:3px solid #0288D1;border-radius:14px;padding:12px 14px;display:block;font-weight:900;color:#01579B;font-size:14px;line-height:1.55;margin:8px 4px 6px;box-shadow:0 3px 0 rgba(2,136,209,.25);text-align:left}
   .scene-ctx .quote{display:block;color:#B71C1C;font-size:13px;margin-top:4px}
   .scene-ctx .prompt{display:block;color:#0D47A1;margin-top:6px;font-size:13px}
@@ -336,11 +336,11 @@
     <!-- 英語プレイ（耳で学ぶ） -->
     <div id="playEnglish" class="hide">
       <div class="english-box">
-        <div class="qLabel" id="qLabelEng" style="color:#01579B;letter-spacing:.15em">NEXT STATION ・ もんだい 1</div>
+        <div class="qLabel" id="qLabelEng" style="color:#01579B;letter-spacing:.15em">NEXT STATION ・ Question 1</div>
         <div class="emoji-big" id="engEmoji">🐱</div>
         <div class="ja-hint" id="engJa"></div>
-        <button class="speaker" id="btnSpeak"><span class="wave">🔊</span> もういちど きく</button>
-        <div style="font-size:11px;color:#01579B;font-weight:900;margin-top:6px">えいごを きいて こたえを えらぼう！</div>
+        <button class="speaker" id="btnSpeak"><span class="wave">🔊</span> Listen again</button>
+        <div style="font-size:11px;color:#01579B;font-weight:900;margin-top:6px">Listen & pick the right answer!</div>
       </div>
       <div class="choices" id="engChoicesBox"></div>
     </div>
@@ -706,12 +706,12 @@
     {id:"clock_half", type:"clock", cls:"m2", name:"30ぷん じかん",     desc:"〇じ 00ふん/30ふん",            svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="27" y2="28" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="16" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct2"},
     {id:"clock_5min", type:"clock", cls:"m3", name:"5ふん きざみ",      desc:"〇じ05ふん/10ふん/15ふん…",     svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="34" y2="14" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="29" y2="13" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct3"},
     {id:"clock_1min", type:"clock", cls:"m4", name:"1ぷん きざみ",      desc:"どんな じかんでも よめるよ",      svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="22" y2="12" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="22" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct4"},
-    // 英語モード（耳で学ぶ）
-    {id:"eng_abc",     type:"english", cls:"m1", name:"アルファベット",   desc:"ABC を きいて あてる",             svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#64B5F6" stroke="#0D47A1" stroke-width="2"/><text x="27" y="28" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">ABC</text></svg>`, trophy:"e1"},
-    {id:"eng_numbers", type:"english", cls:"m2", name:"すうじ えいご",    desc:"one / two / three…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#AB47BC" stroke="#4A148C" stroke-width="2"/><text x="27" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">1・2・3</text></svg>`, trophy:"e2"},
-    {id:"eng_colors",  type:"english", cls:"m3", name:"いろ えいご",      desc:"red / blue / yellow…",            svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="15" cy="20" r="6" fill="#E53935"/><circle cx="27" cy="20" r="6" fill="#1E88E5"/><circle cx="39" cy="20" r="6" fill="#FFEB3B"/></svg>`, trophy:"e3"},
-    {id:"eng_animals", type:"english", cls:"m4", name:"どうぶつ えいご",  desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"},
-    {id:"eng_situation", type:"english", cls:"m5", name:"シチュエーション", desc:"よくある ばめんの えいご（しんおや）", svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💬</text><text x="42" y="28" text-anchor="middle" font-size="16">😊</text></svg>`, trophy:"e5"}
+    // English listening modes
+    {id:"eng_abc",     type:"english", cls:"m1", name:"Alphabet",        desc:"Listen to A, B, C…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#64B5F6" stroke="#0D47A1" stroke-width="2"/><text x="27" y="28" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">ABC</text></svg>`, trophy:"e1"},
+    {id:"eng_numbers", type:"english", cls:"m2", name:"Numbers",         desc:"one / two / three…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#AB47BC" stroke="#4A148C" stroke-width="2"/><text x="27" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">1・2・3</text></svg>`, trophy:"e2"},
+    {id:"eng_colors",  type:"english", cls:"m3", name:"Colors",          desc:"red / blue / yellow…",            svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="15" cy="20" r="6" fill="#E53935"/><circle cx="27" cy="20" r="6" fill="#1E88E5"/><circle cx="39" cy="20" r="6" fill="#FFEB3B"/></svg>`, trophy:"e3"},
+    {id:"eng_animals", type:"english", cls:"m4", name:"Animals",         desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"},
+    {id:"eng_situation", type:"english", cls:"m5", name:"Situations",    desc:"Everyday scenes for families",    svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💬</text><text x="42" y="28" text-anchor="middle" font-size="16">😊</text></svg>`, trophy:"e5"}
   ];
 
   // ===== English words =====
@@ -742,57 +742,57 @@
     ]
   };
 
-  // よくあるシチュエーション（親子で使える日常フレーズ・物語仕立て）
+  // Everyday situations (for parents & kids to read together — all English)
   const SITUATIONS = [
-    {emoji:"☀️🛏️🥱",  scene:"あさ、おきたばかり。おかあさんが にっこり わらって 『Good morning!』と こえを かけてきた。", prompt:"あなたも あいさつを かえそう！", en:"Good morning"},
+    {emoji:"☀️🛏️🥱", scene:"Sunday, 7am. Sunlight streams through the curtain and warms your cheeks. Mom walks into your bedroom smiling and says 'Good morning, sunshine!' to wake you up gently.", prompt:"How do you greet her back?", en:"Good morning"},
 
-    {emoji:"🌙🌟🛌",  scene:"よる、ベッドに はいる じかん。おとうさんが やさしく 『もう ねようね』と いった。",            prompt:"おやすみの あいさつを しよう。",    en:"Good night"},
+    {emoji:"🌙🌟🛌", scene:"It's 9pm. You've brushed your teeth, put on pajamas, and Dad just finished reading your favorite bedtime story. He reaches to turn off the lamp and whispers, 'Time to sleep now.'", prompt:"Say it before you close your eyes.", en:"Good night"},
 
-    {emoji:"🤝👧👦",  scene:"こうえんで はじめて あう おともだちが てを さしだした。にこっと わらっている。",                 prompt:"えいごで じぶんを しょうかいしよう！", en:"Nice to meet you"},
+    {emoji:"🤝👧👦", scene:"First day at a new school. The teacher brings in a new classmate who will sit next to you. She smiles shyly and looks at you, waiting for you to speak first.", prompt:"What do you say to introduce yourself?", en:"Nice to meet you"},
 
-    {emoji:"🎁💝✨",  scene:"たんじょうびに おばあちゃんから プレゼントを もらった。とても うれしい きもち。",                  prompt:"かんしゃの ことばを つたえよう。",  en:"Thank you"},
+    {emoji:"🎁💝✨", scene:"It's your birthday! At Grandma's house, a big yellow gift box sits on the table. She hands it to you with a wink. Inside is the exact toy you've been wanting for months!", prompt:"How do you show appreciation?", en:"Thank you"},
 
-    {emoji:"😢🧸💔",  scene:"うっかり おともだちの だいじな おもちゃを こわして しまった。おともだちは かなしそう…。",         prompt:"ちゃんと あやまろう！",             en:"I'm sorry"},
+    {emoji:"😢🧸💔", scene:"While running around the living room, you accidentally step on your friend's favorite toy car. A wheel snaps off with a loud crack. Your friend's eyes go wide and fill with tears.", prompt:"What do you say right away?", en:"I'm sorry"},
 
-    {emoji:"🍔🤤🕐",  scene:"おひるの じかん。あさから なにも たべていなくて おなかが グーグー なっている。",                   prompt:"おかあさんに きもちを つたえよう。", en:"I'm hungry"},
+    {emoji:"🍔🤤🕐", scene:"You spent three hours at the park running, throwing balls, and playing tag. You walk home tired and find a delicious curry smell filling the kitchen from Mom's cooking.", prompt:"Tell Mom exactly how you feel!", en:"I'm hungry"},
 
-    {emoji:"💧🥤🌞",  scene:"あつい なつの ひ。こうえんで たくさん はしって、くちが カラカラに なった。",                       prompt:"おみずが ほしいって つたえよう。",  en:"I'm thirsty"},
+    {emoji:"💧🥤🌞", scene:"It's a scorching 32°C summer afternoon. You've been playing tag at the park for an hour and sweat is dripping down your forehead. Your mouth feels completely dry.", prompt:"Tell Mom what your body needs.", en:"I'm thirsty"},
 
-    {emoji:"🍰😋🍴",  scene:"おかあさんが やいた ケーキを ひとくち たべた。あまくて、ふわふわで、ほっぺが おちそう！",           prompt:"この きもちを えいごで！",           en:"It's delicious!"},
+    {emoji:"🍰😋🍴", scene:"Sunday dinner. Mom made hamburger steak for the first time. You take a bite and the juice bursts out — it's warm, sweet, and perfectly seasoned. Mom is watching and asks, 'So, how is it?'", prompt:"Give her an honest reaction!", en:"It's delicious!"},
 
-    {emoji:"🎂🎈🎉",  scene:"きょうは だいすきな おともだちの たんじょうび。パーティーに よばれて みんなで おいわい！",         prompt:"おいわいの ことばを かけよう。",    en:"Happy birthday!"},
+    {emoji:"🎂🎈🎉", scene:"Today is your best friend Lisa's 8th birthday. You arrive at her house to find balloons everywhere, a huge cake on the table, and Lisa running to greet you at the door.", prompt:"The very first thing you should say!", en:"Happy birthday!"},
 
-    {emoji:"🔎🪑❓",  scene:"はくぶつかんで みたことない ふしぎな ものを はっけん！ おとうさんに きいてみたい。",                 prompt:"しつもんして みよう。",              en:"What is this?"},
+    {emoji:"🔎🪑❓", scene:"At the science museum, you spot something mysterious in the corner — it's round, glowing blue, and makes a soft humming sound. Dad stands beside you, also curious.", prompt:"Ask him about it!", en:"What is this?"},
 
-    {emoji:"💴🛍️💭",  scene:"おみやげ やさんで かわいい キーホルダーを みつけた。でも ねふだが ついていない…。",                  prompt:"てんいんさんに ねだんを きこう！",   en:"How much is it?"},
+    {emoji:"💴🛍️💭", scene:"At a souvenir shop, you found the cutest keychain shaped like a cat. You want to buy it, but the price tag has fallen off. A kind shopkeeper notices and smiles at you.", prompt:"Ask about the price!", en:"How much is it?"},
 
-    {emoji:"🚽🙋🏫",  scene:"じゅぎょうちゅう、きゅうに トイレに いきたくなった。がまんは むずかしい！",                         prompt:"せんせいに ちゃんと つたえよう。",   en:"May I go to the bathroom?"},
+    {emoji:"🚽🙋🏫", scene:"In the middle of a math test, you suddenly really need the bathroom. The classroom is silent except for pencils scratching on paper. Twenty minutes left and you can't wait much longer.", prompt:"Quietly raise your hand and ask.", en:"May I go to the bathroom?"},
 
-    {emoji:"🤔💭📝",  scene:"テストの もんだいが とても むずかしい。いくら かんがえても こたえが うかばない。",                  prompt:"せいじつに こたえよう。",            en:"I don't know"},
+    {emoji:"🤔💭📝", scene:"English class. The teacher points at you and asks, 'What's the capital of France?' You hear the question but honestly have no idea what the answer is.", prompt:"Answer her honestly.", en:"I don't know"},
 
-    {emoji:"🎢😄✨",  scene:"ゆうえんちに きた！ ジェットコースターに のって、わくわく どきどき。おとうさんが きく 『たのしい？』",prompt:"きもちを えいごで こたえよう！",    en:"It's fun!"},
+    {emoji:"🎢😄✨", scene:"At the amusement park, you just finished riding the biggest roller coaster in the whole place. Your hair is messy from the wind and your heart is still racing. Dad asks, 'So, how was it?'", prompt:"Answer with all your excitement!", en:"It's fun!"},
 
-    {emoji:"🆘🙏😰",  scene:"こうえんで まいごに なった。いそがしく しているが だれかに こえを かけたい。",                      prompt:"おおきな こえで たすけを よぼう！", en:"Help!"},
+    {emoji:"🆘🙏😰", scene:"In a huge supermarket, you turn around and realize Mom is nowhere to be found. You walk up and down the aisles but can't see her. Your heart races. A friendly staff member is nearby.", prompt:"Call out for help loudly!", en:"Help!"},
 
-    {emoji:"🏠🚪👪",  scene:"がっこうから おうちに かえってきた。げんかんで くつを ぬぐ じかん。",                              prompt:"おうちの人に あいさつしよう。",      en:"I'm home"},
+    {emoji:"🏠🚪👪", scene:"After a long walk home from school carrying your heavy backpack, you finally reach your front door. You open it and immediately smell dinner cooking in the kitchen — Mom must be home.", prompt:"Announce your arrival to your family!", en:"I'm home"},
 
-    {emoji:"🏫🎒👟",  scene:"あさ、がっこうへ いく じかん。おかあさんが げんかんまで みおくりに きてくれた。",                    prompt:"いってきますを えいごで！",         en:"I'm going to school"},
+    {emoji:"🏫🎒👟", scene:"Monday morning. You've had breakfast, brushed your teeth, put on your uniform, and strapped on your backpack. Mom walks with you to the front door to see you off.", prompt:"Say goodbye before you leave!", en:"I'm going to school"},
 
-    {emoji:"👋🌆🚪",  scene:"ともだちと こうえんで あそびおわり。もう そらが あかくなってきた。あしたも あそべるかな。",        prompt:"さよならの あいさつを しよう！",    en:"See you tomorrow"},
+    {emoji:"👋🌆🚪", scene:"You and your friend Ken spent the whole afternoon at the park playing catch, tag, and on the slide. The sky is turning orange now. Ken waves and says, 'Let's play again tomorrow!'", prompt:"Say your farewell!", en:"See you tomorrow"},
 
-    {emoji:"😊👍🤗",  scene:"ともだちが 『いっしょに あそぼう！』って さそって くれた。やろう やろう！",                        prompt:"オーケーを えいごで つたえよう。",  en:"Sure!"},
+    {emoji:"😊👍🤗", scene:"During recess, your classmate Alex runs up and asks, 'Hey, want to play dodgeball with us?' You were actually looking for something fun to do right now.", prompt:"Give him an enthusiastic yes!", en:"Sure!"},
 
-    {emoji:"🤒🌡️💊",  scene:"あさ おきたら からだが あつい。あたまも いたいし、げんきが でない…。",                             prompt:"おかあさんに つたえよう。",          en:"I don't feel well"},
+    {emoji:"🤒🌡️💊", scene:"You wake up and your body feels heavy and warm. Your head is pounding and you can barely get out of bed. Mom comes in and asks with a worried look, 'Are you okay?'", prompt:"Tell her honestly how you feel.", en:"I don't feel well"},
 
-    {emoji:"💦🤦🚶",  scene:"みちを いそいで あるいていたら、しらないひとに うっかり ぶつかって しまった！",                     prompt:"ていねいに あやまろう。",            en:"Excuse me"},
+    {emoji:"💦🤦🚶", scene:"At the library, you were rushing to find your favorite book before it got borrowed. Turning a corner too fast, you accidentally bump into an elderly lady carrying a stack of books.", prompt:"Apologize politely to her!", en:"Excuse me"},
 
-    {emoji:"🖼️❤️🎨", scene:"びじゅつかんで とても すてきな えを みつけた。いろが きれいで、ずっと みていたい きもち。",         prompt:"きもちを つたえよう。",              en:"I like it"},
+    {emoji:"🖼️❤️🎨", scene:"At the art museum, you come across a giant painting of sunflowers. The yellow colors seem to glow, and it makes you feel warm inside. Mom leans over and asks, 'So, what do you think?'", prompt:"Share your honest feeling!", en:"I like it"},
 
-    {emoji:"🛒🍎🙅",  scene:"スーパーで おかあさんが 『りんご いる？』と きいた。でも いまは たべたくない。",                    prompt:"ていねいに ことわろう。",            en:"No, thank you"},
+    {emoji:"🛒🍎🙅", scene:"At the supermarket, the shopkeeper smiles and offers you a free apple sample. She says, 'Would you like one?' But you just ate lunch and you're completely full.", prompt:"Politely decline her offer.", en:"No, thank you"},
 
-    {emoji:"🎖️🙇✨", scene:"せんせいから がんばった ごほうびに とくべつな バッジを もらった。とても うれしい！",                 prompt:"ていねいに おれいを いおう。",       en:"Thank you very much"},
+    {emoji:"🎖️🙇✨", scene:"Your teacher spent every day helping you practice for the speech contest. Today the results came out and you won first place! She smiles warmly and says, 'I'm so proud of you.'", prompt:"Express your deepest gratitude.", en:"Thank you very much"},
 
-    {emoji:"🍽️🙏✨", scene:"レストランで ごはんを たべおわった。おみせを でる まえに ていねいに。",                              prompt:"ごちそうさまを えいごで！",          en:"It was delicious!"}
+    {emoji:"🍽️🙏✨", scene:"At a nice family restaurant, you finished an amazing pasta dish and chocolate cake. Your plate is completely empty. As you stand to leave, the waiter smiles and asks, 'How was everything?'", prompt:"Answer happily!", en:"It was delicious!"}
   ];
 
   // ===== Speech =====
@@ -869,9 +869,9 @@
       $('menuTitle').textContent = 'とけい チャレンジ';
       $('menuSubtitle').textContent = 'ながい はり＝ふん、みじかい はり＝じ！';
     } else if (currentGenre === 'english'){
-      $('boardTitle').textContent = '◀ みみで まなぶ えいご ▶';
-      $('menuTitle').textContent = 'えいご リスニング';
-      $('menuSubtitle').textContent = '🔊 きこえた えいごを えらぼう！';
+      $('boardTitle').textContent = '◀ English Listening ▶';
+      $('menuTitle').textContent = 'Pick your level!';
+      $('menuSubtitle').textContent = '🔊 Listen and pick the right English answer!';
     } else {
       $('boardTitle').textContent = '◀ つぎは どの れっしゃ？ ▶';
       $('menuTitle').textContent = 'のる れっしゃを えらぼう';
@@ -1082,6 +1082,7 @@
       $('playMath').classList.add('hide');
       $('playEnglish').classList.add('hide');
       $('playClock').classList.remove('hide');
+      $('btnBack').textContent = '← もどる';
       $('qLabelClock').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
       $('clockHint').textContent = q.hint;
       $('clockSvgHolder').innerHTML = clockSvg(q.hour, q.minute);
@@ -1097,9 +1098,9 @@
       $('playMath').classList.add('hide');
       $('playClock').classList.add('hide');
       $('playEnglish').classList.remove('hide');
-      $('qLabelEng').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
+      $('btnBack').textContent = '← Back';
+      $('qLabelEng').textContent = `NEXT STATION ・ Question ${state.i+1}`;
       $('engEmoji').textContent = q.emoji;
-      // シーンモードは場面説明を表示。単語モードは日本語を出さない
       const engBox = document.querySelector('.english-box');
       if (q.scene){
         engBox.classList.add('scene');
@@ -1124,6 +1125,7 @@
       $('playMath').classList.remove('hide');
       $('playClock').classList.add('hide');
       $('playEnglish').classList.add('hide');
+      $('btnBack').textContent = '← もどる';
       qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
       const parts=q.text.split(' ');
       const html=parts.map(p=>{
@@ -1157,7 +1159,8 @@
       passBy();
     } else {
       state.streak = 0;
-      flash('ng', `ざんねん… こたえは ${q.ans}`);
+      const ngMsg = q.kind==='english' ? `Oops… The answer is "${q.ans}"` : `ざんねん… こたえは ${q.ans}`;
+      flash('ng', ngMsg);
     }
     renderCombo();
     const delay = q.kind==='english' ? (ok?1300:1700) : (ok?950:1350);
@@ -1177,10 +1180,11 @@
     const s = state.streak;
     comboEl.classList.remove('show','big','huge');
     if (s<2) { comboEl.textContent=""; return; }
+    const en = isEnglishMode();
     let txt="", cls="";
-    if (s>=10){ txt=`✨ ${s} れんぞく！すごすぎ！！ ✨`; cls="huge"; }
-    else if (s>=5){ txt=`⚡ ${s} れんぞく！ ⚡`; cls="big"; }
-    else { txt=`🔥 ${s} れんぞく！`; }
+    if (s>=10){ txt = en ? `✨ ${s} in a row! Incredible! ✨` : `✨ ${s} れんぞく！すごすぎ！！ ✨`; cls="huge"; }
+    else if (s>=5){ txt = en ? `⚡ ${s} in a row! ⚡` : `⚡ ${s} れんぞく！ ⚡`; cls="big"; }
+    else { txt = en ? `🔥 ${s} in a row!` : `🔥 ${s} れんぞく！`; }
     comboEl.textContent=txt;
     if (cls) comboEl.classList.add(cls);
     comboEl.classList.add('show');
@@ -1229,7 +1233,17 @@
       else renderQuestion();
     }, ok?850:1150);
   }
+  function isEnglishMode(){
+    const q = state.questions[state.i];
+    return q && q.kind === 'english';
+  }
   function pickPraise(s){
+    if (isEnglishMode()){
+      if(s>=10) return "Legendary!";
+      if(s>=5)  return "Amazing streak!";
+      const list=["Great job!","Awesome!","Perfect!","Nice one!","Fantastic!","Brilliant!"];
+      return list[Math.floor(Math.random()*list.length)];
+    }
     if(s>=10) return "でんせつの てんさい！";
     if(s>=5) return "ちょう ぜっこうちょう！";
     const list=["はっしゃ オーライ！","めちゃはやい！","こくてつ級！","グッドジョブ！","のぞみ きゅう！","てんさい！"];
