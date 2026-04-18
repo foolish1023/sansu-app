@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>けいさんチャレンジ</title>
+<style>
+  :root{
+    --bg:#FFF7E6;
+    --card:#FFFFFF;
+    --ink:#2B2B2B;
+    --sub:#6B7280;
+    --accent:#FF7A59;
+    --accent2:#FFC24B;
+    --blue:#4FB2E8;
+    --green:#5CC98E;
+    --pink:#F58BB3;
+    --purple:#9B6CE8;
+    --shadow:0 10px 0 rgba(0,0,0,.08);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","Rounded Mplus 1c","Comic Sans MS",system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 10%, #FFE7A3 0 8%, transparent 9%),
+      radial-gradient(circle at 90% 20%, #CDEAFE 0 7%, transparent 8%),
+      radial-gradient(circle at 80% 85%, #FFD3E0 0 9%, transparent 10%),
+      radial-gradient(circle at 15% 80%, #D4F3DE 0 8%, transparent 9%),
+      var(--bg);
+    min-height:100%;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:20px 18px 40px;min-height:100vh;display:flex;flex-direction:column;gap:18px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .logo{font-size:26px;font-weight:900;letter-spacing:.04em}
+  .logo .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle}
+  .star-count{background:#fff;border-radius:999px;padding:8px 14px;font-weight:900;box-shadow:var(--shadow);display:flex;align-items:center;gap:6px}
+  .star-count svg{width:18px;height:18px}
+
+  /* Card base */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+
+  /* Menu */
+  .title{font-size:28px;font-weight:900;text-align:center;margin:6px 0 2px}
+  .subtitle{color:var(--sub);text-align:center;margin-bottom:14px;font-weight:700}
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .mode{
+    border:none;cursor:pointer;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:18px 14px;
+    text-align:left;
+    box-shadow:var(--shadow);
+    transition:transform .08s ease;
+    display:flex;flex-direction:column;gap:4px;
+    font-family:inherit;color:inherit;
+  }
+  .mode:active{transform:translateY(2px)}
+  .mode .emoji{font-size:34px;line-height:1}
+  .mode .name{font-weight:900;font-size:18px;margin-top:6px}
+  .mode .desc{color:var(--sub);font-size:13px;font-weight:700}
+  .mode.m1{background:linear-gradient(180deg,#FFF2D6,#FFFFFF)}
+  .mode.m2{background:linear-gradient(180deg,#E6F4FE,#FFFFFF)}
+  .mode.m3{background:linear-gradient(180deg,#FDE4EE,#FFFFFF)}
+  .mode.m4{background:linear-gradient(180deg,#E3F6EA,#FFFFFF)}
+
+  .question-count{display:flex;gap:8px;justify-content:center;margin:10px 0 0;flex-wrap:wrap}
+  .chip{
+    border:3px solid #EDE5D1;background:#fff;
+    border-radius:999px;padding:8px 14px;font-weight:900;cursor:pointer;
+    font-family:inherit;color:var(--ink);
+  }
+  .chip.active{border-color:var(--accent);background:#FFF1EC;color:var(--accent)}
+
+  /* Play */
+  .playbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .progress{flex:1;height:14px;background:#F0E8D2;border-radius:999px;overflow:hidden}
+  .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease;border-radius:999px}
+  .count{font-weight:900;font-size:16px;color:var(--sub);min-width:54px;text-align:right}
+  .back{background:#fff;border:none;border-radius:14px;padding:10px 12px;font-weight:900;box-shadow:var(--shadow);cursor:pointer;font-family:inherit}
+
+  .qbox{
+    text-align:center;padding:28px 14px;border-radius:20px;
+    background:linear-gradient(180deg,#FFFDF6,#FFF5E0);
+    border:4px dashed #F6D98B;
+  }
+  .qnum{font-size:14px;color:var(--sub);font-weight:900;margin-bottom:8px}
+  .qformula{
+    font-size:clamp(44px,9vw,72px);font-weight:900;letter-spacing:.06em;
+    display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .qformula .op{color:var(--accent)}
+  .qformula .eq{color:var(--blue)}
+  .answer{
+    display:inline-block;min-width:120px;padding:4px 18px;border-radius:16px;
+    background:#fff;border:4px solid var(--blue);color:var(--ink);
+  }
+  .answer.empty{color:#C9C9C9}
+
+  /* Keypad */
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .key{
+    border:none;cursor:pointer;font-family:inherit;color:var(--ink);
+    background:#fff;border-radius:18px;padding:18px 0;
+    font-size:28px;font-weight:900;
+    box-shadow:var(--shadow);
+    transition:transform .06s ease, background .15s;
+  }
+  .key:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(0,0,0,.08)}
+  .key.back{background:#FFE3DB;color:#D1513A}
+  .key.ok{background:linear-gradient(180deg,#5CC98E,#3DA970);color:#fff;grid-column:span 1}
+
+  /* Feedback */
+  .toast{
+    position:fixed;inset:auto 0 30px 0;display:flex;justify-content:center;
+    pointer-events:none;
+  }
+  .toast .bubble{
+    background:#fff;border-radius:999px;padding:14px 22px;font-weight:900;font-size:18px;
+    box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:all .25s ease;
+    display:flex;align-items:center;gap:8px;
+  }
+  .toast.show .bubble{opacity:1;transform:translateY(0)}
+  .toast.ok .bubble{color:#3DA970;border:3px solid #CDEBD9}
+  .toast.ng .bubble{color:#D1513A;border:3px solid #FFD3C6}
+
+  /* Confetti/overlay anim */
+  .burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+  .burst span{
+    position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;
+    animation:fall 1.6s linear forwards;
+  }
+  @keyframes fall{
+    0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
+  }
+
+  /* Result */
+  .result{text-align:center}
+  .result h2{font-size:30px;margin:6px 0 4px}
+  .score{font-size:64px;font-weight:900;color:var(--accent)}
+  .score small{font-size:20px;color:var(--sub)}
+  .stars{display:flex;justify-content:center;gap:6px;margin:8px 0 12px;font-size:36px}
+  .stars .s{filter:grayscale(1);opacity:.35;transform:scale(.9);transition:all .25s}
+  .stars .s.on{filter:none;opacity:1;transform:scale(1.1)}
+  .review{margin-top:14px;display:grid;gap:8px;text-align:left}
+  .review .row{display:flex;justify-content:space-between;padding:10px 14px;border-radius:12px;background:#FAF6EA;font-weight:900}
+  .review .row.ng{background:#FFE8E0;color:#D1513A}
+  .buttons{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;
+    border-radius:999px;padding:14px 22px;font-weight:900;font-size:16px;
+    box-shadow:var(--shadow);
+  }
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.ghost{background:#fff;color:var(--ink)}
+
+  /* helpers */
+  .hide{display:none!important}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:auto}
+  .kana{font-weight:900}
+  /* small devices */
+  @media(max-width:380px){
+    .key{font-size:24px;padding:14px 0}
+    .qformula{font-size:44px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span class="dot"></span>けいさんチャレンジ</div>
+    <div class="star-count" title="これまでにあつめたスター">
+      <svg viewBox="0 0 24 24" fill="#FFB800"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17l-6.1 3.5 1.5-6.8L2.2 9l6.9-.7z"/></svg>
+      <span id="starCount">0</span>
+    </div>
+  </header>
+
+  <!-- MENU -->
+  <section id="menu" class="card">
+    <div class="title">モードを えらんでね</div>
+    <div class="subtitle">きょうは なんもん チャレンジする？</div>
+    <div class="modes">
+      <button class="mode m1" data-mode="1d1d"><div class="emoji">🍎</div><div class="name">1けた + 1けた</div><div class="desc">れい：3 + 4</div></button>
+      <button class="mode m2" data-mode="2d1d"><div class="emoji">🐸</div><div class="name">2けた + 1けた</div><div class="desc">れい：24 + 7</div></button>
+      <button class="mode m3" data-mode="2d2d"><div class="emoji">🎈</div><div class="name">2けた + 2けた</div><div class="desc">れい：36 + 48</div></button>
+      <button class="mode m4" data-mode="3x1d"><div class="emoji">🌟</div><div class="name">3つの たしざん</div><div class="desc">れい：4 + 9 + 2</div></button>
+    </div>
+    <div style="margin-top:16px">
+      <div class="subtitle" style="margin-bottom:6px">もんだいの かず</div>
+      <div class="question-count" id="countChips">
+        <button class="chip" data-count="5">5もん</button>
+        <button class="chip active" data-count="10">10もん</button>
+        <button class="chip" data-count="20">20もん</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play" class="card hide">
+    <div class="playbar">
+      <button class="back" id="btnBack">← もどる</button>
+      <div class="progress"><span id="bar"></span></div>
+      <div class="count"><span id="qIdx">1</span>/<span id="qAll">10</span></div>
+    </div>
+    <div class="qbox">
+      <div class="qnum" id="qLabel">もんだい 1</div>
+      <div class="qformula" id="qFormula"></div>
+    </div>
+    <div class="pad" id="pad">
+      <button class="key" data-k="1">1</button>
+      <button class="key" data-k="2">2</button>
+      <button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button>
+      <button class="key" data-k="5">5</button>
+      <button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button>
+      <button class="key" data-k="8">8</button>
+      <button class="key" data-k="9">9</button>
+      <button class="key back" data-k="del">⌫</button>
+      <button class="key" data-k="0">0</button>
+      <button class="key ok" data-k="ok">OK</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="card result hide">
+    <div style="font-size:48px">🎉</div>
+    <h2 id="resultTitle">やったね！</h2>
+    <div class="score"><span id="scoreNum">0</span><small>/<span id="scoreAll">10</span>もん せいかい</small></div>
+    <div class="stars" id="starRow">
+      <span class="s">⭐</span><span class="s">⭐</span><span class="s">⭐</span>
+    </div>
+    <div id="reviewList" class="review"></div>
+    <div class="buttons">
+      <button class="btn primary" id="btnRetry">もういちど</button>
+      <button class="btn ghost" id="btnHome">メニューへ</button>
+    </div>
+  </section>
+
+  <footer>© けいさんチャレンジ — たのしく まなぼう</footer>
+</div>
+
+<div class="toast" id="toast"><div class="bubble" id="bubble"></div></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const menu = $('menu'), play = $('play'), result = $('result');
+  const qIdxEl = $('qIdx'), qAllEl = $('qAll'), bar = $('bar');
+  const qLabel = $('qLabel'), qFormula = $('qFormula'), pad = $('pad');
+  const toast = $('toast'), bubble = $('bubble');
+  const starCountEl = $('starCount');
+
+  const state = {
+    mode: null,
+    count: 10,
+    questions: [],
+    i: 0,
+    input: '',
+    answers: [], // {q, correct, your, ok}
+  };
+
+  let totalStars = Number(localStorage.getItem('stars_total') || 0);
+  starCountEl.textContent = totalStars;
+
+  // --- question generator ---
+  const rnd = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+  function makeQuestion(mode){
+    if (mode === '1d1d'){
+      const a = rnd(1,9), b = rnd(1,9);
+      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+    }
+    if (mode === '2d1d'){
+      const a = rnd(10,99), b = rnd(1,9);
+      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+    }
+    if (mode === '2d2d'){
+      const a = rnd(10,89), b = rnd(10,89);
+      return { nums:[a,b], text:`${a} + ${b} =`, ans:a+b };
+    }
+    if (mode === '3x1d'){
+      // 3つの1桁 繰り上がりありを優先（合計が10以上）
+      let a,b,c,sum;
+      let tries=0;
+      do{ a=rnd(1,9); b=rnd(0,9); c=rnd(0,9); sum=a+b+c; tries++; }
+      while (sum < 10 && tries < 10);
+      return { nums:[a,b,c], text:`${a} + ${b} + ${c} =`, ans:sum };
+    }
+  }
+  function buildQuestions(mode, count){
+    const seen = new Set(); const list = [];
+    while (list.length < count){
+      const q = makeQuestion(mode);
+      const key = q.text;
+      if (seen.has(key)) continue;
+      seen.add(key); list.push(q);
+    }
+    return list;
+  }
+
+  // --- Menu interaction ---
+  document.querySelectorAll('.mode').forEach(el=>{
+    el.addEventListener('click', ()=> startGame(el.dataset.mode));
+  });
+  document.querySelectorAll('#countChips .chip').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      document.querySelectorAll('#countChips .chip').forEach(c=>c.classList.remove('active'));
+      el.classList.add('active');
+      state.count = Number(el.dataset.count);
+    });
+  });
+
+  function startGame(mode){
+    state.mode = mode;
+    state.questions = buildQuestions(mode, state.count);
+    state.i = 0; state.input=''; state.answers=[];
+    show(play);
+    renderQuestion();
+  }
+
+  function show(section){
+    [menu,play,result].forEach(s=>s.classList.add('hide'));
+    section.classList.remove('hide');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  $('btnBack').addEventListener('click', ()=> show(menu));
+  $('btnHome').addEventListener('click', ()=> show(menu));
+  $('btnRetry').addEventListener('click', ()=> startGame(state.mode));
+
+  // --- Render ---
+  function renderQuestion(){
+    const q = state.questions[state.i];
+    qAllEl.textContent = state.questions.length;
+    qIdxEl.textContent = state.i + 1;
+    qLabel.textContent = `もんだい ${state.i + 1}`;
+    bar.style.width = ((state.i) / state.questions.length * 100) + '%';
+    // formula html with colored operators + answer box
+    const parts = q.text.split(' ');
+    // parts like ["4","+","9","+","2","="]
+    const html = parts.map(p=>{
+      if(p==='+'||p==='-') return `<span class="op">${p}</span>`;
+      if(p==='=') return `<span class="eq">=</span>`;
+      return `<span>${p}</span>`;
+    }).join(' ');
+    state.input='';
+    qFormula.innerHTML = html + ' <span id="ansBox" class="answer empty">？</span>';
+  }
+
+  function updateAnswerBox(){
+    const ansBox = document.getElementById('ansBox');
+    if (!ansBox) return;
+    if (state.input === ''){
+      ansBox.textContent = '？';
+      ansBox.classList.add('empty');
+    }else{
+      ansBox.textContent = state.input;
+      ansBox.classList.remove('empty');
+    }
+  }
+
+  // --- Keypad ---
+  pad.addEventListener('click', (e)=>{
+    const b = e.target.closest('.key'); if(!b) return;
+    const k = b.dataset.k;
+    if (k === 'del'){
+      state.input = state.input.slice(0,-1);
+    } else if (k === 'ok'){
+      return submitAnswer();
+    } else {
+      if (state.input.length >= 3) return; // 最大3桁
+      // 先頭0の重複を防ぐ
+      if (state.input === '0') state.input = '';
+      state.input += k;
+    }
+    updateAnswerBox();
+  });
+
+  // physical keyboard for desktop
+  window.addEventListener('keydown', (e)=>{
+    if (play.classList.contains('hide')) return;
+    if (/^[0-9]$/.test(e.key)){
+      if (state.input.length >= 3) return;
+      if (state.input === '0') state.input = '';
+      state.input += e.key; updateAnswerBox();
+    } else if (e.key === 'Backspace'){
+      state.input = state.input.slice(0,-1); updateAnswerBox();
+    } else if (e.key === 'Enter'){
+      submitAnswer();
+    }
+  });
+
+  function submitAnswer(){
+    if (state.input === '') { flash('ng','すうじを いれてね'); return; }
+    const q = state.questions[state.i];
+    const your = Number(state.input);
+    const ok = your === q.ans;
+    state.answers.push({ text:q.text, correct:q.ans, your, ok });
+    if (ok){ flash('ok', pickPraise()); confetti(); }
+    else { flash('ng', `ざんねん… こたえは ${q.ans}`); }
+    setTimeout(()=>{
+      state.i++;
+      if (state.i >= state.questions.length){
+        finish();
+      } else {
+        renderQuestion();
+      }
+    }, ok ? 700 : 1200);
+  }
+
+  function pickPraise(){
+    const list = ['せいかい！','やったー！','すごい！','ナイス！','その ちょうし！','てんさい！'];
+    return list[Math.floor(Math.random()*list.length)];
+  }
+
+  function flash(type, text){
+    bubble.textContent = (type==='ok'?'🎉 ':'🥺 ') + text;
+    toast.classList.remove('ok','ng');
+    toast.classList.add('show', type);
+    clearTimeout(flash._t);
+    flash._t = setTimeout(()=> toast.classList.remove('show'), 1000);
+  }
+
+  function confetti(){
+    const colors = ['#FF7A59','#FFC24B','#4FB2E8','#5CC98E','#F58BB3','#9B6CE8'];
+    const wrap = document.createElement('div');
+    wrap.className = 'burst';
+    for (let i=0;i<28;i++){
+      const s = document.createElement('span');
+      s.style.left = (Math.random()*100)+'%';
+      s.style.background = colors[i%colors.length];
+      s.style.animationDelay = (Math.random()*0.4)+'s';
+      s.style.transform = `rotate(${Math.random()*360}deg)`;
+      wrap.appendChild(s);
+    }
+    document.body.appendChild(wrap);
+    setTimeout(()=>wrap.remove(), 1800);
+  }
+
+  function finish(){
+    bar.style.width = '100%';
+    const score = state.answers.filter(a=>a.ok).length;
+    const all = state.answers.length;
+    $('scoreNum').textContent = score;
+    $('scoreAll').textContent = all;
+    const ratio = score / all;
+    const starsEarned = ratio >= 1 ? 3 : ratio >= .7 ? 2 : ratio >= .4 ? 1 : 0;
+    const starEls = document.querySelectorAll('#starRow .s');
+    starEls.forEach((el,i)=> el.classList.toggle('on', i < starsEarned));
+    // add to total
+    totalStars += starsEarned;
+    localStorage.setItem('stars_total', totalStars);
+    starCountEl.textContent = totalStars;
+
+    $('resultTitle').textContent =
+      ratio >= 1 ? 'ぜんもん せいかい！' :
+      ratio >= .7 ? 'よくできたね！' :
+      ratio >= .4 ? 'もうすこし！' : 'つぎは きっとできる！';
+
+    const review = $('reviewList'); review.innerHTML='';
+    state.answers.forEach((a,idx)=>{
+      const row = document.createElement('div');
+      row.className = 'row' + (a.ok?'':' ng');
+      row.innerHTML = `<span>${idx+1}. ${a.text} ${a.your}</span><span>${a.ok?'⭕️':'❌ せいかい '+a.correct}</span>`;
+      review.appendChild(row);
+    });
+    show(result);
+    if (ratio >= 1) { for(let k=0;k<3;k++) setTimeout(confetti, k*400); }
+  }
+</script>
+</body>
+</html>
