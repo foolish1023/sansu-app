@@ -157,6 +157,15 @@
   .choice.wrong{background:linear-gradient(180deg,#FFCDD2,#EF9A9A);border-color:#B71C1C;color:#B71C1C}
   .choice.disabled{pointer-events:none;opacity:.6}
 
+  /* English listening */
+  .english-box{background:linear-gradient(180deg,#E1F5FE,#B3E5FC);border:4px solid #0288D1;border-radius:20px;padding:18px;text-align:center;margin-top:8px;box-shadow:var(--shadow)}
+  .emoji-big{font-size:min(96px,22vw);line-height:1;margin:6px 0}
+  .ja-hint{font-weight:900;font-size:18px;color:#01579B;margin:6px 0 10px}
+  .speaker{background:linear-gradient(180deg,#FFD54F,#FFA726);border:3px solid #E65100;border-radius:999px;padding:11px 20px;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit;color:#5D2E00;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:6px}
+  .speaker:active{transform:translateY(2px)}
+  .speaker .wave{display:inline-block;animation:wave 1.2s infinite}
+  @keyframes wave{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+
   /* Result */
   .result{text-align:center}
   .result h2{font-size:24px;margin:8px 0 4px}
@@ -251,6 +260,7 @@
     <div class="genres" id="genreTabs">
       <button class="genre active" data-genre="math">➕ たしざん</button>
       <button class="genre" data-genre="clock">🕐 とけい</button>
+      <button class="genre" data-genre="english">🔊 えいご</button>
     </div>
     <div class="board" id="boardTitle">◀ つぎは どの れっしゃ？ ▶</div>
     <div class="title" id="menuTitle">のる れっしゃを えらぼう</div>
@@ -315,6 +325,18 @@
         <div class="clock-hint" id="clockHint">しんかんせんの しゅっぱつは なんじ？</div>
       </div>
       <div class="choices" id="choicesBox"></div>
+    </div>
+
+    <!-- 英語プレイ（耳で学ぶ） -->
+    <div id="playEnglish" class="hide">
+      <div class="english-box">
+        <div class="qLabel" id="qLabelEng" style="color:#01579B;letter-spacing:.15em">NEXT STATION ・ もんだい 1</div>
+        <div class="emoji-big" id="engEmoji">🐱</div>
+        <div class="ja-hint" id="engJa">ねこ</div>
+        <button class="speaker" id="btnSpeak"><span class="wave">🔊</span> もういちど きく</button>
+        <div style="font-size:11px;color:#01579B;font-weight:900;margin-top:6px">えいごを きいて こたえを えらぼう！</div>
+      </div>
+      <div class="choices" id="engChoicesBox"></div>
     </div>
   </section>
 
@@ -658,7 +680,11 @@
     {id:"ct1",      ic:"🕐", nm:"ぴったり マスター",     ds:"ぴったり じかん ぜんもん"},
     {id:"ct2",      ic:"🕧", nm:"はんぶん マスター",     ds:"30ぷん じかん ぜんもん"},
     {id:"ct3",      ic:"🕔", nm:"5ふん マスター",         ds:"5ふんきざみ ぜんもん"},
-    {id:"ct4",      ic:"⏰", nm:"じかん はかせ",         ds:"1ぷんきざみ ぜんもん"}
+    {id:"ct4",      ic:"⏰", nm:"じかん はかせ",         ds:"1ぷんきざみ ぜんもん"},
+    {id:"e1",       ic:"🔤", nm:"ABC マスター",           ds:"アルファベット ぜんもん"},
+    {id:"e2",       ic:"🔢", nm:"すうじえいご マスター",  ds:"すうじ えいご ぜんもん"},
+    {id:"e3",       ic:"🎨", nm:"いろえいご マスター",    ds:"いろ えいご ぜんもん"},
+    {id:"e4",       ic:"🐾", nm:"どうぶつえいご マスター",ds:"どうぶつ えいご ぜんもん"}
   ];
 
   // ===== Mode list =====
@@ -672,8 +698,59 @@
     {id:"clock_hour", type:"clock", cls:"m1", name:"ぴったり じかん",   desc:"〇じ ちょうど（3じ/6じ etc）", svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="27" y2="12" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><line x1="27" y1="20" x2="35" y2="20" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct1"},
     {id:"clock_half", type:"clock", cls:"m2", name:"30ぷん じかん",     desc:"〇じ 00ふん/30ふん",            svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="27" y2="28" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="16" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct2"},
     {id:"clock_5min", type:"clock", cls:"m3", name:"5ふん きざみ",      desc:"〇じ05ふん/10ふん/15ふん…",     svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="34" y2="14" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="29" y2="13" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct3"},
-    {id:"clock_1min", type:"clock", cls:"m4", name:"1ぷん きざみ",      desc:"どんな じかんでも よめるよ",      svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="22" y2="12" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="22" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct4"}
+    {id:"clock_1min", type:"clock", cls:"m4", name:"1ぷん きざみ",      desc:"どんな じかんでも よめるよ",      svg:`<svg viewBox="0 0 54 40"><circle cx="27" cy="20" r="16" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="27" cy="20" r="12" fill="#FFFDE7"/><line x1="27" y1="20" x2="22" y2="12" stroke="#E4002B" stroke-width="1.8" stroke-linecap="round"/><line x1="27" y1="20" x2="31" y2="22" stroke="#0B6FC6" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="20" r="1.5" fill="#0D2E4E"/></svg>`, trophy:"ct4"},
+    // 英語モード（耳で学ぶ）
+    {id:"eng_abc",     type:"english", cls:"m1", name:"アルファベット",   desc:"ABC を きいて あてる",             svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#64B5F6" stroke="#0D47A1" stroke-width="2"/><text x="27" y="28" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">ABC</text></svg>`, trophy:"e1"},
+    {id:"eng_numbers", type:"english", cls:"m2", name:"すうじ えいご",    desc:"one / two / three…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#AB47BC" stroke="#4A148C" stroke-width="2"/><text x="27" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">1・2・3</text></svg>`, trophy:"e2"},
+    {id:"eng_colors",  type:"english", cls:"m3", name:"いろ えいご",      desc:"red / blue / yellow…",            svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="15" cy="20" r="6" fill="#E53935"/><circle cx="27" cy="20" r="6" fill="#1E88E5"/><circle cx="39" cy="20" r="6" fill="#FFEB3B"/></svg>`, trophy:"e3"},
+    {id:"eng_animals", type:"english", cls:"m4", name:"どうぶつ えいご",  desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"}
   ];
+
+  // ===== English words =====
+  const ENGLISH_WORDS = {
+    abc: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(l=>({en:l, ja:l, emoji:l})),
+    numbers: [
+      {en:"one",ja:"いち",emoji:"1️⃣"},{en:"two",ja:"に",emoji:"2️⃣"},
+      {en:"three",ja:"さん",emoji:"3️⃣"},{en:"four",ja:"よん・し",emoji:"4️⃣"},
+      {en:"five",ja:"ご",emoji:"5️⃣"},{en:"six",ja:"ろく",emoji:"6️⃣"},
+      {en:"seven",ja:"なな・しち",emoji:"7️⃣"},{en:"eight",ja:"はち",emoji:"8️⃣"},
+      {en:"nine",ja:"きゅう",emoji:"9️⃣"},{en:"ten",ja:"じゅう",emoji:"🔟"}
+    ],
+    colors: [
+      {en:"red",ja:"あか",emoji:"🔴"},{en:"blue",ja:"あお",emoji:"🔵"},
+      {en:"yellow",ja:"きいろ",emoji:"🟡"},{en:"green",ja:"みどり",emoji:"🟢"},
+      {en:"pink",ja:"ピンク",emoji:"🌸"},{en:"purple",ja:"むらさき",emoji:"🟣"},
+      {en:"black",ja:"くろ",emoji:"⚫"},{en:"white",ja:"しろ",emoji:"⚪"},
+      {en:"orange",ja:"オレンジ",emoji:"🟠"},{en:"brown",ja:"ちゃいろ",emoji:"🟤"}
+    ],
+    animals: [
+      {en:"cat",ja:"ねこ",emoji:"🐱"},{en:"dog",ja:"いぬ",emoji:"🐶"},
+      {en:"bird",ja:"とり",emoji:"🐦"},{en:"fish",ja:"さかな",emoji:"🐟"},
+      {en:"pig",ja:"ぶた",emoji:"🐷"},{en:"cow",ja:"うし",emoji:"🐮"},
+      {en:"horse",ja:"うま",emoji:"🐴"},{en:"lion",ja:"ライオン",emoji:"🦁"},
+      {en:"tiger",ja:"とら",emoji:"🐯"},{en:"bear",ja:"くま",emoji:"🐻"},
+      {en:"monkey",ja:"さる",emoji:"🐵"},{en:"rabbit",ja:"うさぎ",emoji:"🐰"},
+      {en:"elephant",ja:"ぞう",emoji:"🐘"},{en:"mouse",ja:"ねずみ",emoji:"🐭"}
+    ]
+  };
+
+  // ===== Speech =====
+  function speak(text, lang='en-US', rate=0.85){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang; u.rate = rate; u.pitch = 1.15; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  // 初回ユーザー操作で音声ロック解除
+  let audioUnlocked = false;
+  function unlockAudio(){
+    if (audioUnlocked) return;
+    try{ window.speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); audioUnlocked=true; }catch(e){}
+  }
+  document.addEventListener('click', unlockAudio, {once:true});
 
   // ===== Save state =====
   const SAVE_KEY = "keisan_train_save_v2";
@@ -714,6 +791,10 @@
       $('boardTitle').textContent = '◀ どの じかんレベル？ ▶';
       $('menuTitle').textContent = 'とけい チャレンジ';
       $('menuSubtitle').textContent = 'ながい はり＝ふん、みじかい はり＝じ！';
+    } else if (currentGenre === 'english'){
+      $('boardTitle').textContent = '◀ みみで まなぶ えいご ▶';
+      $('menuTitle').textContent = 'えいご リスニング';
+      $('menuSubtitle').textContent = '🔊 きこえた えいごを えらぼう！';
     } else {
       $('boardTitle').textContent = '◀ つぎは どの れっしゃ？ ▶';
       $('menuTitle').textContent = 'のる れっしゃを えらぼう';
@@ -747,6 +828,28 @@
     if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); return {kind:'math',text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
     // 時計
     if (mode && mode.startsWith('clock_')) return makeClockQuestion(mode);
+    // 英語
+    if (mode && mode.startsWith('eng_')) return makeEnglishQuestion(mode);
+  }
+
+  function makeEnglishQuestion(modeId){
+    const cat = modeId.replace('eng_','');
+    const pool = ENGLISH_WORDS[cat];
+    const q = pool[Math.floor(Math.random()*pool.length)];
+    const choices = [q.en];
+    let safety=0;
+    while (choices.length < 4 && safety < 40){
+      safety++;
+      const c = pool[Math.floor(Math.random()*pool.length)].en;
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return {
+      kind:'english', en:q.en, ja:q.ja, emoji:q.emoji,
+      choices: choices.sort(()=>Math.random()-0.5),
+      ans: q.en,
+      text: `eng_${cat}_${q.en}`,
+      label: `🔊 ${q.en}（${q.ja}）`
+    };
   }
 
   function timeLabel(h,m){
@@ -880,6 +983,7 @@
 
     if (q.kind === 'clock'){
       $('playMath').classList.add('hide');
+      $('playEnglish').classList.add('hide');
       $('playClock').classList.remove('hide');
       $('qLabelClock').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
       $('clockHint').textContent = q.hint;
@@ -892,9 +996,27 @@
         btn.addEventListener('click', ()=> submitChoice(c, btn));
         box.appendChild(btn);
       });
+    } else if (q.kind === 'english'){
+      $('playMath').classList.add('hide');
+      $('playClock').classList.add('hide');
+      $('playEnglish').classList.remove('hide');
+      $('qLabelEng').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
+      $('engEmoji').textContent = q.emoji;
+      $('engJa').textContent = q.ja;
+      const box = $('engChoicesBox'); box.innerHTML = '';
+      q.choices.forEach(c=>{
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.textContent = c;
+        btn.addEventListener('click', ()=> submitChoice(c, btn));
+        box.appendChild(btn);
+      });
+      // 自動で音声再生
+      setTimeout(()=>speak(q.en), 350);
     } else {
       $('playMath').classList.remove('hide');
       $('playClock').classList.add('hide');
+      $('playEnglish').classList.add('hide');
       qLabel.textContent=`NEXT STATION ・ もんだい ${state.i+1}`;
       const parts=q.text.split(' ');
       const html=parts.map(p=>{
@@ -909,13 +1031,15 @@
   function submitChoice(choice, btn){
     const q = state.questions[state.i];
     const ok = choice === q.ans;
-    // すべてのボタンを無効化、色付け
-    document.querySelectorAll('#choicesBox .choice').forEach(b=>{
+    // クリックしたボタンの親(choicesBox or engChoicesBox)内のボタンをすべて制御
+    btn.parentElement.querySelectorAll('.choice').forEach(b=>{
       b.classList.add('disabled');
       if (b.textContent === q.ans) b.classList.add('correct');
       else if (b === btn) b.classList.add('wrong');
     });
     state.answers.push({text:q.label, correct:q.ans, your:choice, ok});
+    // 英語は正解の発音を再生して耳で覚えさせる
+    if (q.kind === 'english'){ setTimeout(()=>speak(q.ans), 250); }
     if (ok){
       state.streak++;
       state.maxStreak=Math.max(state.maxStreak,state.streak);
@@ -926,11 +1050,12 @@
       flash('ng', `ざんねん… こたえは ${q.ans}`);
     }
     renderCombo();
+    const delay = q.kind==='english' ? (ok?1300:1700) : (ok?950:1350);
     setTimeout(()=>{
       state.i++;
       if (state.i >= state.questions.length) finish();
       else renderQuestion();
-    }, ok?950:1350);
+    }, delay);
   }
   function updateAns(){
     const el=document.getElementById('ansBox'); if(!el) return;
@@ -1173,7 +1298,7 @@
     });
   });
 
-  // ジャンル切替（たしざん ⇔ とけい）
+  // ジャンル切替（たしざん / とけい / えいご）
   document.querySelectorAll('#genreTabs .genre').forEach(el=>{
     el.addEventListener('click',()=>{
       document.querySelectorAll('#genreTabs .genre').forEach(g=>g.classList.remove('active'));
@@ -1181,6 +1306,12 @@
       currentGenre = el.dataset.genre;
       renderModes();
     });
+  });
+
+  // 英語モードの音声リプレイ
+  $('btnSpeak').addEventListener('click',()=>{
+    const q = state.questions[state.i];
+    if (q && q.kind === 'english') speak(q.en);
   });
 
   // ===== Boot =====
