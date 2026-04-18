@@ -107,7 +107,9 @@
   .mode.m1{background:linear-gradient(135deg,#2DAA6E,#22884F);color:#fff}       /* 山手線グリーン */
   .mode.m2{background:linear-gradient(135deg,#F58220,#E05E0F);color:#fff}        /* オレンジ */
   .mode.m3{background:linear-gradient(135deg,#0B6FC6,#0950A0);color:#fff}        /* 新幹線ブルー */
-  .mode.m4{background:linear-gradient(135deg,#9B2DDC,#6C1FB0);color:#fff}        /* 特急パープル */
+  .mode.m4{background:linear-gradient(135deg,#00BCD4,#00838F);color:#fff}        /* リニア ティール */
+  .mode.m5{background:linear-gradient(135deg,#FFB300,#F57C00);color:#2B1A00;grid-column:1/-1;position:relative}
+  .mode.m5::after{content:"★";position:absolute;top:8px;right:14px;font-size:22px;color:#E53935}
 
   /* number of questions chips */
   .count-wrap{margin-top:14px}
@@ -274,7 +276,7 @@
     <div class="subtitle">はやさが あがるほど むずかしいよ</div>
 
     <div class="modes">
-      <button class="mode m1" data-mode="1d1d">
+      <button class="mode m1" data-mode="1d1d_low">
         <div class="icon">
           <svg viewBox="0 0 54 40"><!-- 山手線っぽい普通電車 -->
             <rect x="4" y="8" width="46" height="24" rx="6" fill="#2DAA6E" stroke="#1b6b43" stroke-width="2"/>
@@ -286,11 +288,11 @@
             <circle cx="40" cy="32" r="3" fill="#333"/>
           </svg>
         </div>
-        <div><div class="name">かくえきていしゃ</div><div class="desc">1けた ＋ 1けた</div></div>
+        <div><div class="name">かくえきていしゃ</div><div class="desc">1けた ＋ 1けた（こたえ 10まで）</div></div>
         <div class="arrow">▶</div>
       </button>
 
-      <button class="mode m2" data-mode="2d1d">
+      <button class="mode m2" data-mode="1d1d_high">
         <div class="icon">
           <svg viewBox="0 0 54 40"><!-- 中央線オレンジ特急 -->
             <path d="M4 32 L4 14 Q4 8 10 8 L44 8 Q52 8 52 18 L52 32 Z" fill="#F58220" stroke="#a64b0a" stroke-width="2"/>
@@ -300,11 +302,11 @@
             <circle cx="46" cy="14" r="2" fill="#FFE082"/>
           </svg>
         </div>
-        <div><div class="name">とっきゅう</div><div class="desc">2けた ＋ 1けた</div></div>
+        <div><div class="name">とっきゅう</div><div class="desc">1けた ＋ 1けた（こたえ 10〜20）</div></div>
         <div class="arrow">▶</div>
       </button>
 
-      <button class="mode m3" data-mode="2d2d">
+      <button class="mode m3" data-mode="2d1d">
         <div class="icon">
           <svg viewBox="0 0 60 40"><!-- N700系新幹線 -->
             <path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#fff" stroke="#083876" stroke-width="2"/>
@@ -317,28 +319,41 @@
             <circle cx="46" cy="32" r="3" fill="#222"/>
           </svg>
         </div>
-        <div><div class="name">しんかんせん</div><div class="desc">2けた ＋ 2けた</div></div>
+        <div><div class="name">しんかんせん</div><div class="desc">2けた ＋ 1けた（こたえ 100まで）</div></div>
         <div class="arrow">▶</div>
       </button>
 
-      <button class="mode m4" data-mode="3x1d">
+      <button class="mode m4" data-mode="2d2d">
         <div class="icon">
-          <svg viewBox="0 0 60 40"><!-- 3両編成 -->
-            <rect x="2"  y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
-            <rect x="22" y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
-            <rect x="42" y="14" width="16" height="18" rx="3" fill="#fff" stroke="#5b1f85" stroke-width="2"/>
-            <rect x="2" y="22" width="56" height="5" fill="#9B2DDC"/>
-            <line x1="18" y1="23" x2="22" y2="23" stroke="#5b1f85" stroke-width="2"/>
-            <line x1="38" y1="23" x2="42" y2="23" stroke="#5b1f85" stroke-width="2"/>
-            <circle cx="8" cy="34" r="2.5" fill="#333"/>
-            <circle cx="14" cy="34" r="2.5" fill="#333"/>
-            <circle cx="28" cy="34" r="2.5" fill="#333"/>
-            <circle cx="34" cy="34" r="2.5" fill="#333"/>
-            <circle cx="48" cy="34" r="2.5" fill="#333"/>
-            <circle cx="54" cy="34" r="2.5" fill="#333"/>
+          <svg viewBox="0 0 60 40"><!-- L0系リニア風・流線形 -->
+            <path d="M2 26 L2 18 Q2 14 8 12 L32 7 Q54 5 58 16 L58 26 Q58 30 54 30 L6 30 Q2 30 2 26 Z" fill="#fff" stroke="#00838F" stroke-width="2"/>
+            <path d="M2 22 L58 22 L58 25 L2 25 Z" fill="#00BCD4"/>
+            <path d="M32 7 Q52 7 57 15 L25 15 Z" fill="#0097A7"/>
+            <rect x="10" y="16" width="5" height="4" rx="1" fill="#004D60"/>
+            <rect x="18" y="16" width="5" height="4" rx="1" fill="#004D60"/>
+            <rect x="26" y="16" width="5" height="4" rx="1" fill="#004D60"/>
+            <rect x="2" y="30" width="56" height="2" fill="#B2EBF2"/>
+            <rect x="6" y="32" width="48" height="1.5" fill="#80DEEA" opacity=".8"/>
           </svg>
         </div>
-        <div><div class="name">3りょうへんせい</div><div class="desc">3つの たしざん（くりあがり）</div></div>
+        <div><div class="name">リニアモーターカー</div><div class="desc">2けた ＋ 2けた（こたえ 100まで）</div></div>
+        <div class="arrow">▶</div>
+      </button>
+
+      <button class="mode m5" data-mode="3x1d">
+        <div class="icon">
+          <svg viewBox="0 0 60 40"><!-- ドクターイエロー風・スペシャル -->
+            <path d="M2 28 L2 16 Q2 12 8 10 L40 6 Q56 6 58 16 L58 28 Q58 32 54 32 L6 32 Q2 32 2 28 Z" fill="#FFD700" stroke="#8B6914" stroke-width="2"/>
+            <path d="M2 21 L58 21 L58 25 L2 25 Z" fill="#003E7E"/>
+            <path d="M40 6 Q52 8 56 14 L30 14 Z" fill="#FFF176" opacity=".9"/>
+            <rect x="10" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
+            <rect x="20" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
+            <rect x="30" y="15" width="6" height="5" rx="1" fill="#8B6914"/>
+            <circle cx="14" cy="32" r="3" fill="#222"/>
+            <circle cx="46" cy="32" r="3" fill="#222"/>
+          </svg>
+        </div>
+        <div><div class="name">スペシャル</div><div class="desc">1けた ＋ 1けた ＋ 1けた（こたえ 20まで）</div></div>
         <div class="arrow">▶</div>
       </button>
     </div>
@@ -432,22 +447,27 @@
 
   const rnd = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
   function makeQuestion(mode){
-    if (mode === '1d1d'){
-      const a = rnd(1,9), b = rnd(1,9);
+    let a,b,c,tries;
+    if (mode === '1d1d_low'){
+      do{ a=rnd(1,9); b=rnd(1,9); } while (a+b>10);
+      return { text:`${a} + ${b} =`, ans:a+b };
+    }
+    if (mode === '1d1d_high'){
+      do{ a=rnd(1,9); b=rnd(1,9); } while (a+b<10 || a+b>20);
       return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '2d1d'){
-      const a = rnd(10,99), b = rnd(1,9);
+      do{ a=rnd(10,99); b=rnd(1,9); } while (a+b>100);
       return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '2d2d'){
-      const a = rnd(10,89), b = rnd(10,89);
+      do{ a=rnd(10,89); b=rnd(10,89); } while (a+b>100);
       return { text:`${a} + ${b} =`, ans:a+b };
     }
     if (mode === '3x1d'){
-      let a,b,c,sum,tries=0;
-      do{ a=rnd(1,9); b=rnd(0,9); c=rnd(0,9); sum=a+b+c; tries++; } while (sum<10 && tries<10);
-      return { text:`${a} + ${b} + ${c} =`, ans:sum };
+      tries=0;
+      do{ a=rnd(1,9); b=rnd(1,9); c=rnd(1,9); tries++; } while (a+b+c>20 && tries<30);
+      return { text:`${a} + ${b} + ${c} =`, ans:a+b+c };
     }
   }
   function buildQuestions(mode, count){
