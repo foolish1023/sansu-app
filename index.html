@@ -841,10 +841,17 @@
   }
   function buildQuestions(mode,count){
     const seen=new Set(), list=[];
-    while(list.length<count){
+    let safety=0;
+    while(list.length<count && safety < count*20){
+      safety++;
       const q=makeQuestion(mode);
-      if(seen.has(q.text)) continue;
-      seen.add(q.text); list.push(q);
+      const key = q.text || `c_${q.hour}_${q.minute}`;
+      if(seen.has(key)) continue;
+      seen.add(key); list.push(q);
+    }
+    // ユニーク問題が足りない場合（例：ぴったりじかんで20問）重複OKで埋める
+    while(list.length<count){
+      list.push(makeQuestion(mode));
     }
     return list;
   }
