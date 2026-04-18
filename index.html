@@ -159,8 +159,12 @@
 
   /* English listening */
   .english-box{background:linear-gradient(180deg,#E1F5FE,#B3E5FC);border:4px solid #0288D1;border-radius:20px;padding:18px;text-align:center;margin-top:8px;box-shadow:var(--shadow)}
-  .emoji-big{font-size:min(96px,22vw);line-height:1;margin:6px 0}
+  .emoji-big{font-size:min(96px,22vw);line-height:1;margin:6px 0;letter-spacing:2px}
+  .english-box.scene .emoji-big{font-size:min(84px,19vw);letter-spacing:6px}
+  .scene-ctx{background:#fff;border:3px solid #0288D1;border-radius:999px;padding:8px 16px;display:inline-block;font-weight:900;color:#01579B;font-size:15px;margin:6px 0 4px;box-shadow:0 3px 0 rgba(2,136,209,.25)}
   .ja-hint{font-weight:900;font-size:18px;color:#01579B;margin:6px 0 10px}
+  /* 長いフレーズの4択：少し小さめで改行OK */
+  .choices.phrases .choice{font-size:15px;line-height:1.25;padding:14px 6px;min-height:62px;white-space:normal}
   .speaker{background:linear-gradient(180deg,#FFD54F,#FFA726);border:3px solid #E65100;border-radius:999px;padding:11px 20px;font-weight:900;font-size:15px;cursor:pointer;font-family:inherit;color:#5D2E00;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:6px}
   .speaker:active{transform:translateY(2px)}
   .speaker .wave{display:inline-block;animation:wave 1.2s infinite}
@@ -684,7 +688,8 @@
     {id:"e1",       ic:"🔤", nm:"ABC マスター",           ds:"アルファベット ぜんもん"},
     {id:"e2",       ic:"🔢", nm:"すうじえいご マスター",  ds:"すうじ えいご ぜんもん"},
     {id:"e3",       ic:"🎨", nm:"いろえいご マスター",    ds:"いろ えいご ぜんもん"},
-    {id:"e4",       ic:"🐾", nm:"どうぶつえいご マスター",ds:"どうぶつ えいご ぜんもん"}
+    {id:"e4",       ic:"🐾", nm:"どうぶつえいご マスター",ds:"どうぶつ えいご ぜんもん"},
+    {id:"e5",       ic:"💬", nm:"シチュエーション マスター", ds:"よくある ばめん ぜんもん"}
   ];
 
   // ===== Mode list =====
@@ -703,7 +708,8 @@
     {id:"eng_abc",     type:"english", cls:"m1", name:"アルファベット",   desc:"ABC を きいて あてる",             svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#64B5F6" stroke="#0D47A1" stroke-width="2"/><text x="27" y="28" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">ABC</text></svg>`, trophy:"e1"},
     {id:"eng_numbers", type:"english", cls:"m2", name:"すうじ えいご",    desc:"one / two / three…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#AB47BC" stroke="#4A148C" stroke-width="2"/><text x="27" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">1・2・3</text></svg>`, trophy:"e2"},
     {id:"eng_colors",  type:"english", cls:"m3", name:"いろ えいご",      desc:"red / blue / yellow…",            svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="15" cy="20" r="6" fill="#E53935"/><circle cx="27" cy="20" r="6" fill="#1E88E5"/><circle cx="39" cy="20" r="6" fill="#FFEB3B"/></svg>`, trophy:"e3"},
-    {id:"eng_animals", type:"english", cls:"m4", name:"どうぶつ えいご",  desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"}
+    {id:"eng_animals", type:"english", cls:"m4", name:"どうぶつ えいご",  desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"},
+    {id:"eng_situation", type:"english", cls:"m5", name:"シチュエーション", desc:"よくある ばめんの えいご（しんおや）", svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💬</text><text x="42" y="28" text-anchor="middle" font-size="16">😊</text></svg>`, trophy:"e5"}
   ];
 
   // ===== English words =====
@@ -733,6 +739,35 @@
       {en:"elephant",ja:"ぞう",emoji:"🐘"},{en:"mouse",ja:"ねずみ",emoji:"🐭"}
     ]
   };
+
+  // よくあるシチュエーション（親子で使える日常フレーズ）
+  const SITUATIONS = [
+    {emoji:"☀️🛏️", ctx:"あさ おきた",              en:"Good morning"},
+    {emoji:"🌙💤",  ctx:"ねる まえ",                en:"Good night"},
+    {emoji:"👋😊",  ctx:"おともだちに あう",        en:"Hello"},
+    {emoji:"👋🚪",  ctx:"わかれる とき",            en:"Goodbye"},
+    {emoji:"🎁💝",  ctx:"プレゼントを もらった",    en:"Thank you"},
+    {emoji:"😢🙇",  ctx:"あやまる とき",            en:"I'm sorry"},
+    {emoji:"🤝👧",  ctx:"はじめて あった",          en:"Nice to meet you"},
+    {emoji:"🍔🤤",  ctx:"おなかが すいた",          en:"I'm hungry"},
+    {emoji:"🥤💧",  ctx:"のどが かわいた",          en:"I'm thirsty"},
+    {emoji:"🍽️😋", ctx:"おいしい！",               en:"It's delicious!"},
+    {emoji:"❤️👍",  ctx:"これ すき！",              en:"I like it"},
+    {emoji:"👎😑",  ctx:"これ きらい",              en:"I don't like it"},
+    {emoji:"❓👀",  ctx:"これ なに？",              en:"What is this?"},
+    {emoji:"💴🛍️", ctx:"ねだんを きく",            en:"How much is it?"},
+    {emoji:"👋🌆",  ctx:"また あした！",            en:"See you tomorrow"},
+    {emoji:"🏠👪",  ctx:"おうちに かえった",        en:"I'm home"},
+    {emoji:"🏫🎒",  ctx:"がっこうへ いく",          en:"I'm going to school"},
+    {emoji:"🚽🚶",  ctx:"トイレに いきたい",        en:"May I go to the bathroom?"},
+    {emoji:"🤔💭",  ctx:"わからない",               en:"I don't know"},
+    {emoji:"🎉😄",  ctx:"たのしい！",               en:"It's fun!"},
+    {emoji:"🆘🙏",  ctx:"たすけて！",               en:"Help!"},
+    {emoji:"🤗😊",  ctx:"いいよ！",                 en:"Sure!"},
+    {emoji:"🎂🎈",  ctx:"たんじょうびを いわう",    en:"Happy birthday!"},
+    {emoji:"🤒🌡️", ctx:"ぐあいが わるい",          en:"I don't feel well"},
+    {emoji:"🙇✨",  ctx:"おれいを いう（ていねい）",en:"Thank you very much"}
+  ];
 
   // ===== Speech =====
   let enVoice = null;
@@ -850,6 +885,25 @@
 
   function makeEnglishQuestion(modeId){
     const cat = modeId.replace('eng_','');
+    // シチュエーションモード
+    if (cat === 'situation'){
+      const s = SITUATIONS[Math.floor(Math.random()*SITUATIONS.length)];
+      const choices = [s.en];
+      let safety=0;
+      while (choices.length < 4 && safety < 60){
+        safety++;
+        const c = SITUATIONS[Math.floor(Math.random()*SITUATIONS.length)].en;
+        if (!choices.includes(c)) choices.push(c);
+      }
+      return {
+        kind:'english', scene:true, en:s.en, emoji:s.emoji, ctx:s.ctx,
+        choices: choices.sort(()=>Math.random()-0.5),
+        ans: s.en,
+        text: `situ_${s.en}`,
+        label: `🔊 ${s.en}`
+      };
+    }
+    // 単語モード
     const pool = ENGLISH_WORDS[cat];
     const q = pool[Math.floor(Math.random()*pool.length)];
     const choices = [q.en];
@@ -1018,8 +1072,18 @@
       $('playEnglish').classList.remove('hide');
       $('qLabelEng').textContent = `NEXT STATION ・ もんだい ${state.i+1}`;
       $('engEmoji').textContent = q.emoji;
-      $('engJa').textContent = ''; // 英語だけで覚えるため問題中は日本語を表示しない
-      const box = $('engChoicesBox'); box.innerHTML = '';
+      // シーンモードは場面説明を表示。単語モードは日本語を出さない
+      const engBox = document.querySelector('.english-box');
+      if (q.scene){
+        engBox.classList.add('scene');
+        $('engJa').innerHTML = `<span class="scene-ctx">📖 ${q.ctx}</span>`;
+      } else {
+        engBox.classList.remove('scene');
+        $('engJa').textContent = '';
+      }
+      const box = $('engChoicesBox');
+      box.className = 'choices' + (q.scene?' phrases':'');
+      box.innerHTML = '';
       q.choices.forEach(c=>{
         const btn = document.createElement('button');
         btn.className = 'choice';
