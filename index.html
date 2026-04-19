@@ -223,32 +223,71 @@
   .trophy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
   @media(min-width:480px){.trophy-grid{grid-template-columns:repeat(3,1fr)}}
 
-  /* Calendar */
-  .cal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-  .cal-stat{background:linear-gradient(180deg,#FFF7E0,#FFE59C);border:3px solid #F6C960;border-radius:12px;padding:8px 6px;text-align:center;font-weight:900;box-shadow:0 4px 0 #D8A93A}
-  .cal-stat .lbl{font-size:10px;color:#7A5200;letter-spacing:.05em}
-  .cal-stat .num{font-size:22px;color:#B33E00;line-height:1.1}
-  .cal-stat .unit{font-size:10px;color:#7A5200}
-  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-weight:900;color:var(--ink);font-size:14px}
-  .cal-head button{background:#fff;border:2px solid #D6E2ED;border-radius:10px;padding:4px 10px;font-weight:900;cursor:pointer;font-family:inherit;font-size:13px}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-  .cal-grid .dow{font-size:10px;text-align:center;color:var(--sub);font-weight:900;padding:2px 0}
-  .cal-grid .dow.sun{color:#D32F2F}.cal-grid .dow.sat{color:#1976D2}
-  .cal-cell{background:#F4F8FB;border-radius:8px;padding:4px;min-height:46px;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:900;color:var(--sub)}
-  .cal-cell.blank{background:transparent}
-  .cal-cell.today{background:#FFF3E0;border:2px solid var(--orange);color:var(--ink)}
-  .cal-cell.has{background:#E8F5E9;color:#1B5E20}
-  .cal-cell .stamps{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center}
-  .cal-cell .stamp{width:10px;height:10px;border-radius:50%;display:inline-block}
-  .cal-cell .stamp.math{background:#2DAA6E}
-  .cal-cell .stamp.clock{background:#0B6FC6}
-  .cal-cell .stamp.eng{background:#AB47BC}
-  .cal-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;font-size:11px;font-weight:900;color:var(--sub)}
-  .cal-legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
-  .cal-legend .dot.math{background:#2DAA6E}
-  .cal-legend .dot.clock{background:#0B6FC6}
-  .cal-legend .dot.eng{background:#AB47BC}
-  .cal-legend .note{width:100%;text-align:center;color:#888;font-weight:700;font-size:10px}
+  /* Calendar — 保護者向けダッシュボード */
+  #tab-calendar{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
+  .dash-title{font-size:13px;font-weight:800;color:#4B5563;letter-spacing:.06em;margin:6px 2px 4px}
+  .dash-card{background:#fff;border:1.5px solid #E5E7EB;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 0 rgba(0,0,0,.04)}
+
+  /* Monthly progress */
+  .prog-bar{position:relative;background:#F3F4F6;border-radius:999px;height:10px;overflow:hidden}
+  .prog-bar > span{position:absolute;inset:0;background:linear-gradient(90deg,#34D399,#10B981);border-radius:999px;transition:width .4s}
+  .prog-line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .prog-line .big{font-size:28px;font-weight:900;color:#111827;line-height:1}
+  .prog-line .big small{font-size:13px;color:#6B7280;font-weight:800}
+  .prog-line .pct{font-size:15px;font-weight:900;color:#10B981}
+
+  /* Streak row */
+  .streak-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  .streak-chip{background:#fff;border:1.5px solid #E5E7EB;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.04)}
+  .streak-chip .ic{font-size:22px;line-height:1}
+  .streak-chip .lbl{font-size:11px;color:#6B7280;font-weight:800;margin-top:2px}
+  .streak-chip .val{font-size:22px;font-weight:900;color:#111827}
+  .streak-chip .unit{font-size:11px;color:#6B7280;font-weight:800}
+  .streak-chip.fire{background:linear-gradient(180deg,#FFF7ED,#FFEDD5);border-color:#FDBA74}
+  .streak-chip.fire .val{color:#C2410C}
+
+  /* Subject bars */
+  .subj{display:grid;grid-template-columns:70px 1fr 40px;gap:8px;align-items:center;margin-bottom:7px;font-size:13px}
+  .subj:last-child{margin-bottom:0}
+  .subj .name{font-weight:900;color:#111827}
+  .subj .bar{position:relative;background:#F3F4F6;border-radius:999px;height:8px;overflow:hidden}
+  .subj .bar > span{position:absolute;inset:0;border-radius:999px;transition:width .4s}
+  .subj.math .bar > span{background:#10B981}
+  .subj.clock .bar > span{background:#3B82F6}
+  .subj.eng .bar > span{background:#A855F7}
+  .subj .days{text-align:right;font-weight:900;color:#4B5563;font-size:12px}
+
+  /* Month header */
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .cal-head .month{font-size:16px;font-weight:900;color:#111827}
+  .cal-head button{background:#fff;border:1.5px solid #E5E7EB;border-radius:10px;width:36px;height:32px;font-weight:900;cursor:pointer;font-family:inherit;font-size:14px;color:#4B5563}
+  .cal-head button:hover{background:#F9FAFB}
+
+  /* Grid */
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-grid .dow{font-size:11px;text-align:center;color:#6B7280;font-weight:800;padding:4px 0}
+  .cal-grid .dow.sun{color:#DC2626}.cal-grid .dow.sat{color:#2563EB}
+  .cal-cell{background:#F9FAFB;border:1px solid transparent;border-radius:9px;padding:4px 2px;min-height:54px;display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:800;color:#6B7280;position:relative}
+  .cal-cell.blank{background:transparent;border:none}
+  .cal-cell.today{background:#FEF3C7;border-color:#F59E0B;color:#92400E}
+  .cal-cell.today::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:9px;box-shadow:0 0 0 2px rgba(245,158,11,.3);pointer-events:none}
+  .cal-cell.has{background:#D1FAE5;color:#065F46;border-color:#6EE7B7}
+  .cal-cell.has.three{background:linear-gradient(135deg,#D1FAE5,#DBEAFE 50%,#F3E8FF);border-color:#10B981}
+  .cal-cell .stamps{display:flex;gap:3px;margin-top:3px;justify-content:center}
+  .cal-cell .stamp{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 1px 0 rgba(0,0,0,.1)}
+  .cal-cell .stamp.math{background:#10B981}
+  .cal-cell .stamp.clock{background:#3B82F6}
+  .cal-cell .stamp.eng{background:#A855F7}
+  .cal-cell .count{position:absolute;bottom:2px;right:4px;font-size:9px;color:#059669;font-weight:900}
+
+  /* Legend */
+  .cal-legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px;padding-top:10px;border-top:1px solid #E5E7EB;font-size:11px;font-weight:800;color:#4B5563}
+  .cal-legend .item{display:inline-flex;align-items:center;gap:4px}
+  .cal-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+  .cal-legend .dot.math{background:#10B981}
+  .cal-legend .dot.clock{background:#3B82F6}
+  .cal-legend .dot.eng{background:#A855F7}
+  .cal-legend .note{width:100%;text-align:center;color:#9CA3AF;font-weight:700;font-size:10px;margin-top:4px}
 
   /* Login bonus toast */
   .login-bonus{
@@ -683,14 +722,21 @@
     </div>
 
     <div id="tab-calendar" class="hide">
-      <div class="cal-stats" id="calStats"></div>
-      <div class="cal-head" id="calHead"></div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="cal-legend">
-        <span><span class="dot math"></span>たしざん</span>
-        <span><span class="dot clock"></span>とけい</span>
-        <span><span class="dot eng"></span>えいご</span>
-        <span class="note">※ せいかいりつ 80%いじょう で スタンプ</span>
+      <div class="dash-title">📊 こんげつの がくしゅう</div>
+      <div class="dash-card" id="monthProgress"></div>
+      <div class="streak-row" id="streakRow"></div>
+      <div class="dash-title">📚 かもく べつ（こんげつ）</div>
+      <div class="dash-card" id="subjectBars"></div>
+      <div class="dash-title">🗓️ がくしゅう カレンダー</div>
+      <div class="dash-card">
+        <div class="cal-head" id="calHead"></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <span class="item"><span class="dot math"></span>たしざん</span>
+          <span class="item"><span class="dot clock"></span>とけい</span>
+          <span class="item"><span class="dot eng"></span>えいご</span>
+          <span class="note">※ 1ラウンドで せいかいりつ 80% いじょう で スタンプが つきます</span>
+        </div>
       </div>
     </div>
 
@@ -1563,25 +1609,57 @@
 
   let calView = new Date(); // 表示中の月
   function renderCalendar(){
-    // stats header
-    const totalDays = Object.keys(save.history||{}).length;
-    const mathDays = Object.values(save.history||{}).filter(h=>h.math).length;
-    const clockDays = Object.values(save.history||{}).filter(h=>h.clock).length;
-    const engDays = Object.values(save.history||{}).filter(h=>h.english).length;
-    $('calStats').innerHTML = `
-      <div class="cal-stat"><div class="lbl">れんぞく</div><div class="num">${save.playStreak||0}</div><div class="unit">にち</div></div>
-      <div class="cal-stat"><div class="lbl">さいこう</div><div class="num">${save.maxPlayStreak||0}</div><div class="unit">にち</div></div>
-      <div class="cal-stat"><div class="lbl">がくしゅう</div><div class="num">${totalDays}</div><div class="unit">にち</div></div>
-    `;
-
     const y=calView.getFullYear(), m=calView.getMonth();
     const first=new Date(y,m,1), last=new Date(y,m+1,0);
-    const dowLabels=['日','月','火','水','木','金','土'];
-    $('calHead').innerHTML = `
-      <button id="calPrev">◀</button>
-      <span>${y}年 ${m+1}月</span>
-      <button id="calNext">▶</button>
+    const daysInMonth = last.getDate();
+    const hist = save.history || {};
+
+    // 今月の日別集計
+    const monthKeys = Object.keys(hist).filter(k => k.startsWith(`${y}-${String(m+1).padStart(2,'0')}-`));
+    const studiedDays = monthKeys.length;
+    const monthMath  = monthKeys.filter(k=>hist[k].math).length;
+    const monthClock = monthKeys.filter(k=>hist[k].clock).length;
+    const monthEng   = monthKeys.filter(k=>hist[k].english).length;
+    const pct = daysInMonth ? Math.round(studiedDays/daysInMonth*100) : 0;
+
+    // 今月進捗
+    $('monthProgress').innerHTML = `
+      <div class="prog-line">
+        <div class="big">${studiedDays}<small> / ${daysInMonth} にち</small></div>
+        <div class="pct">${pct}%</div>
+      </div>
+      <div class="prog-bar"><span style="width:${pct}%"></span></div>
     `;
+
+    // 連続
+    $('streakRow').innerHTML = `
+      <div class="streak-chip fire">
+        <div class="ic">🔥</div>
+        <div class="lbl">いまの れんぞく</div>
+        <div><span class="val">${save.playStreak||0}</span><span class="unit"> にち</span></div>
+      </div>
+      <div class="streak-chip">
+        <div class="ic">🏆</div>
+        <div class="lbl">さいこう きろく</div>
+        <div><span class="val">${save.maxPlayStreak||0}</span><span class="unit"> にち</span></div>
+      </div>
+    `;
+
+    // 科目別
+    const maxDays = Math.max(1, monthMath, monthClock, monthEng);
+    $('subjectBars').innerHTML = `
+      <div class="subj math"><div class="name">たしざん</div><div class="bar"><span style="width:${monthMath/maxDays*100}%"></span></div><div class="days">${monthMath}日</div></div>
+      <div class="subj clock"><div class="name">とけい</div><div class="bar"><span style="width:${monthClock/maxDays*100}%"></span></div><div class="days">${monthClock}日</div></div>
+      <div class="subj eng"><div class="name">えいご</div><div class="bar"><span style="width:${monthEng/maxDays*100}%"></span></div><div class="days">${monthEng}日</div></div>
+    `;
+
+    // カレンダー
+    $('calHead').innerHTML = `
+      <button id="calPrev" aria-label="前月">◀</button>
+      <div class="month">${y}年 ${m+1}月</div>
+      <button id="calNext" aria-label="翌月">▶</button>
+    `;
+    const dowLabels = ['日','月','火','水','木','金','土'];
     let html = '';
     dowLabels.forEach((d,i)=>{
       const cls = i===0?'dow sun':i===6?'dow sat':'dow';
@@ -1591,16 +1669,18 @@
     const tk = todayKey();
     for (let d=1; d<=last.getDate(); d++){
       const key = todayKey(new Date(y,m,d));
-      const rec = save.history && save.history[key];
+      const rec = hist[key];
       let stamps = '';
+      let count = 0;
       if (rec){
-        if (rec.math)    stamps += '<span class="stamp math" title="たしざん"></span>';
-        if (rec.clock)   stamps += '<span class="stamp clock" title="とけい"></span>';
-        if (rec.english) stamps += '<span class="stamp eng" title="えいご"></span>';
+        if (rec.math)    { stamps += '<span class="stamp math"></span>'; count++; }
+        if (rec.clock)   { stamps += '<span class="stamp clock"></span>'; count++; }
+        if (rec.english) { stamps += '<span class="stamp eng"></span>'; count++; }
       }
       const isToday = key===tk;
-      const cls = 'cal-cell' + (rec?' has':'') + (isToday?' today':'');
-      html += `<div class="${cls}"><span>${d}</span><span class="stamps">${stamps}</span></div>`;
+      const cls = 'cal-cell' + (rec?' has':'') + (count===3?' three':'') + (isToday?' today':'');
+      const countBadge = count>=2 ? `<span class="count">${count}</span>` : '';
+      html += `<div class="${cls}"><span>${d}</span><span class="stamps">${stamps}</span>${countBadge}</div>`;
     }
     $('calGrid').innerHTML = html;
     $('calPrev').addEventListener('click', ()=>{ calView=new Date(y,m-1,1); renderCalendar(); });
