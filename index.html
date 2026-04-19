@@ -289,6 +289,24 @@
   .cal-legend .dot.eng{background:#A855F7}
   .cal-legend .note{width:100%;text-align:center;color:#9CA3AF;font-weight:700;font-size:10px;margin-top:4px}
 
+  /* コース達成パネル */
+  .courses-group{margin-bottom:10px}
+  .courses-group:last-child{margin-bottom:0}
+  .courses-group .grp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12px;font-weight:900;color:#374151}
+  .courses-group .grp-head .ratio{font-size:11px;color:#6B7280;font-weight:800}
+  .course-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  @media(min-width:480px){.course-list{grid-template-columns:1fr 1fr 1fr}}
+  .course{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;border:1.5px solid #E5E7EB;background:#F9FAFB;font-size:12px;font-weight:900;color:#9CA3AF}
+  .course .check{width:18px;height:18px;border-radius:50%;background:#E5E7EB;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0}
+  .course .name{line-height:1.2;flex:1;word-break:break-word}
+  .course.done{background:#ECFDF5;border-color:#34D399;color:#065F46}
+  .course.done .check{background:#10B981;color:#fff}
+  .course.done.math{background:#ECFDF5;border-color:#10B981}
+  .course.done.clock{background:#EFF6FF;border-color:#3B82F6;color:#1E40AF}
+  .course.done.clock .check{background:#3B82F6}
+  .course.done.eng{background:#FAF5FF;border-color:#A855F7;color:#6B21A8}
+  .course.done.eng .check{background:#A855F7}
+
   /* Login bonus toast */
   .login-bonus{
     position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;
@@ -727,6 +745,8 @@
       <div class="streak-row" id="streakRow"></div>
       <div class="dash-title">📚 かもく べつ（こんげつ）</div>
       <div class="dash-card" id="subjectBars"></div>
+      <div class="dash-title">🎓 コース たっせい じょうきょう</div>
+      <div class="dash-card" id="coursesPanel"></div>
       <div class="dash-title">🗓️ がくしゅう カレンダー</div>
       <div class="dash-card">
         <div class="cal-head" id="calHead"></div>
@@ -1001,7 +1021,7 @@
 
   // ===== Save state =====
   const SAVE_KEY = "keisan_train_save_v2";
-  const defaultSave = { tickets:0, maxStreak:0, stationIdx:0, trophies:[], cleared:{}, history:{}, lastPlayDate:"", playStreak:0, maxPlayStreak:0 };
+  const defaultSave = { tickets:0, maxStreak:0, stationIdx:0, trophies:[], cleared:{}, passed:{}, modeLastDate:{}, history:{}, lastPlayDate:"", playStreak:0, maxPlayStreak:0 };
   function loadSave(){
     try{ return { ...defaultSave, ...JSON.parse(localStorage.getItem(SAVE_KEY) || "{}") }; }
     catch{ return { ...defaultSave }; }
@@ -1653,6 +1673,30 @@
       <div class="subj eng"><div class="name">えいご</div><div class="bar"><span style="width:${monthEng/maxDays*100}%"></span></div><div class="days">${monthEng}日</div></div>
     `;
 
+    // コース達成状況（モード別）
+    const groups = [
+      {key:'math',    label:'➕ たしざん'},
+      {key:'clock',   label:'🕐 とけい'},
+      {key:'english', label:'🔊 えいご'}
+    ];
+    let coursesHtml = '';
+    groups.forEach(g=>{
+      const modes = MODES.filter(mo => mo.type === g.key);
+      const cleared = modes.filter(mo => save.cleared && save.cleared[mo.id]).length;
+      const items = modes.map(mo => {
+        const done = !!(save.cleared && save.cleared[mo.id]);
+        const icon = done ? '✓' : '○';
+        return `<div class="course ${done?'done '+g.key:''}"><div class="check">${icon}</div><div class="name">${mo.name}</div></div>`;
+      }).join('');
+      coursesHtml += `
+        <div class="courses-group">
+          <div class="grp-head"><span>${g.label}</span><span class="ratio">${cleared}/${modes.length} クリア</span></div>
+          <div class="course-list">${items}</div>
+        </div>
+      `;
+    });
+    $('coursesPanel').innerHTML = coursesHtml;
+
     // カレンダー
     $('calHead').innerHTML = `
       <button id="calPrev" aria-label="前月">◀</button>
@@ -1687,13 +1731,17 @@
     $('calNext').addEventListener('click', ()=>{ calView=new Date(y,m+1,1); renderCalendar(); });
   }
 
-  function recordStamp(genre, ratio){
-    // 80%以上ならスタンプ
+  function recordStamp(genre, ratio, modeId){
     if (ratio < 0.8) return;
     const key = todayKey();
     save.history = save.history || {};
     save.history[key] = save.history[key] || {};
     save.history[key][genre] = true;
+    // モード別クリア履歴
+    save.passed = save.passed || {};
+    save.modeLastDate = save.modeLastDate || {};
+    save.passed[modeId] = true;
+    save.modeLastDate[modeId] = key;
   }
 
   // ===== Login bonus (連続ログイン) =====
