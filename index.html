@@ -1219,7 +1219,15 @@
       flash('ng', ngMsg);
     }
     renderCombo();
-    const delay = q.kind==='english' ? (ok?1300:1700) : (ok?950:1350);
+    // 英語は正解フレーズを最後まで読み終えるまで待つ（文字数比例＋バッファ）
+    let delay;
+    if (q.kind === 'english'){
+      const ansLen = (q.ans || '').length;
+      const speechMs = Math.max(1600, ansLen * 100); // 約100ms/文字
+      delay = speechMs + (ok ? 900 : 1300);
+    } else {
+      delay = ok ? 950 : 1350;
+    }
     setTimeout(()=>{
       state.i++;
       if (state.i >= state.questions.length) finish();
