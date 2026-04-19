@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7FC7F5"/>
+      <stop offset="1" stop-color="#CDEBFA"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="540" width="1200" height="90" fill="#E2C98E"/>
+  <text x="600" y="270" font-size="120" text-anchor="middle" font-family="'Hiragino Sans',sans-serif" font-weight="900" fill="#003E7E">🚄 けいさんトレイン</text>
+  <text x="600" y="370" font-size="56" text-anchor="middle" font-family="'Hiragino Sans',sans-serif" font-weight="700" fill="#0D2E4E">新幹線で日本縦断！</text>
+  <text x="600" y="450" font-size="40" text-anchor="middle" font-family="'Hiragino Sans',sans-serif" font-weight="700" fill="#1A4480">算数 ・ 時計 ・ 英語 を たのしく まなぼう</text>
+</svg>

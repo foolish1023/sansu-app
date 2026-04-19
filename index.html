@@ -6,15 +6,17 @@
 <title>けいさんトレイン — 新幹線で日本縦断！</title>
 <meta name="description" content="新幹線で日本を縦断しながら算数・時計・英語を楽しく学べる小学生向け学習アプリ。無料・登録不要・ブラウザだけで動きます。" />
 <meta name="theme-color" content="#003E7E" />
-<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚄</text></svg>' />
-<link rel="apple-touch-icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23003E7E"/><text x="50" y="72" font-size="64" text-anchor="middle">🚄</text></svg>' />
-<link rel="manifest" href='data:application/json,{"name":"けいさんトレイン","short_name":"けいさん","start_url":".","display":"standalone","background_color":"%23CDEBFA","theme_color":"%23003E7E","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23003E7E%22/><text x=%2250%22 y=%2272%22 font-size=%2264%22 text-anchor=%22middle%22>🚄</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}' />
+<link rel="icon" href="icon-192.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon-192.svg" />
+<link rel="manifest" href="manifest.webmanifest" />
 <meta property="og:title" content="けいさんトレイン — 新幹線で日本縦断！" />
 <meta property="og:description" content="算数・時計・英語を楽しく学べる小学生向け学習アプリ。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://foolish1023.github.io/sansu-app/" />
+<meta property="og:image" content="https://foolish1023.github.io/sansu-app/ogp.svg" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://foolish1023.github.io/sansu-app/ogp.svg" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="けいさんトレイン" />
@@ -886,6 +888,7 @@
   // ===== Speech =====
   let enVoice = null;
   let voicesLoaded = false;
+  let speechAvailable = ('speechSynthesis' in window); // 後でhasEnVoice判定で更新
   function refreshVoices(){
     if(!('speechSynthesis' in window)) return;
     const voices = window.speechSynthesis.getVoices();
@@ -901,13 +904,18 @@
   if ('speechSynthesis' in window){
     refreshVoices();
     window.speechSynthesis.onvoiceschanged = refreshVoices;
-    // Fire HD/Silkなど voiceschanged が発火しない端末向け：定期ポーリング
     let retry = 0;
     const tick = setInterval(()=>{
       refreshVoices();
       retry++;
-      if (voicesLoaded || retry > 10) clearInterval(tick);
-    }, 300);
+      if (voicesLoaded || retry > 10){
+        clearInterval(tick);
+        // 4秒経ってもvoiceゼロ＝Silk Browser等で音声非対応と判定
+        if (!voicesLoaded || !enVoice) speechAvailable = false;
+      }
+    }, 400);
+  } else {
+    speechAvailable = false;
   }
   function speak(text, rate=0.8){
     if (!text) return;
@@ -946,11 +954,20 @@
   // ===== Save state =====
   const SAVE_KEY = "keisan_train_save_v2";
   const defaultSave = { tickets:0, maxStreak:0, stationIdx:0, trophies:[], cleared:{}, passed:{}, modeLastDate:{}, history:{}, lastPlayDate:"", playStreak:0, maxPlayStreak:0 };
+  // localStorage が無い/拒否される端末（Silkプライベート等）向けにメモリfallback
+  const memStore = {};
+  const safeStorage = {
+    getItem(k){ try{ return localStorage.getItem(k); }catch(e){ return memStore[k] || null; } },
+    setItem(k,v){ try{ localStorage.setItem(k,v); }catch(e){ memStore[k] = v; } },
+    removeItem(k){ try{ localStorage.removeItem(k); }catch(e){ delete memStore[k]; } }
+  };
   function loadSave(){
-    try{ return { ...defaultSave, ...JSON.parse(localStorage.getItem(SAVE_KEY) || "{}") }; }
+    try{ return { ...defaultSave, ...JSON.parse(safeStorage.getItem(SAVE_KEY) || "{}") }; }
     catch{ return { ...defaultSave }; }
   }
-  function saveNow(){ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }
+  function saveNow(){
+    try { safeStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){}
+  }
   let save = loadSave();
 
   // state during a round
@@ -1235,8 +1252,14 @@
         btn.addEventListener('click', ()=> submitChoice(c, btn));
         box.appendChild(btn);
       });
+      // 音声非対応端末向けの注意表示
+      if (!speechAvailable){
+        const note = $('engJa');
+        const cur = note.innerHTML;
+        note.innerHTML = `<div style="background:#FFF3E0;border:2px solid #F59E0B;border-radius:10px;padding:8px;font-size:12px;color:#8B6914;margin-bottom:6px">🔇 この端末は音声非対応。文字を見て答えてね</div>` + cur;
+      }
       // 自動で音声再生：シーンモードは場面文を読み上げる（聴解練習）、単語モードは単語を読む
-      setTimeout(()=> speak(q.scene ? q.sceneText : q.en, 0.9), 350);
+      if (speechAvailable) setTimeout(()=> speak(q.scene ? q.sceneText : q.en, 0.9), 350);
     } else {
       applyLanguage('ja');
       $('playMath').classList.remove('hide');
@@ -1266,7 +1289,7 @@
     // 英語：正解音声を再度再生して耳で覚えさせる（日本語は表示しない）
     if (q.kind === 'english'){
       $('engJa').textContent = '';
-      setTimeout(()=>speak(q.ans), 250);
+      if (speechAvailable) setTimeout(()=>speak(q.ans), 250);
     }
     if (ok){
       state.streak++;
@@ -1281,12 +1304,16 @@
       showBatsu();
     }
     renderCombo();
-    // 英語は正解フレーズを最後まで読み終えるまで待つ（文字数比例＋バッファ）
+    // 英語は正解フレーズを最後まで読み終えるまで待つ（文字数比例＋バッファ）。音声非対応端末は短縮
     let delay;
     if (q.kind === 'english'){
-      const ansLen = (q.ans || '').length;
-      const speechMs = Math.max(1600, ansLen * 100); // 約100ms/文字
-      delay = speechMs + (ok ? 900 : 1300);
+      if (speechAvailable){
+        const ansLen = (q.ans || '').length;
+        const speechMs = Math.max(1600, ansLen * 100);
+        delay = speechMs + (ok ? 900 : 1300);
+      } else {
+        delay = ok ? 1000 : 1500;
+      }
     } else {
       delay = ok ? 950 : 1350;
     }
@@ -1848,7 +1875,7 @@
   bindReset('btnResetTrophies','トロフィーをリセット',()=>{ save.trophies=[]; save.cleared={}; });
   bindReset('btnResetJourney', '駅進行をリセット',     ()=>{ save.stationIdx=0; save.tickets=0; });
   bindReset('btnResetLog',     '学習履歴をリセット',   ()=>{ save.log=[]; save.history={}; save.playStreak=0; save.maxPlayStreak=0; });
-  bindReset('btnResetAll',     'すべてリセット',       ()=>{ localStorage.removeItem(SAVE_KEY); save = loadSave(); });
+  bindReset('btnResetAll',     'すべてリセット',       ()=>{ safeStorage.removeItem(SAVE_KEY); save = loadSave(); });
 
   // ===== Boot =====
   renderHeader(); renderLocation(); renderModes();
