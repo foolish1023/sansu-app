@@ -885,27 +885,51 @@
 
   // ===== Speech =====
   let enVoice = null;
+  let voicesLoaded = false;
   function refreshVoices(){
     if(!('speechSynthesis' in window)) return;
     const voices = window.speechSynthesis.getVoices();
-    enVoice =
-      voices.find(v=>/en[-_]US/i.test(v.lang)) ||
-      voices.find(v=>/en[-_]GB/i.test(v.lang)) ||
-      voices.find(v=>v.lang && v.lang.toLowerCase().startsWith('en')) ||
-      null;
+    if (voices && voices.length){
+      voicesLoaded = true;
+      enVoice =
+        voices.find(v=>/en[-_]US/i.test(v.lang)) ||
+        voices.find(v=>/en[-_]GB/i.test(v.lang)) ||
+        voices.find(v=>v.lang && v.lang.toLowerCase().startsWith('en')) ||
+        null;
+    }
   }
   if ('speechSynthesis' in window){
     refreshVoices();
     window.speechSynthesis.onvoiceschanged = refreshVoices;
+    // Fire HD/Silkなど voiceschanged が発火しない端末向け：定期ポーリング
+    let retry = 0;
+    const tick = setInterval(()=>{
+      refreshVoices();
+      retry++;
+      if (voicesLoaded || retry > 10) clearInterval(tick);
+    }, 300);
   }
   function speak(text, rate=0.8){
+    if (!text) return;
     try{
       if(!('speechSynthesis' in window)) return;
+      // 念のため最新ボイスを取り直す
+      refreshVoices();
       window.speechSynthesis.cancel();
+      // 一部端末は resume() しないと再生されない
+      try { window.speechSynthesis.resume(); } catch(e){}
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US';
       if (enVoice) u.voice = enVoice;
-      u.rate = rate; u.pitch = 1.15; u.volume = 1;
+      u.rate = rate; u.pitch = 1.1; u.volume = 1;
+      // 失敗時のフォールバック：voice指定を外して再試行
+      u.onerror = () => {
+        try {
+          const u2 = new SpeechSynthesisUtterance(text);
+          u2.lang = 'en-US'; u2.rate = rate; u2.volume = 1;
+          window.speechSynthesis.speak(u2);
+        } catch(e){}
+      };
       window.speechSynthesis.speak(u);
     }catch(e){}
   }
@@ -1779,21 +1803,7 @@
   if ($('lbClose')) $('lbClose').addEventListener('click', ()=> $('loginBonus').classList.remove('show'));
 
   $('btnZukan').addEventListener('click',openZukan);
-  // 保護者ボタンは長押し(800ms)でのみ開く（子供の誤タップ防止）
-  (function(){
-    const btn = $('btnParent');
-    let timer = null;
-    const start = (e) => { e.preventDefault && e.preventDefault();
-      btn.style.opacity = '0.6';
-      timer = setTimeout(()=>{ btn.style.opacity=''; openParent(); timer=null; }, 800);
-    };
-    const cancel = () => { if (timer){ clearTimeout(timer); timer=null; } btn.style.opacity=''; };
-    btn.addEventListener('pointerdown', start);
-    btn.addEventListener('pointerup', cancel);
-    btn.addEventListener('pointerleave', cancel);
-    btn.addEventListener('pointercancel', cancel);
-    btn.title = '長押しで開く（保護者用）';
-  })();
+  $('btnParent').addEventListener('click', openParent);
   $('btnParentBack').addEventListener('click',()=>show(menu));
   $('btnZukanBack').addEventListener('click',()=>show(menu));
   $('btnBack').addEventListener('click',()=>show(menu));
