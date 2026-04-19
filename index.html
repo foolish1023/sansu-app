@@ -4,6 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>けいさんトレイン — 新幹線で日本縦断！</title>
+<meta name="description" content="新幹線で日本を縦断しながら算数・時計・英語を楽しく学べる小学生向け学習アプリ。無料・登録不要・ブラウザだけで動きます。" />
+<meta name="theme-color" content="#003E7E" />
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚄</text></svg>' />
+<link rel="apple-touch-icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23003E7E"/><text x="50" y="72" font-size="64" text-anchor="middle">🚄</text></svg>' />
+<link rel="manifest" href='data:application/json,{"name":"けいさんトレイン","short_name":"けいさん","start_url":".","display":"standalone","background_color":"%23CDEBFA","theme_color":"%23003E7E","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23003E7E%22/><text x=%2250%22 y=%2272%22 font-size=%2264%22 text-anchor=%22middle%22>🚄</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}' />
+<meta property="og:title" content="けいさんトレイン — 新幹線で日本縦断！" />
+<meta property="og:description" content="算数・時計・英語を楽しく学べる小学生向け学習アプリ。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://foolish1023.github.io/sansu-app/" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="けいさんトレイン" />
 <style>
   :root{
     --sky1:#7FC7F5; --sky2:#CDEBFA;
@@ -733,60 +747,33 @@
     ]
   };
 
-  // Everyday & business situations (all English, adult-friendly)
+  // Everyday situations for kids (simple, friendly)
   const SITUATIONS = [
-    // ===== Business / work =====
-    {emoji:"💼🤝🗣️", scene:"You walk into a meeting room for the first time with a new client. They stand up from the long conference table and extend their hand with a professional smile. Your boss watches from the side, expecting you to make a strong first impression.", prompt:"Greet them properly.", en:"It's a pleasure to meet you"},
-
-    {emoji:"📧⏰🚨", scene:"It's 5:45pm. You just realized the report you promised to your manager by end of day still needs one more hour of work. You knock on her office door; she looks up from her laptop and asks, 'Is everything okay?'", prompt:"Apologize for the delay.", en:"I'm sorry, I need more time"},
-
-    {emoji:"📞📋👔", scene:"A client calls your office and asks to speak with your colleague Mr. Smith, who is in a meeting and cannot be disturbed. You need to handle the call politely and professionally.", prompt:"What do you say to the caller?", en:"May I take a message?"},
-
-    {emoji:"🎯📊🙌", scene:"Your teammate just closed the biggest deal of the quarter after three months of hard work. She walks into the office holding the signed contract with a huge smile. Everyone turns to look.", prompt:"Congratulate her sincerely.", en:"Congratulations on the deal!"},
-
-    {emoji:"💡🤔📝", scene:"During a brainstorming meeting, your colleague proposes an idea that sounds interesting but needs more detail. You want him to explain further before the team makes a decision.", prompt:"Ask him to elaborate.", en:"Could you explain that in more detail?"},
-
-    // ===== Travel / airport / hotel =====
-    {emoji:"✈️🛂🎫", scene:"You arrive at the airport check-in counter 2 hours before your international flight. You hand over your passport to the agent, who smiles politely and asks, 'Are you checking any bags today?'", prompt:"Confirm your intention.", en:"Yes, I have one bag to check"},
-
-    {emoji:"🏨🗝️📋", scene:"You've just arrived at a hotel in New York after a 14-hour flight. You drag your suitcase to the front desk. The receptionist greets you warmly and asks, 'How may I help you?'", prompt:"State your purpose.", en:"I'd like to check in, please"},
-
-    {emoji:"🍽️📖🍷", scene:"At a fine dining restaurant, you've been studying the menu for several minutes. The waiter approaches, notebook ready, and asks, 'Have you decided what you'd like to order?' You see two interesting dishes but can't decide.", prompt:"Ask for advice.", en:"What would you recommend?"},
-
-    {emoji:"🗺️🚶❓", scene:"You're lost in a foreign city looking for the nearest train station. The map on your phone isn't loading. You spot a friendly-looking local person waiting at a bus stop.", prompt:"Ask politely for directions.", en:"Excuse me, could you help me?"},
-
-    {emoji:"🏪💳🛍️", scene:"At a department store in London, you found a beautiful watch you want to buy. You bring it to the counter and the cashier smiles, 'Will that be cash or card today?'", prompt:"Confirm your payment method.", en:"I'll pay by card, please"},
-
-    {emoji:"☕🥐🤔", scene:"You walk into a cozy coffee shop on a cold morning. The barista greets you, 'Good morning! What can I get started for you today?' You want a medium latte with oat milk.", prompt:"Place your order clearly.", en:"A medium latte with oat milk, please"},
-
-    {emoji:"🎤🗣️📞", scene:"You're on an important business call with a partner overseas. The connection is a bit poor and they're speaking quickly. You need them to slow down so you don't miss anything.", prompt:"Ask them politely.", en:"Could you speak more slowly, please?"},
-
-    // ===== Everyday & social =====
-    {emoji:"🎉🎂🥂", scene:"At a friend's promotion party, the room is full of colleagues celebrating. She walks up holding a glass of champagne, beaming with pride. She just got promoted to director.", prompt:"Toast her success.", en:"Congratulations!"},
-
-    {emoji:"😢🌧️💔", scene:"Your coworker's mother passed away last week. You see her at the office for the first time since she returned from leave. Her eyes are tired, and she's trying to smile.", prompt:"Offer sincere condolences.", en:"I'm so sorry for your loss"},
-
-    {emoji:"🏃⚠️💨", scene:"You're rushing to catch the train and you accidentally bump into a well-dressed elderly man on the platform, nearly knocking his briefcase out of his hand. He turns with a surprised look.", prompt:"Apologize sincerely.", en:"I'm terribly sorry"},
-
-    {emoji:"🎁🎀😊", scene:"A coworker hands you a small wrapped gift and says, 'Happy birthday! I hope you like it.' You didn't expect anything and feel genuinely touched by the thoughtful gesture.", prompt:"Thank them warmly.", en:"That's so thoughtful, thank you"},
-
-    {emoji:"🙋‍♂️📣❓", scene:"In a large lecture hall, the professor just finished a complex explanation. You didn't fully understand one key concept and want to ask, but you want to be polite and not interrupt.", prompt:"Get their attention respectfully.", en:"Excuse me, may I ask a question?"},
-
-    {emoji:"🤷🤔💭", scene:"Your manager asks if you'd like to lead the new project. It's a great opportunity but also a huge responsibility. You need a moment to think it through before committing.", prompt:"Ask for time to decide.", en:"Let me think about it"},
-
-    {emoji:"🏥💊🌡️", scene:"You've had a fever and a bad cough for two days and finally go to the doctor's office. The receptionist hands you a clipboard and asks, 'What brings you in today?'", prompt:"Describe how you feel.", en:"I don't feel well"},
-
-    {emoji:"🎤👏🎺", scene:"You just delivered a 30-minute presentation to senior executives about your team's new strategy. The room breaks into applause. The CEO nods approvingly and says, 'Great work!'", prompt:"Reply with humility.", en:"Thank you very much"},
-
-    {emoji:"🚗🔧💸", scene:"Your car broke down in the middle of the highway. You called roadside assistance. When the technician finishes, he hands you the invoice and asks, 'Would you like a receipt?'", prompt:"Politely accept.", en:"Yes, please"},
-
-    {emoji:"📅🤝🗓️", scene:"A colleague wants to schedule a meeting with you next week to discuss a project. She asks, 'Does Tuesday afternoon work for you?' You actually prefer Wednesday morning.", prompt:"Politely propose an alternative.", en:"Could we meet Wednesday morning instead?"},
-
-    {emoji:"🍰😋👌", scene:"You're at a dinner party at your boss's house. The host has just served her homemade dessert — a beautiful chocolate cake. You take a bite and it's incredible. She's watching for your reaction.", prompt:"Compliment her cooking.", en:"This is absolutely delicious"},
-
-    {emoji:"🔁📞🙏", scene:"A sales call ended abruptly due to a dropped connection right when you were about to confirm an important detail. You call the person back immediately.", prompt:"Apologize for the disconnection.", en:"Sorry about that, we got cut off"},
-
-    {emoji:"💼🚪👋", scene:"It's Friday, 6pm. You're finishing up your work and heading out for the weekend. Your team is still at their desks. You want to say goodbye warmly as you leave.", prompt:"Wish them a good weekend.", en:"Have a great weekend!"}
+    {emoji:"☀️🛏️", scene:"Morning! Mom comes into your room and smiles at you.", prompt:"Say it back to her!", en:"Good morning"},
+    {emoji:"🌙🛌", scene:"It's bedtime. Dad turns off the light.", prompt:"Say it before you sleep.", en:"Good night"},
+    {emoji:"👋😊", scene:"You see your friend at school in the morning.", prompt:"Greet them!", en:"Hello"},
+    {emoji:"👋🚪", scene:"School is over. You wave to your friends.", prompt:"Say it before you leave.", en:"Goodbye"},
+    {emoji:"🎁🎀", scene:"Grandma gives you a present!", prompt:"What do you say?", en:"Thank you"},
+    {emoji:"😢🙏", scene:"Oops! You stepped on your friend's toy.", prompt:"Say sorry!", en:"I'm sorry"},
+    {emoji:"🤝👶", scene:"You meet a new friend for the first time.", prompt:"Introduce yourself!", en:"Nice to meet you"},
+    {emoji:"🍔🤤", scene:"It's lunchtime and your tummy is growling!", prompt:"Tell Mom!", en:"I'm hungry"},
+    {emoji:"💧🥤", scene:"You played outside and your mouth is dry.", prompt:"Tell Mom!", en:"I'm thirsty"},
+    {emoji:"🍰😋", scene:"You take a bite of Mom's pancake. Yummy!", prompt:"Tell her!", en:"It's delicious!"},
+    {emoji:"🎂🎉", scene:"Today is your friend's birthday party!", prompt:"Cheer for them!", en:"Happy birthday!"},
+    {emoji:"❓👀", scene:"You found something strange on the table.", prompt:"Ask Dad!", en:"What is this?"},
+    {emoji:"💴🛍️", scene:"You see a cute toy in the shop. No price tag!", prompt:"Ask the shopkeeper!", en:"How much?"},
+    {emoji:"🚽🙋", scene:"In class, you really need the bathroom!", prompt:"Ask the teacher!", en:"May I go to the bathroom?"},
+    {emoji:"🤔💭", scene:"Teacher asks a hard question. You aren't sure.", prompt:"Be honest!", en:"I don't know"},
+    {emoji:"🎢😄", scene:"You're at the amusement park! So fun!", prompt:"Tell Dad!", en:"It's fun!"},
+    {emoji:"🆘🙏", scene:"You got lost in the big store!", prompt:"Call out loud!", en:"Help!"},
+    {emoji:"🏠👋", scene:"You're back home from school.", prompt:"Greet your family!", en:"I'm home"},
+    {emoji:"🏫🎒", scene:"It's morning. Time to go to school.", prompt:"Say bye to Mom!", en:"I'm going to school"},
+    {emoji:"👋🌆", scene:"You played all afternoon with Ken at the park.", prompt:"Say bye!", en:"See you tomorrow"},
+    {emoji:"😊👍", scene:"A friend asks if you want to play tag.", prompt:"Say yes!", en:"Sure!"},
+    {emoji:"🤒🌡️", scene:"You feel hot and your head hurts.", prompt:"Tell Mom!", en:"I don't feel well"},
+    {emoji:"🍎❤️", scene:"You taste a sweet apple. So good!", prompt:"Say how you feel!", en:"I like it"},
+    {emoji:"🐱🐶", scene:"You see a fluffy kitten in the garden.", prompt:"What is it?", en:"It's a cat"},
+    {emoji:"🌧️☔", scene:"It started raining outside.", prompt:"Tell Mom what's happening!", en:"It's raining"}
   ];
 
   // ===== Page language switcher =====
@@ -865,7 +852,9 @@
     if (audioUnlocked) return;
     try{ window.speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); audioUnlocked=true; }catch(e){}
   }
-  document.addEventListener('click', unlockAudio, {once:true});
+  ['click','touchstart','pointerdown','keydown'].forEach(ev =>
+    document.addEventListener(ev, unlockAudio, {once:true, passive:true})
+  );
 
   // ===== Save state =====
   const SAVE_KEY = "keisan_train_save_v2";
@@ -942,7 +931,7 @@
     if (mode==='1d1d_high'){ do{a=rnd(1,9);b=rnd(1,9);}while(a+b<10||a+b>20); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
     if (mode==='2d1d'){ do{a=rnd(10,99);b=rnd(1,9);}while(a+b>100); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
     if (mode==='2d2d'){ do{a=rnd(10,89);b=rnd(10,89);}while(a+b>100); return {kind:'math',text:`${a} + ${b} =`,ans:a+b}; }
-    if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); return {kind:'math',text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
+    if (mode==='3x1d'){ tries=0; do{a=rnd(1,9);b=rnd(1,9);c=rnd(1,9);tries++;}while(a+b+c>20 && tries<30); if(a+b+c>20){ a=Math.min(a,6); b=Math.min(b,7); c=Math.min(c,7); } return {kind:'math',text:`${a} + ${b} + ${c} =`,ans:a+b+c}; }
     // 時計
     if (mode && mode.startsWith('clock_')) return makeClockQuestion(mode);
     // 英語
@@ -1245,7 +1234,8 @@
   });
   window.addEventListener('keydown',(e)=>{
     if(play.classList.contains('hide')) return;
-    if($('playMath').classList.contains('hide')) return; // 時計モード中は無視
+    if($('playMath').classList.contains('hide')) return; // 時計/英語モード中は無視
+    if(state.i >= state.questions.length) return; // 結果画面遷移直前は無視
     if(/^[0-9]$/.test(e.key)){ if(state.input.length>=3) return; if(state.input==='0') state.input=''; state.input+=e.key; updateAns(); }
     else if(e.key==='Backspace'){ state.input=state.input.slice(0,-1); updateAns(); }
     else if(e.key==='Enter'){ submit(); }
@@ -1369,7 +1359,7 @@
     // 学習スタンプ（ジャンル別に80%以上で記録）
     const mode0 = MODES.find(m=>m.id===state.mode);
     const genre = mode0 && mode0.type;
-    if (genre) recordStamp(genre, ratio);
+    if (genre) recordStamp(genre, ratio, state.mode);
 
     // 新トロフィー表示
     const newWrap=$('newTrophies'); newWrap.innerHTML="";
@@ -1700,7 +1690,21 @@
   if ($('lbClose')) $('lbClose').addEventListener('click', ()=> $('loginBonus').classList.remove('show'));
 
   $('btnZukan').addEventListener('click',openZukan);
-  $('btnParent').addEventListener('click',openParent);
+  // 保護者ボタンは長押し(800ms)でのみ開く（子供の誤タップ防止）
+  (function(){
+    const btn = $('btnParent');
+    let timer = null;
+    const start = (e) => { e.preventDefault && e.preventDefault();
+      btn.style.opacity = '0.6';
+      timer = setTimeout(()=>{ btn.style.opacity=''; openParent(); timer=null; }, 800);
+    };
+    const cancel = () => { if (timer){ clearTimeout(timer); timer=null; } btn.style.opacity=''; };
+    btn.addEventListener('pointerdown', start);
+    btn.addEventListener('pointerup', cancel);
+    btn.addEventListener('pointerleave', cancel);
+    btn.addEventListener('pointercancel', cancel);
+    btn.title = '長押しで開く（保護者用）';
+  })();
   $('btnParentBack').addEventListener('click',()=>show(menu));
   $('btnZukanBack').addEventListener('click',()=>show(menu));
   $('btnBack').addEventListener('click',()=>show(menu));
