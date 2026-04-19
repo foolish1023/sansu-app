@@ -44,6 +44,7 @@
   .hstat{display:flex;gap:6px;align-items:center}
   .stat{background:#fff;color:var(--blueDeep);border-radius:8px;padding:5px 9px;font-weight:900;font-size:12px;display:flex;align-items:center;gap:4px;border:2px solid #fff}
   .stat.zukan{cursor:pointer;background:var(--gold);color:#2B1A00;border-color:#FFF3C4}
+  .stat.parent{cursor:pointer;background:#1F2937;color:#fff;border-color:#374151}
 
   .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:3px solid #fff}
 
@@ -371,6 +372,7 @@
     <div class="hstat">
       <div class="stat" title="あつめた きっぷ">🎫 <span id="tickets">0</span></div>
       <div class="stat zukan" id="btnZukan" title="ずかん">🗾 ずかん</div>
+      <div class="stat parent" id="btnParent" title="保護者ページ">👤 保護者</div>
     </div>
   </header>
 
@@ -495,7 +497,6 @@
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="map">ちず</button>
-      <button class="tab" data-tab="calendar">カレンダー</button>
       <button class="tab" data-tab="trophy">トロフィー</button>
     </div>
 
@@ -755,7 +756,19 @@
       <div class="station-list" id="stationList"></div>
     </div>
 
-    <div id="tab-calendar" class="hide">
+    <div id="tab-trophy" class="hide">
+      <div class="trophy-grid" id="trophyGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== PARENT DASHBOARD ===== -->
+  <section id="parent" class="card hide">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <button class="back" id="btnParentBack">← 戻る</button>
+      <div style="font-weight:900;font-size:16px">👤 保護者ページ</div>
+      <span style="width:60px"></span>
+    </div>
+    <div id="tab-calendar">
       <div class="dash-title">📊 今月の学習状況</div>
       <div class="dash-card" id="monthProgress"></div>
       <div class="streak-row" id="streakRow"></div>
@@ -786,10 +799,6 @@
           <button class="reset-btn danger" id="btnResetAll">⚠️ すべてリセット</button>
         </div>
       </div>
-    </div>
-
-    <div id="tab-trophy" class="hide">
-      <div class="trophy-grid" id="trophyGrid"></div>
     </div>
   </section>
 
@@ -1061,7 +1070,7 @@
   const state = { mode:null, count:10, questions:[], i:0, input:"", answers:[], streak:0, maxStreak:0 };
 
   // ===== DOM =====
-  const menu=$('menu'), play=$('play'), result=$('result'), zukan=$('zukan');
+  const menu=$('menu'), play=$('play'), result=$('result'), zukan=$('zukan'), parent=$('parent');
   const qIdxEl=$('qIdx'), qAllEl=$('qAll'), qLabel=$('qLabel'), qFormula=$('qFormula'), pad=$('pad');
   const toast=$('toast'), bubble=$('bubble');
   const comboEl=$('combo');
@@ -1284,7 +1293,7 @@
   }
 
   function show(section){
-    [menu,play,result,zukan].forEach(s=>s.classList.add('hide'));
+    [menu,play,result,zukan,parent].forEach(s=>s.classList.add('hide'));
     section.classList.remove('hide');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -1600,18 +1609,22 @@
 
   // ===== Zukan (図鑑) =====
   function openZukan(){
-    renderMap(); renderStationList(); renderTrophies(); renderCalendar();
+    renderMap(); renderStationList(); renderTrophies();
     show(zukan);
     setActiveTab('map');
   }
   function setActiveTab(tab){
     document.querySelectorAll('#zukan .tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
     $('tab-map').classList.toggle('hide', tab!=='map');
-    $('tab-calendar').classList.toggle('hide', tab!=='calendar');
     $('tab-trophy').classList.toggle('hide', tab!=='trophy');
-    if (tab==='calendar') renderCalendar();
   }
   document.querySelectorAll('#zukan .tab').forEach(t=>t.addEventListener('click',()=>setActiveTab(t.dataset.tab)));
+
+  // ===== Parent dashboard =====
+  function openParent(){
+    renderCalendar();
+    show(parent);
+  }
 
   function renderMap(){
     const g=$('stations'); g.innerHTML="";
@@ -1876,6 +1889,8 @@
   if ($('lbClose')) $('lbClose').addEventListener('click', ()=> $('loginBonus').classList.remove('show'));
 
   $('btnZukan').addEventListener('click',openZukan);
+  $('btnParent').addEventListener('click',openParent);
+  $('btnParentBack').addEventListener('click',()=>show(menu));
   $('btnZukanBack').addEventListener('click',()=>show(menu));
   $('btnBack').addEventListener('click',()=>show(menu));
   $('btnHome').addEventListener('click',()=>{ renderLocation(); renderModes(); show(menu); });
