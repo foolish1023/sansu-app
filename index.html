@@ -144,6 +144,42 @@
   @keyframes pass{0%{left:-80px;opacity:1}100%{left:calc(100% + 80px);opacity:.9}}
   .pass{position:fixed;top:30%;left:-80px;width:120px;height:60px;z-index:90;pointer-events:none;animation:pass 1.2s cubic-bezier(.4,.1,.4,1)}
 
+  /* 大きな⭕️で正解を即座に伝える */
+  @keyframes maru-pop{
+    0%   {transform:translate(-50%,-50%) scale(.2) rotate(-15deg); opacity:0}
+    20%  {transform:translate(-50%,-50%) scale(1.15) rotate(0); opacity:1}
+    50%  {transform:translate(-50%,-50%) scale(1) rotate(0); opacity:1}
+    100% {transform:translate(-50%,-50%) scale(1.05) rotate(0); opacity:0}
+  }
+  .maru{
+    position:fixed;left:50%;top:42%;
+    width:min(260px,55vw);height:min(260px,55vw);
+    border:14px solid #E4002B;border-radius:50%;
+    background:rgba(255,255,255,.85);
+    box-shadow:0 0 0 6px rgba(228,0,43,.15), 0 12px 30px rgba(0,0,0,.25);
+    z-index:120;pointer-events:none;
+    animation:maru-pop 1s ease-out forwards;
+  }
+  /* 不正解は青いバツ */
+  @keyframes batsu-pop{
+    0%   {transform:translate(-50%,-50%) scale(.4); opacity:0}
+    25%  {transform:translate(-50%,-50%) scale(1.1); opacity:1}
+    100% {transform:translate(-50%,-50%) scale(1); opacity:0}
+  }
+  .batsu{
+    position:fixed;left:50%;top:42%;
+    width:min(220px,48vw);height:min(220px,48vw);
+    z-index:120;pointer-events:none;
+    animation:batsu-pop 1.1s ease-out forwards;
+  }
+  .batsu::before,.batsu::after{
+    content:"";position:absolute;left:50%;top:50%;
+    width:100%;height:18px;background:#1976D2;border-radius:8px;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .batsu::before{transform:translate(-50%,-50%) rotate(45deg)}
+  .batsu::after {transform:translate(-50%,-50%) rotate(-45deg)}
+
   /* Genre tabs */
   .genres{display:flex;gap:8px;margin-bottom:12px}
   .genre{flex:1;background:#EDF3FA;border:none;border-radius:10px;padding:11px;font-weight:900;color:var(--sub);cursor:pointer;font-family:inherit;font-size:14px;box-shadow:var(--shadow)}
@@ -1212,11 +1248,13 @@
       state.streak++;
       state.maxStreak=Math.max(state.maxStreak,state.streak);
       flash('ok', pickPraise(state.streak));
+      showMaru();
       passBy();
     } else {
       state.streak = 0;
       const ngMsg = q.kind==='english' ? `Oops… The answer is "${q.ans}"` : `ざんねん… こたえは ${q.ans}`;
       flash('ng', ngMsg);
+      showBatsu();
     }
     renderCombo();
     // 英語は正解フレーズを最後まで読み終えるまで待つ（文字数比例＋バッファ）
@@ -1286,10 +1324,12 @@
       state.streak++;
       state.maxStreak=Math.max(state.maxStreak,state.streak);
       flash('ok',pickPraise(state.streak));
+      showMaru();
       passBy();
     } else {
       state.streak=0;
       flash('ng',`ざんねん… こたえは ${q.ans}`);
+      showBatsu();
     }
     renderCombo();
     setTimeout(()=>{
@@ -1330,6 +1370,20 @@
     </svg>`;
     document.body.appendChild(el);
     setTimeout(()=>el.remove(),1400);
+  }
+  // 大きな⭕️で正解を即座に伝える
+  function showMaru(){
+    const el = document.createElement('div');
+    el.className = 'maru';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1000);
+  }
+  // 不正解時のバツ
+  function showBatsu(){
+    const el = document.createElement('div');
+    el.className = 'batsu';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1100);
   }
 
   // ===== Finish / reward =====
