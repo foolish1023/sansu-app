@@ -1175,8 +1175,8 @@
         btn.addEventListener('click', ()=> submitChoice(c, btn));
         box.appendChild(btn);
       });
-      // 自動で音声再生
-      setTimeout(()=>speak(q.en), 350);
+      // 自動で音声再生：シーンモードは場面文を読み上げる（聴解練習）、単語モードは単語を読む
+      setTimeout(()=> speak(q.scene ? q.sceneText : q.en, 0.9), 350);
     } else {
       applyLanguage('ja');
       $('playMath').classList.remove('hide');
@@ -1756,10 +1756,11 @@
     });
   });
 
-  // 英語モードの音声リプレイ
+  // 英語モードの音声リプレイ（シーンモードは場面文、単語モードは単語）
   $('btnSpeak').addEventListener('click',()=>{
     const q = state.questions[state.i];
-    if (q && q.kind === 'english') speak(q.en);
+    if (!q || q.kind !== 'english') return;
+    speak(q.scene ? q.sceneText : q.en, 0.9);
   });
 
   // データ管理（リセット）ボタン
