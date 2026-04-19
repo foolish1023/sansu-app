@@ -1771,15 +1771,45 @@
     $('calPrev').addEventListener('click', ()=>{ calView=new Date(y,m-1,1); renderCalendar(); });
     $('calNext').addEventListener('click', ()=>{ calView=new Date(y,m+1,1); renderCalendar(); });
 
-    // 学習履歴（直近30件）
-    const log = (save.log || []).slice(0, 30);
-    if (log.length === 0){
+    // 学習履歴（直近30件） + 過去日次データのフォールバック
+    const subjLabel = {math:'算数', clock:'時計', english:'英語'};
+    const log = (save.log || []).slice();
+    // 過去の history からも履歴を補完（log以前の日次サマリ）
+    const logDates = new Set(log.map(e => todayKey(new Date(e.ts))));
+    const histEntries = [];
+    Object.keys(hist).sort().reverse().forEach(dateKey=>{
+      if (logDates.has(dateKey)) return; // 既に詳細ログがある日はスキップ
+      const r = hist[dateKey];
+      const subjects = [];
+      if (r.math)    subjects.push('算数');
+      if (r.clock)   subjects.push('時計');
+      if (r.english) subjects.push('英語');
+      if (subjects.length === 0) return;
+      const [yy,mm,dd] = dateKey.split('-');
+      histEntries.push({
+        ts: new Date(+yy, +mm-1, +dd).getTime(),
+        dateOnly: true,
+        modeName: subjects.join(' / '),
+        type: '',
+        score: '✓', total: ''
+      });
+    });
+    const all = log.concat(histEntries).sort((a,b)=>b.ts-a.ts).slice(0,30);
+    if (all.length === 0){
       $('logPanel').innerHTML = '<div class="log-empty">学習履歴はまだありません</div>';
     } else {
-      const subjLabel = {math:'算数', clock:'時計', english:'英語'};
-      $('logPanel').innerHTML = log.map(e=>{
+      $('logPanel').innerHTML = all.map(e=>{
         const d = new Date(e.ts);
-        const ts = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        const ts = e.dateOnly
+          ? `${d.getMonth()+1}/${d.getDate()}`
+          : `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        if (e.dateOnly){
+          return `<div class="log-row">
+            <div class="ts">${ts}</div>
+            <div class="meta">学習あり<small>${e.modeName}</small></div>
+            <div class="score low">記録のみ</div>
+          </div>`;
+        }
         const ratio = e.total ? e.score/e.total : 0;
         const star = ratio>=1 ? ' ⭐⭐⭐' : ratio>=.8 ? ' ⭐⭐' : ratio>=.5 ? ' ⭐' : '';
         const cls = ratio>=.5 ? 'score' : 'score low';
