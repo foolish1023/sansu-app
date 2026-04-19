@@ -307,6 +307,22 @@
   .course.done.eng{background:#FAF5FF;border-color:#A855F7;color:#6B21A8}
   .course.done.eng .check{background:#A855F7}
 
+  /* 学習履歴 */
+  .log-row{display:grid;grid-template-columns:80px 1fr auto;gap:10px;padding:9px 10px;border-radius:8px;font-size:12px;background:#F9FAFB;margin-bottom:5px;align-items:center}
+  .log-row .ts{color:#6B7280;font-weight:800;font-size:11px}
+  .log-row .meta{font-weight:900;color:#111827;line-height:1.3}
+  .log-row .meta small{color:#6B7280;font-weight:700;font-size:11px;display:block}
+  .log-row .score{font-weight:900;font-size:13px;color:#10B981;text-align:right}
+  .log-row .score.low{color:#9CA3AF}
+  .log-row .score .star{margin-left:2px}
+  .log-empty{text-align:center;color:#9CA3AF;font-weight:700;font-size:12px;padding:14px}
+
+  /* リセットボタン */
+  .reset-btn{background:#fff;border:1.5px solid #E5E7EB;color:#374151;border-radius:10px;padding:11px 14px;font-weight:900;font-size:13px;cursor:pointer;font-family:inherit;text-align:left;transition:background .12s}
+  .reset-btn:hover{background:#F3F4F6}
+  .reset-btn.danger{border-color:#FCA5A5;color:#B91C1C;background:#FEF2F2}
+  .reset-btn.danger:hover{background:#FEE2E2}
+
   /* Login bonus toast */
   .login-bonus{
     position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;
@@ -740,22 +756,34 @@
     </div>
 
     <div id="tab-calendar" class="hide">
-      <div class="dash-title">📊 こんげつの がくしゅう</div>
+      <div class="dash-title">📊 今月の学習状況</div>
       <div class="dash-card" id="monthProgress"></div>
       <div class="streak-row" id="streakRow"></div>
-      <div class="dash-title">📚 かもく べつ（こんげつ）</div>
+      <div class="dash-title">📚 科目別（今月）</div>
       <div class="dash-card" id="subjectBars"></div>
-      <div class="dash-title">🎓 コース たっせい じょうきょう</div>
+      <div class="dash-title">🎓 コース達成状況</div>
       <div class="dash-card" id="coursesPanel"></div>
-      <div class="dash-title">🗓️ がくしゅう カレンダー</div>
+      <div class="dash-title">🗓️ 学習カレンダー</div>
       <div class="dash-card">
         <div class="cal-head" id="calHead"></div>
         <div class="cal-grid" id="calGrid"></div>
         <div class="cal-legend">
-          <span class="item"><span class="dot math"></span>たしざん</span>
-          <span class="item"><span class="dot clock"></span>とけい</span>
-          <span class="item"><span class="dot eng"></span>えいご</span>
-          <span class="note">※ 1ラウンドで せいかいりつ 80% いじょう で スタンプが つきます</span>
+          <span class="item"><span class="dot math"></span>算数</span>
+          <span class="item"><span class="dot clock"></span>時計</span>
+          <span class="item"><span class="dot eng"></span>英語</span>
+          <span class="note">※ 1ラウンドの正答率 80% 以上でスタンプが付きます</span>
+        </div>
+      </div>
+      <div class="dash-title">📝 学習履歴（直近）</div>
+      <div class="dash-card" id="logPanel"></div>
+      <div class="dash-title">⚙️ データ管理</div>
+      <div class="dash-card" id="resetPanel">
+        <div style="font-size:12px;color:#6B7280;margin-bottom:10px;line-height:1.5">操作は元に戻せません。お子さんと相談してから実行してください。</div>
+        <div style="display:grid;gap:8px">
+          <button class="reset-btn" id="btnResetTrophies">🏆 トロフィーをリセット</button>
+          <button class="reset-btn" id="btnResetJourney">🚄 駅進行をリセット</button>
+          <button class="reset-btn" id="btnResetLog">📝 学習履歴をリセット</button>
+          <button class="reset-btn danger" id="btnResetAll">⚠️ すべてリセット</button>
         </div>
       </div>
     </div>
@@ -1533,6 +1561,19 @@
       newWrap.appendChild(el);
     });
 
+    // 学習履歴に追加（直近100件まで保持）
+    const modeObj = MODES.find(m=>m.id===state.mode);
+    save.log = save.log || [];
+    save.log.unshift({
+      ts: Date.now(),
+      modeId: state.mode,
+      modeName: modeObj ? modeObj.name : state.mode,
+      type: modeObj ? modeObj.type : '',
+      score: score,
+      total: all
+    });
+    if (save.log.length > 100) save.log = save.log.slice(0, 100);
+
     saveNow(); renderHeader();
 
     $('resultTitle').textContent = isEng
@@ -1645,7 +1686,7 @@
     // 今月進捗
     $('monthProgress').innerHTML = `
       <div class="prog-line">
-        <div class="big">${studiedDays}<small> / ${daysInMonth} にち</small></div>
+        <div class="big">${studiedDays}<small> / ${daysInMonth} 日</small></div>
         <div class="pct">${pct}%</div>
       </div>
       <div class="prog-bar"><span style="width:${pct}%"></span></div>
@@ -1655,29 +1696,29 @@
     $('streakRow').innerHTML = `
       <div class="streak-chip fire">
         <div class="ic">🔥</div>
-        <div class="lbl">いまの れんぞく</div>
-        <div><span class="val">${save.playStreak||0}</span><span class="unit"> にち</span></div>
+        <div class="lbl">現在の連続日数</div>
+        <div><span class="val">${save.playStreak||0}</span><span class="unit"> 日</span></div>
       </div>
       <div class="streak-chip">
         <div class="ic">🏆</div>
-        <div class="lbl">さいこう きろく</div>
-        <div><span class="val">${save.maxPlayStreak||0}</span><span class="unit"> にち</span></div>
+        <div class="lbl">最高記録</div>
+        <div><span class="val">${save.maxPlayStreak||0}</span><span class="unit"> 日</span></div>
       </div>
     `;
 
     // 科目別
     const maxDays = Math.max(1, monthMath, monthClock, monthEng);
     $('subjectBars').innerHTML = `
-      <div class="subj math"><div class="name">たしざん</div><div class="bar"><span style="width:${monthMath/maxDays*100}%"></span></div><div class="days">${monthMath}日</div></div>
-      <div class="subj clock"><div class="name">とけい</div><div class="bar"><span style="width:${monthClock/maxDays*100}%"></span></div><div class="days">${monthClock}日</div></div>
-      <div class="subj eng"><div class="name">えいご</div><div class="bar"><span style="width:${monthEng/maxDays*100}%"></span></div><div class="days">${monthEng}日</div></div>
+      <div class="subj math"><div class="name">算数</div><div class="bar"><span style="width:${monthMath/maxDays*100}%"></span></div><div class="days">${monthMath}日</div></div>
+      <div class="subj clock"><div class="name">時計</div><div class="bar"><span style="width:${monthClock/maxDays*100}%"></span></div><div class="days">${monthClock}日</div></div>
+      <div class="subj eng"><div class="name">英語</div><div class="bar"><span style="width:${monthEng/maxDays*100}%"></span></div><div class="days">${monthEng}日</div></div>
     `;
 
     // コース達成状況（モード別）
     const groups = [
-      {key:'math',    label:'➕ たしざん'},
-      {key:'clock',   label:'🕐 とけい'},
-      {key:'english', label:'🔊 えいご'}
+      {key:'math',    label:'➕ 算数'},
+      {key:'clock',   label:'🕐 時計'},
+      {key:'english', label:'🔊 英語'}
     ];
     let coursesHtml = '';
     groups.forEach(g=>{
@@ -1729,6 +1770,26 @@
     $('calGrid').innerHTML = html;
     $('calPrev').addEventListener('click', ()=>{ calView=new Date(y,m-1,1); renderCalendar(); });
     $('calNext').addEventListener('click', ()=>{ calView=new Date(y,m+1,1); renderCalendar(); });
+
+    // 学習履歴（直近30件）
+    const log = (save.log || []).slice(0, 30);
+    if (log.length === 0){
+      $('logPanel').innerHTML = '<div class="log-empty">学習履歴はまだありません</div>';
+    } else {
+      const subjLabel = {math:'算数', clock:'時計', english:'英語'};
+      $('logPanel').innerHTML = log.map(e=>{
+        const d = new Date(e.ts);
+        const ts = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        const ratio = e.total ? e.score/e.total : 0;
+        const star = ratio>=1 ? ' ⭐⭐⭐' : ratio>=.8 ? ' ⭐⭐' : ratio>=.5 ? ' ⭐' : '';
+        const cls = ratio>=.5 ? 'score' : 'score low';
+        return `<div class="log-row">
+          <div class="ts">${ts}</div>
+          <div class="meta">${subjLabel[e.type]||''}<small>${e.modeName||''}</small></div>
+          <div class="${cls}">${e.score}/${e.total}<span class="star">${star}</span></div>
+        </div>`;
+      }).join('');
+    }
   }
 
   function recordStamp(genre, ratio, modeId){
@@ -1813,6 +1874,21 @@
     const q = state.questions[state.i];
     if (q && q.kind === 'english') speak(q.en);
   });
+
+  // データ管理（リセット）ボタン
+  function bindReset(id, label, action){
+    const el = $(id); if(!el) return;
+    el.addEventListener('click', ()=>{
+      if (!confirm(`「${label}」を実行します。元に戻せません。よろしいですか？`)) return;
+      action();
+      saveNow(); renderHeader(); renderLocation(); renderModes(); renderCalendar();
+      alert('完了しました');
+    });
+  }
+  bindReset('btnResetTrophies','トロフィーをリセット',()=>{ save.trophies=[]; save.cleared={}; });
+  bindReset('btnResetJourney', '駅進行をリセット',     ()=>{ save.stationIdx=0; save.tickets=0; });
+  bindReset('btnResetLog',     '学習履歴をリセット',   ()=>{ save.log=[]; save.history={}; save.playStreak=0; save.maxPlayStreak=0; });
+  bindReset('btnResetAll',     'すべてリセット',       ()=>{ localStorage.removeItem(SAVE_KEY); save = loadSave(); });
 
   // ===== Boot =====
   renderHeader(); renderLocation(); renderModes();
