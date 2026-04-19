@@ -712,7 +712,7 @@
     {id:"eng_numbers", type:"english", cls:"m2", name:"Numbers",         desc:"one / two / three…",              svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#AB47BC" stroke="#4A148C" stroke-width="2"/><text x="27" y="26" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">1・2・3</text></svg>`, trophy:"e2"},
     {id:"eng_colors",  type:"english", cls:"m3", name:"Colors",          desc:"red / blue / yellow…",            svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#fff" stroke="#0D2E4E" stroke-width="2"/><circle cx="15" cy="20" r="6" fill="#E53935"/><circle cx="27" cy="20" r="6" fill="#1E88E5"/><circle cx="39" cy="20" r="6" fill="#FFEB3B"/></svg>`, trophy:"e3"},
     {id:"eng_animals", type:"english", cls:"m4", name:"Animals",         desc:"cat / dog / bird…",               svg:`<svg viewBox="0 0 54 40"><rect x="4" y="6" width="46" height="28" rx="6" fill="#66BB6A" stroke="#1B5E20" stroke-width="2"/><text x="27" y="30" text-anchor="middle" font-size="22">🐱</text></svg>`, trophy:"e4"},
-    {id:"eng_situation", type:"english", cls:"m5", name:"Situations",    desc:"Everyday scenes for families",    svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💬</text><text x="42" y="28" text-anchor="middle" font-size="16">😊</text></svg>`, trophy:"e5"}
+    {id:"eng_situation", type:"english", cls:"m5", name:"Situations (Advanced)",    desc:"For adults / business & travel scenes",    svg:`<svg viewBox="0 0 60 40"><rect x="4" y="6" width="52" height="28" rx="6" fill="#FF7043" stroke="#BF360C" stroke-width="2"/><text x="17" y="28" text-anchor="middle" font-size="16">💼</text><text x="42" y="28" text-anchor="middle" font-size="16">🌍</text></svg>`, trophy:"e5"}
   ];
 
   // ===== English words (expanded for adult learners) =====
@@ -747,33 +747,60 @@
     ]
   };
 
-  // Everyday situations for kids (simple, friendly)
+  // Adult-level situations (parent-requested high-difficulty mode for grown-ups)
   const SITUATIONS = [
-    {emoji:"☀️🛏️", scene:"Morning! Mom comes into your room and smiles at you.", prompt:"Say it back to her!", en:"Good morning"},
-    {emoji:"🌙🛌", scene:"It's bedtime. Dad turns off the light.", prompt:"Say it before you sleep.", en:"Good night"},
-    {emoji:"👋😊", scene:"You see your friend at school in the morning.", prompt:"Greet them!", en:"Hello"},
-    {emoji:"👋🚪", scene:"School is over. You wave to your friends.", prompt:"Say it before you leave.", en:"Goodbye"},
-    {emoji:"🎁🎀", scene:"Grandma gives you a present!", prompt:"What do you say?", en:"Thank you"},
-    {emoji:"😢🙏", scene:"Oops! You stepped on your friend's toy.", prompt:"Say sorry!", en:"I'm sorry"},
-    {emoji:"🤝👶", scene:"You meet a new friend for the first time.", prompt:"Introduce yourself!", en:"Nice to meet you"},
-    {emoji:"🍔🤤", scene:"It's lunchtime and your tummy is growling!", prompt:"Tell Mom!", en:"I'm hungry"},
-    {emoji:"💧🥤", scene:"You played outside and your mouth is dry.", prompt:"Tell Mom!", en:"I'm thirsty"},
-    {emoji:"🍰😋", scene:"You take a bite of Mom's pancake. Yummy!", prompt:"Tell her!", en:"It's delicious!"},
-    {emoji:"🎂🎉", scene:"Today is your friend's birthday party!", prompt:"Cheer for them!", en:"Happy birthday!"},
-    {emoji:"❓👀", scene:"You found something strange on the table.", prompt:"Ask Dad!", en:"What is this?"},
-    {emoji:"💴🛍️", scene:"You see a cute toy in the shop. No price tag!", prompt:"Ask the shopkeeper!", en:"How much?"},
-    {emoji:"🚽🙋", scene:"In class, you really need the bathroom!", prompt:"Ask the teacher!", en:"May I go to the bathroom?"},
-    {emoji:"🤔💭", scene:"Teacher asks a hard question. You aren't sure.", prompt:"Be honest!", en:"I don't know"},
-    {emoji:"🎢😄", scene:"You're at the amusement park! So fun!", prompt:"Tell Dad!", en:"It's fun!"},
-    {emoji:"🆘🙏", scene:"You got lost in the big store!", prompt:"Call out loud!", en:"Help!"},
-    {emoji:"🏠👋", scene:"You're back home from school.", prompt:"Greet your family!", en:"I'm home"},
-    {emoji:"🏫🎒", scene:"It's morning. Time to go to school.", prompt:"Say bye to Mom!", en:"I'm going to school"},
-    {emoji:"👋🌆", scene:"You played all afternoon with Ken at the park.", prompt:"Say bye!", en:"See you tomorrow"},
-    {emoji:"😊👍", scene:"A friend asks if you want to play tag.", prompt:"Say yes!", en:"Sure!"},
-    {emoji:"🤒🌡️", scene:"You feel hot and your head hurts.", prompt:"Tell Mom!", en:"I don't feel well"},
-    {emoji:"🍎❤️", scene:"You taste a sweet apple. So good!", prompt:"Say how you feel!", en:"I like it"},
-    {emoji:"🐱🐶", scene:"You see a fluffy kitten in the garden.", prompt:"What is it?", en:"It's a cat"},
-    {emoji:"🌧️☔", scene:"It started raining outside.", prompt:"Tell Mom what's happening!", en:"It's raining"}
+    // ===== Business / work =====
+    {emoji:"💼🤝🗣️", scene:"You walk into a meeting room for the first time with a new client. They stand up from the long conference table and extend their hand with a professional smile. Your boss watches from the side, expecting you to make a strong first impression.", prompt:"Greet them properly.", en:"It's a pleasure to meet you"},
+
+    {emoji:"📧⏰🚨", scene:"It's 5:45pm. You just realized the report you promised to your manager by end of day still needs one more hour of work. You knock on her office door; she looks up from her laptop and asks, 'Is everything okay?'", prompt:"Apologize for the delay.", en:"I'm sorry, I need more time"},
+
+    {emoji:"📞📋👔", scene:"A client calls your office and asks to speak with your colleague Mr. Smith, who is in a meeting and cannot be disturbed. You need to handle the call politely and professionally.", prompt:"What do you say to the caller?", en:"May I take a message?"},
+
+    {emoji:"🎯📊🙌", scene:"Your teammate just closed the biggest deal of the quarter after three months of hard work. She walks into the office holding the signed contract with a huge smile. Everyone turns to look.", prompt:"Congratulate her sincerely.", en:"Congratulations on the deal!"},
+
+    {emoji:"💡🤔📝", scene:"During a brainstorming meeting, your colleague proposes an idea that sounds interesting but needs more detail. You want him to explain further before the team makes a decision.", prompt:"Ask him to elaborate.", en:"Could you explain that in more detail?"},
+
+    // ===== Travel / airport / hotel =====
+    {emoji:"✈️🛂🎫", scene:"You arrive at the airport check-in counter 2 hours before your international flight. You hand over your passport to the agent, who smiles politely and asks, 'Are you checking any bags today?'", prompt:"Confirm your intention.", en:"Yes, I have one bag to check"},
+
+    {emoji:"🏨🗝️📋", scene:"You've just arrived at a hotel in New York after a 14-hour flight. You drag your suitcase to the front desk. The receptionist greets you warmly and asks, 'How may I help you?'", prompt:"State your purpose.", en:"I'd like to check in, please"},
+
+    {emoji:"🍽️📖🍷", scene:"At a fine dining restaurant, you've been studying the menu for several minutes. The waiter approaches, notebook ready, and asks, 'Have you decided what you'd like to order?' You see two interesting dishes but can't decide.", prompt:"Ask for advice.", en:"What would you recommend?"},
+
+    {emoji:"🗺️🚶❓", scene:"You're lost in a foreign city looking for the nearest train station. The map on your phone isn't loading. You spot a friendly-looking local person waiting at a bus stop.", prompt:"Ask politely for directions.", en:"Excuse me, could you help me?"},
+
+    {emoji:"🏪💳🛍️", scene:"At a department store in London, you found a beautiful watch you want to buy. You bring it to the counter and the cashier smiles, 'Will that be cash or card today?'", prompt:"Confirm your payment method.", en:"I'll pay by card, please"},
+
+    {emoji:"☕🥐🤔", scene:"You walk into a cozy coffee shop on a cold morning. The barista greets you, 'Good morning! What can I get started for you today?' You want a medium latte with oat milk.", prompt:"Place your order clearly.", en:"A medium latte with oat milk, please"},
+
+    {emoji:"🎤🗣️📞", scene:"You're on an important business call with a partner overseas. The connection is a bit poor and they're speaking quickly. You need them to slow down so you don't miss anything.", prompt:"Ask them politely.", en:"Could you speak more slowly, please?"},
+
+    // ===== Everyday & social =====
+    {emoji:"🎉🎂🥂", scene:"At a friend's promotion party, the room is full of colleagues celebrating. She walks up holding a glass of champagne, beaming with pride. She just got promoted to director.", prompt:"Toast her success.", en:"Congratulations!"},
+
+    {emoji:"😢🌧️💔", scene:"Your coworker's mother passed away last week. You see her at the office for the first time since she returned from leave. Her eyes are tired, and she's trying to smile.", prompt:"Offer sincere condolences.", en:"I'm so sorry for your loss"},
+
+    {emoji:"🏃⚠️💨", scene:"You're rushing to catch the train and you accidentally bump into a well-dressed elderly man on the platform, nearly knocking his briefcase out of his hand. He turns with a surprised look.", prompt:"Apologize sincerely.", en:"I'm terribly sorry"},
+
+    {emoji:"🎁🎀😊", scene:"A coworker hands you a small wrapped gift and says, 'Happy birthday! I hope you like it.' You didn't expect anything and feel genuinely touched by the thoughtful gesture.", prompt:"Thank them warmly.", en:"That's so thoughtful, thank you"},
+
+    {emoji:"🙋‍♂️📣❓", scene:"In a large lecture hall, the professor just finished a complex explanation. You didn't fully understand one key concept and want to ask, but you want to be polite and not interrupt.", prompt:"Get their attention respectfully.", en:"Excuse me, may I ask a question?"},
+
+    {emoji:"🤷🤔💭", scene:"Your manager asks if you'd like to lead the new project. It's a great opportunity but also a huge responsibility. You need a moment to think it through before committing.", prompt:"Ask for time to decide.", en:"Let me think about it"},
+
+    {emoji:"🏥💊🌡️", scene:"You've had a fever and a bad cough for two days and finally go to the doctor's office. The receptionist hands you a clipboard and asks, 'What brings you in today?'", prompt:"Describe how you feel.", en:"I don't feel well"},
+
+    {emoji:"🎤👏🎺", scene:"You just delivered a 30-minute presentation to senior executives about your team's new strategy. The room breaks into applause. The CEO nods approvingly and says, 'Great work!'", prompt:"Reply with humility.", en:"Thank you very much"},
+
+    {emoji:"🚗🔧💸", scene:"Your car broke down in the middle of the highway. You called roadside assistance. When the technician finishes, he hands you the invoice and asks, 'Would you like a receipt?'", prompt:"Politely accept.", en:"Yes, please"},
+
+    {emoji:"📅🤝🗓️", scene:"A colleague wants to schedule a meeting with you next week to discuss a project. She asks, 'Does Tuesday afternoon work for you?' You actually prefer Wednesday morning.", prompt:"Politely propose an alternative.", en:"Could we meet Wednesday morning instead?"},
+
+    {emoji:"🍰😋👌", scene:"You're at a dinner party at your boss's house. The host has just served her homemade dessert — a beautiful chocolate cake. You take a bite and it's incredible. She's watching for your reaction.", prompt:"Compliment her cooking.", en:"This is absolutely delicious"},
+
+    {emoji:"🔁📞🙏", scene:"A sales call ended abruptly due to a dropped connection right when you were about to confirm an important detail. You call the person back immediately.", prompt:"Apologize for the disconnection.", en:"Sorry about that, we got cut off"},
+
+    {emoji:"💼🚪👋", scene:"It's Friday, 6pm. You're finishing up your work and heading out for the weekend. Your team is still at their desks. You want to say goodbye warmly as you leave.", prompt:"Wish them a good weekend.", en:"Have a great weekend!"}
   ];
 
   // ===== Page language switcher =====
